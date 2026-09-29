@@ -28,7 +28,7 @@
 
 只修改本项目。原 DSH checkout 作为只读参考。运行时零第三方 Go module，Go 1.22 可构建。公开接口、所有权与限制随代码交付；覆盖率当前检查 Cordis，未来新增运行时包必须扩展选择器。
 
-没有 Loader、Session、Tool、Model、Agent Loop、CLI 或网站。当前没有真实 API、跨平台本地验收或远端 CI 执行。用户已授权将项目作为公开的独立仓库发布到 `gosomea/deepseek-harness-go`；后续路线见 [roadmap](../../roadmap.md)。
+没有 Loader、Session、Tool、Model、Agent Loop、CLI 或网站。当前没有真实 API 或跨平台本地验收；远端 CI 状态按提交记录。用户已授权将项目作为公开的独立仓库发布到 `gosomea/deepseek-harness-go`；后续路线见 [roadmap](../../roadmap.md)。
 
 ## 复现与证据
 
@@ -39,3 +39,7 @@
 ## GitHub 发布准备（第二版）
 
 用户授权建立公开仓库。Go module、import 和覆盖率统计选择器统一迁移为 `github.com/gosomea/deepseek-harness-go`，README 提供 clone 入口，原验收导出保持不变。本版本重新执行 foundation → runtime → acceptance；门禁下限与检查内容不变。本地全部通过后提交并推送，远端 CI 结果另行核对。
+
+## Windows 检出修复（第三版）
+
+首次 GitHub CI 的 Windows 格式检查失败；Linux 全部通过，macOS 各检查通过但任务被矩阵提前取消。增加 `.gitattributes` 固定文本 LF；矩阵设置 `fail-fast: false`，格式失败时列出文件。用 `core.autocrlf=true` 的本机临时 clone 复现并验证检出行为，再按原门禁重新验收；不降低任何检查要求。

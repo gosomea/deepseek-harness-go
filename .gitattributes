@@ -1,0 +1,2 @@
+# Keep source, generated docs and output snapshots identical on every platform.
+* text=auto eol=lf
