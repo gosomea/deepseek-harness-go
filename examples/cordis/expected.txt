@@ -1,0 +1,8 @@
+before provider: pending
+greeter started
+hello #1
+greeter stopped
+after provider removal: pending
+greeter started
+hello again #1
+greeter stopped

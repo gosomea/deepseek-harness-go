@@ -1,0 +1,1321 @@
+{
+  "schema_version": 1,
+  "status": {
+    "plan": "deepseek-harness-go-cordis-v01",
+    "revision": "ab8f026494278d0a05087fdf57533f770e8d28e832c3081c9efda89515266de3",
+    "nodes": {
+      "foundation": {
+        "status": "passed",
+        "reason": null,
+        "owner": "codex-root",
+        "attempt": "07a974fbc5164a02910e9779404c0a3d",
+        "subject": "c49a83787d5e53138681fae8bfe5fbc6cb4c2996d703e2770aa6583c808c1773",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "runtime": {
+        "status": "passed",
+        "reason": null,
+        "owner": "codex-root",
+        "attempt": "dee2bbda8f7048689801fce9aa272e47",
+        "subject": "ba2897ff9b5646d706cae7cb9d89e0534b767b97cd6087fcb50faa2044db62ec",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "acceptance": {
+        "status": "passed",
+        "reason": null,
+        "owner": "codex-root",
+        "attempt": "1aed0d14b179449183fea61f6caca494",
+        "subject": "bbf33b65014fab73844432c11bc3a9da149e5fa526a48144dcad1b3500a9cf92",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      }
+    },
+    "complete": true
+  },
+  "events": [
+    {
+      "time": 1790698457.479413,
+      "action": "claim",
+      "node": "foundation",
+      "token": "5d43204f0c3c49caa6ca4683aa03bde9",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698496.590105,
+      "action": "start",
+      "node": "foundation",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698496.718868,
+      "action": "verify",
+      "node": "foundation",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698496.9698482,
+      "action": "passed",
+      "node": "foundation",
+      "receipt_hash": "0f1a12496676640b960699b6cc2dbdfcbff97cc689b04ba387936238b0878fa1",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698517.259944,
+      "action": "claim",
+      "node": "runtime",
+      "token": "2ad2177cb9074d66ab1bdc1cca2c25be",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698541.28084,
+      "action": "start",
+      "node": "runtime",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698541.4314969,
+      "action": "verify",
+      "node": "runtime",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698544.6474931,
+      "action": "passed",
+      "node": "runtime",
+      "receipt_hash": "755b215fe7480a9dda4d68a5fda1a52462f1c4ff1d2539c4504337c108363369",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698560.5248609,
+      "action": "claim",
+      "node": "acceptance",
+      "token": "18f0db0c6ec84144ab07e19d3a80f7fc",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698575.38304,
+      "action": "start",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698575.5554361,
+      "action": "verify",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698581.859849,
+      "action": "awaiting-review",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790698643.243497,
+      "action": "passed",
+      "node": "acceptance",
+      "receipt_hash": "8d6fed31b67390950d91c53e869c060df3ddb6a2902181ad19d1b9b7e4cd9044",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699686.704332,
+      "action": "revise",
+      "node": null,
+      "previous_revision": "6d859405d21fae249646b2dcc6ec626c92efe85545a07b23d985a9d24239b030",
+      "previous_attempts": [
+        "5d43204f0c3c49caa6ca4683aa03bde9",
+        "2ad2177cb9074d66ab1bdc1cca2c25be",
+        "18f0db0c6ec84144ab07e19d3a80f7fc"
+      ]
+    },
+    {
+      "time": 1790699706.790081,
+      "action": "claim",
+      "node": "foundation",
+      "token": "07a974fbc5164a02910e9779404c0a3d",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699706.93978,
+      "action": "start",
+      "node": "foundation",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699707.057408,
+      "action": "verify",
+      "node": "foundation",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699707.410752,
+      "action": "passed",
+      "node": "foundation",
+      "receipt_hash": "63061814f5b10526d520d47164dc1c0ce309d56ade6a862ccfcc2497f86ad111",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699707.554067,
+      "action": "claim",
+      "node": "runtime",
+      "token": "dee2bbda8f7048689801fce9aa272e47",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699707.6878479,
+      "action": "start",
+      "node": "runtime",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699707.801292,
+      "action": "verify",
+      "node": "runtime",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699710.938675,
+      "action": "passed",
+      "node": "runtime",
+      "receipt_hash": "2c687a18eeb2d31bcc30f5ce7638bf29d978286067202ae1149867b852375a0c",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699711.118639,
+      "action": "claim",
+      "node": "acceptance",
+      "token": "1aed0d14b179449183fea61f6caca494",
+      "owner": "codex-root",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699711.260982,
+      "action": "start",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699711.407827,
+      "action": "verify",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699717.622174,
+      "action": "awaiting-review",
+      "node": "acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1790699770.474842,
+      "action": "passed",
+      "node": "acceptance",
+      "receipt_hash": "ecd3422ae0c081a9f967e2ac9a90fb4998bf8c1dae408ab8d94dd129f6bc5a36",
+      "previous_attempts": []
+    }
+  ],
+  "receipts": {
+    "foundation": {
+      "node": "foundation",
+      "attempt": "07a974fbc5164a02910e9779404c0a3d",
+      "revision": "ab8f026494278d0a05087fdf57533f770e8d28e832c3081c9efda89515266de3",
+      "checks": [
+        {
+          "id": "go-version",
+          "argv": [
+            "go",
+            "version"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790699707.058339,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790699707.192959,
+          "stdout_sha256": "c4312aae122be00b6545d4ceb2e4832505392f017b95d52b896cbf16efe90394",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "module",
+          "argv": [
+            "go",
+            "list",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790699707.193305,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790699707.369586,
+          "stdout_sha256": "1c5c56c801f18ac3d1990d61fe6691a4f76cf9c06c7b8de8ae7be15b3a43dc28",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "go.mod": {
+          "sha256": "d18616ff3f878492fdd15d9a06873b4fc490dcd9042d7a269591800e39cb4d58",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/architecture.md": {
+          "sha256": "846d69cd957fade85a40d3a451d68c72ee8ce259d0e0e32d72bb3f0fa92a6eb5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/architecture.md": {
+          "sha256": "846d69cd957fade85a40d3a451d68c72ee8ce259d0e0e32d72bb3f0fa92a6eb5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "c49a83787d5e53138681fae8bfe5fbc6cb4c2996d703e2770aa6583c808c1773"
+    },
+    "runtime": {
+      "node": "runtime",
+      "attempt": "dee2bbda8f7048689801fce9aa272e47",
+      "revision": "ab8f026494278d0a05087fdf57533f770e8d28e832c3081c9efda89515266de3",
+      "checks": [
+        {
+          "id": "runtime-tests",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cordis",
+            "./examples/cordis"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790699707.802526,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790699710.887072,
+          "stdout_sha256": "0ab5bfb3f439595365060d104ddde17fb2e9d81e65b36d98d655ee2b42413d63",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "go.mod": {
+          "sha256": "d18616ff3f878492fdd15d9a06873b4fc490dcd9042d7a269591800e39cb4d58",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "c60361aa5da013dca4d9fcf02260cbeab6457709a908a9fdebe96f87e9d7020a",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "7d3827b334ecc6843e48b75fb60dd12bba84be6ea73040847666be72e3a41655",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "389cb43328de140218cfe7d323050b654105cc4580f6fa8d1aff7d67326a7114",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "fb8c9383e5e4c2614433f3b1fcbc435bb320e2c3b2dc7199a3d492223ab667ad",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "87cdf252b8391ebf28129d8ca44429e34dbfc6d453e0dfe2b79139caa343d3a1",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "78899b36bd06148e7deddbfa7cab3965ca1d07da25b4663666129165c1175e0e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "c60361aa5da013dca4d9fcf02260cbeab6457709a908a9fdebe96f87e9d7020a",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/README.md": {
+          "sha256": "a7f2d12e55d9c52d75c257fc2e11ab42b864c0a716b13d6143b67da88f397515",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "7d3827b334ecc6843e48b75fb60dd12bba84be6ea73040847666be72e3a41655",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "389cb43328de140218cfe7d323050b654105cc4580f6fa8d1aff7d67326a7114",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/expected.txt": {
+          "sha256": "4e4a4ceb677aba835c30f13b4ff964ffcad187e85337aafd9515b95438587aa4",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/README.md": {
+          "sha256": "67adde54696b6ea392a015447816a651b55c235d2c3857ff35ee7f6b7112664b",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "fb8c9383e5e4c2614433f3b1fcbc435bb320e2c3b2dc7199a3d492223ab667ad",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "ba2897ff9b5646d706cae7cb9d89e0534b767b97cd6087fcb50faa2044db62ec"
+    },
+    "acceptance": {
+      "node": "acceptance",
+      "attempt": "1aed0d14b179449183fea61f6caca494",
+      "revision": "ab8f026494278d0a05087fdf57533f770e8d28e832c3081c9efda89515266de3",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790699711.410429,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790699717.565964,
+          "stdout_sha256": "00de6b0eb4962763f3ff529e3d66a329cc8a336a728f76610fe5abf5a5799847",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        ".github/workflows/check.yml": {
+          "sha256": "f97b4e3a9a0cae8394c845b28d63c43655443910acb53b5483aa30c0c31cc0d4",
+          "executable": false,
+          "symlink": null
+        },
+        "AGENTS.md": {
+          "sha256": "fbad2f101488970dd8aa1c3992e53f8d31a9efa2057c703702e8a2077bc74688",
+          "executable": false,
+          "symlink": null
+        },
+        "CONTRIBUTING.md": {
+          "sha256": "7d932e8b799db590557c88673bd62a31a310eef1a41a42976c9b3670c1b94039",
+          "executable": false,
+          "symlink": null
+        },
+        "Makefile": {
+          "sha256": "66f032300b92bba1c2edaef984115b175b3173374e03ad5eb668dd5af947f191",
+          "executable": false,
+          "symlink": null
+        },
+        "README.md": {
+          "sha256": "73f3c69022406b72cb8f6055916c7fde34785bcac960e1814441d154ad5093cb",
+          "executable": false,
+          "symlink": null
+        },
+        "THIRD_PARTY_NOTICES.md": {
+          "sha256": "0cff15d316e8d7a671dc181bc93c886f749e3e5a3e499eecc94b6f6a21f9c999",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/README.md": {
+          "sha256": "a7f2d12e55d9c52d75c257fc2e11ab42b864c0a716b13d6143b67da88f397515",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "c60361aa5da013dca4d9fcf02260cbeab6457709a908a9fdebe96f87e9d7020a",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "389cb43328de140218cfe7d323050b654105cc4580f6fa8d1aff7d67326a7114",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "7d3827b334ecc6843e48b75fb60dd12bba84be6ea73040847666be72e3a41655",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/cordis-v01/plans.md": {
+          "sha256": "0de193848f994503253d4fad7cc8be38768659f7476f37619d105b678d687786",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "092d91d8cfb1d3ff1b99d783660e434b03ed44c7d55b1e102fb346bcc318ff98",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/architecture.md": {
+          "sha256": "846d69cd957fade85a40d3a451d68c72ee8ce259d0e0e32d72bb3f0fa92a6eb5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/api.md": {
+          "sha256": "f510474bd1f3691b633e1c5305c497c38394a305a37750eb9a3d53112b4a279a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/events.md": {
+          "sha256": "b9ff5ae40e3fc5cc03d0d8d6257c1bd29ae3588f5851d04fe2d68b4c7bcb14f9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/lifecycle.md": {
+          "sha256": "8f894f910abb0cf2d16065f92733ed713417a31fce084f6fe38231b3561ffba8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/services.md": {
+          "sha256": "22500706ecdabfcdd955302414fb8b8a19cbb677938dfac2e80130b300199146",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/tutorial.md": {
+          "sha256": "267e8bd7622484636fd5745c45db06fadd3bfa1c3c987ea75c85b0980110c4b0",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/development.md": {
+          "sha256": "2aa0c854cf11fef811f706de9a4791254dcfcb482b069a7df6decc95ef66f0ee",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "d28cad97f1a19608534422fa4faf592a92145e42a1e16e3701dba2ae67285604",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/README.md": {
+          "sha256": "67adde54696b6ea392a015447816a651b55c235d2c3857ff35ee7f6b7112664b",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/expected.txt": {
+          "sha256": "4e4a4ceb677aba835c30f13b4ff964ffcad187e85337aafd9515b95438587aa4",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "fb8c9383e5e4c2614433f3b1fcbc435bb320e2c3b2dc7199a3d492223ab667ad",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "d18616ff3f878492fdd15d9a06873b4fc490dcd9042d7a269591800e39cb4d58",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/README.md": {
+          "sha256": "be991869a5bb02e6afc88d8f8a03c6e34fb7dd4b5d7969894c1936147b6d9519",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "87cdf252b8391ebf28129d8ca44429e34dbfc6d453e0dfe2b79139caa343d3a1",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "78899b36bd06148e7deddbfa7cab3965ca1d07da25b4663666129165c1175e0e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "Makefile": {
+          "sha256": "66f032300b92bba1c2edaef984115b175b3173374e03ad5eb668dd5af947f191",
+          "executable": false,
+          "symlink": null
+        },
+        ".github/workflows/check.yml": {
+          "sha256": "f97b4e3a9a0cae8394c845b28d63c43655443910acb53b5483aa30c0c31cc0d4",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "d28cad97f1a19608534422fa4faf592a92145e42a1e16e3701dba2ae67285604",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/api.md": {
+          "sha256": "f510474bd1f3691b633e1c5305c497c38394a305a37750eb9a3d53112b4a279a",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "87cdf252b8391ebf28129d8ca44429e34dbfc6d453e0dfe2b79139caa343d3a1",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "78899b36bd06148e7deddbfa7cab3965ca1d07da25b4663666129165c1175e0e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "bbf33b65014fab73844432c11bc3a9da149e5fa526a48144dcad1b3500a9cf92",
+      "review": {
+        "node": "acceptance",
+        "attempt": "1aed0d14b179449183fea61f6caca494",
+        "revision": "ab8f026494278d0a05087fdf57533f770e8d28e832c3081c9efda89515266de3",
+        "subject": "bbf33b65014fab73844432c11bc3a9da149e5fa526a48144dcad1b3500a9cf92",
+        "reviewer": "codex-root",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "repository",
+          "runtime",
+          "documentation",
+          "gates"
+        ],
+        "evidence": [
+          "Makefile",
+          ".github/workflows/check.yml",
+          "docs/testing.md",
+          "docs/cordis/api.md",
+          "scripts/doccheck/main.go",
+          "scripts/doccheck/main_test.go"
+        ],
+        "findings": []
+      }
+    }
+  },
+  "history": [
+    {
+      "node": "foundation",
+      "attempt": "5d43204f0c3c49caa6ca4683aa03bde9",
+      "revision": "6d859405d21fae249646b2dcc6ec626c92efe85545a07b23d985a9d24239b030",
+      "checks": [
+        {
+          "id": "go-version",
+          "argv": [
+            "go",
+            "version"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790698496.719903,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790698496.790553,
+          "stdout_sha256": "c4312aae122be00b6545d4ceb2e4832505392f017b95d52b896cbf16efe90394",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "module",
+          "argv": [
+            "go",
+            "list",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790698496.79089,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790698496.926259,
+          "stdout_sha256": "66bb1e5384884b6daf9c8dc9e82c7d01c73137eb1ecc13378937aac545b4fc08",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "go.mod": {
+          "sha256": "5b1c0e3b104c84789a9cce2a7ff1f2d169612b14ec924ab8aa5fe5006516d59b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/architecture.md": {
+          "sha256": "79bffceff7cc373ae9b873522eecf2d4eaf1f4ad9bf9720d74b6ed06e633c854",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/architecture.md": {
+          "sha256": "79bffceff7cc373ae9b873522eecf2d4eaf1f4ad9bf9720d74b6ed06e633c854",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "edc436247197b2447157642e7ae6e3e312aa5d70d474ccc29445c4360d5cd72c"
+    },
+    {
+      "node": "runtime",
+      "attempt": "2ad2177cb9074d66ab1bdc1cca2c25be",
+      "revision": "6d859405d21fae249646b2dcc6ec626c92efe85545a07b23d985a9d24239b030",
+      "checks": [
+        {
+          "id": "runtime-tests",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cordis",
+            "./examples/cordis"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790698541.4322371,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790698544.601702,
+          "stdout_sha256": "d1f163953e8f33be4754a01a8e479c8f91c955fbb6e1e40db8ad40f99d25e0d4",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "go.mod": {
+          "sha256": "5b1c0e3b104c84789a9cce2a7ff1f2d169612b14ec924ab8aa5fe5006516d59b",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "6a6b6c20feb16d68ea55fe39f1f4fa96c8f2a298186c0388941359f34cf48923",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "27dce6095c9451bfcee661565c593e07c1cd4cae53f74f88ed08758aa726cfb3",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "8c1c00ff8ef8cabc34ae96fd5e2f889fd0ddde056b70f4a958a213fbe5fe1fc9",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "c455123f5719c07af26f7deb21dbbbe056ab42b375acb6d21c3176f26461df88",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "11527f343ea356eee64e4819d4679d4e82561dab8d06f0e952163ade105ae699",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "62a07d92fb239e1573666813c0fd53817e9720a413ae6e7440ac4a19f8e2f1e1",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "6a6b6c20feb16d68ea55fe39f1f4fa96c8f2a298186c0388941359f34cf48923",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/README.md": {
+          "sha256": "a7f2d12e55d9c52d75c257fc2e11ab42b864c0a716b13d6143b67da88f397515",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "27dce6095c9451bfcee661565c593e07c1cd4cae53f74f88ed08758aa726cfb3",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "8c1c00ff8ef8cabc34ae96fd5e2f889fd0ddde056b70f4a958a213fbe5fe1fc9",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/expected.txt": {
+          "sha256": "4e4a4ceb677aba835c30f13b4ff964ffcad187e85337aafd9515b95438587aa4",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/README.md": {
+          "sha256": "67adde54696b6ea392a015447816a651b55c235d2c3857ff35ee7f6b7112664b",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "c455123f5719c07af26f7deb21dbbbe056ab42b375acb6d21c3176f26461df88",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "b71448651f5eba2b9f095f060e6d0f1845d0a545183f90ceefb368fb6057475d"
+    },
+    {
+      "node": "acceptance",
+      "attempt": "18f0db0c6ec84144ab07e19d3a80f7fc",
+      "revision": "6d859405d21fae249646b2dcc6ec626c92efe85545a07b23d985a9d24239b030",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1790698575.556878,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1790698581.804262,
+          "stdout_sha256": "a1960efd93d4749021821c4e61a69b2f5686d8b419fc469957ee5f396bfdc96b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        ".github/workflows/check.yml": {
+          "sha256": "f97b4e3a9a0cae8394c845b28d63c43655443910acb53b5483aa30c0c31cc0d4",
+          "executable": false,
+          "symlink": null
+        },
+        "AGENTS.md": {
+          "sha256": "fbad2f101488970dd8aa1c3992e53f8d31a9efa2057c703702e8a2077bc74688",
+          "executable": false,
+          "symlink": null
+        },
+        "CONTRIBUTING.md": {
+          "sha256": "039ed8b1c5517f6105ffc2cecfcec29b636c46bcdf19f6ebcf5d5a2078c255a3",
+          "executable": false,
+          "symlink": null
+        },
+        "Makefile": {
+          "sha256": "66f032300b92bba1c2edaef984115b175b3173374e03ad5eb668dd5af947f191",
+          "executable": false,
+          "symlink": null
+        },
+        "README.md": {
+          "sha256": "5027c5f9d083f6578770d5ea213b522e9f4246cc7f48d431a18fd72f023465af",
+          "executable": false,
+          "symlink": null
+        },
+        "THIRD_PARTY_NOTICES.md": {
+          "sha256": "0cff15d316e8d7a671dc181bc93c886f749e3e5a3e499eecc94b6f6a21f9c999",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/README.md": {
+          "sha256": "a7f2d12e55d9c52d75c257fc2e11ab42b864c0a716b13d6143b67da88f397515",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/context.go": {
+          "sha256": "73807f72cd32df737ed2ac7600f1e6a501b5a0bf410e96a0f873dbd6f3531fe5",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/doc.go": {
+          "sha256": "046aeaab9358d6997c72cacb2c836871272089267f1470608024b53bccced22d",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/effect.go": {
+          "sha256": "533cd33dd84c336c378fde6dcde360be0ea5114958238263603340ad9f836e2e",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events.go": {
+          "sha256": "5f4539744385c2ffcbc0fc7d9a79ea7f95569dd07b765430f97cb64ec6f0bdaa",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/events_test.go": {
+          "sha256": "6a6b6c20feb16d68ea55fe39f1f4fa96c8f2a298186c0388941359f34cf48923",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/fiber.go": {
+          "sha256": "b595572e0aa34220180d41d050b5a1e5eebefbb1f0da34d0bc896eeff5a9ab87",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle.go": {
+          "sha256": "2cc482ad1ff4ab6b0f93979226da4a2a17901c3ee4fd5d0c1994d66f6489d2a4",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/lifecycle_test.go": {
+          "sha256": "8c1c00ff8ef8cabc34ae96fd5e2f889fd0ddde056b70f4a958a213fbe5fe1fc9",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/plugin.go": {
+          "sha256": "9f7bae071a2211ea8438c5f11acf27502a126818476e8a59a85580b7fbeb8ffe",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/runtime_test.go": {
+          "sha256": "27dce6095c9451bfcee661565c593e07c1cd4cae53f74f88ed08758aa726cfb3",
+          "executable": false,
+          "symlink": null
+        },
+        "cordis/service.go": {
+          "sha256": "5108890407ca24f1400c94d0f5dd0e702dcfb94bca4cc52aceb6bd2e199c374c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/cordis-v01/plans.md": {
+          "sha256": "c5b55f5056c230bf1eba98e6ad605abf73ab16d505d834be0f34ad637cf0f89e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "092d91d8cfb1d3ff1b99d783660e434b03ed44c7d55b1e102fb346bcc318ff98",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/architecture.md": {
+          "sha256": "79bffceff7cc373ae9b873522eecf2d4eaf1f4ad9bf9720d74b6ed06e633c854",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/api.md": {
+          "sha256": "f510474bd1f3691b633e1c5305c497c38394a305a37750eb9a3d53112b4a279a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/events.md": {
+          "sha256": "b9ff5ae40e3fc5cc03d0d8d6257c1bd29ae3588f5851d04fe2d68b4c7bcb14f9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/lifecycle.md": {
+          "sha256": "8f894f910abb0cf2d16065f92733ed713417a31fce084f6fe38231b3561ffba8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/services.md": {
+          "sha256": "22500706ecdabfcdd955302414fb8b8a19cbb677938dfac2e80130b300199146",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/source-map.md": {
+          "sha256": "6b79112817a992b1274373cf69a130e5a9e76d74066a46bc9c89fbe727af719f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/tutorial.md": {
+          "sha256": "267e8bd7622484636fd5745c45db06fadd3bfa1c3c987ea75c85b0980110c4b0",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/development.md": {
+          "sha256": "2aa0c854cf11fef811f706de9a4791254dcfcb482b069a7df6decc95ef66f0ee",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "611f2fab52d1ec98fc0436a668a5bacd004ad40e95b7a5a1cd82bfc8a0e1bcfd",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "3375da1f40de5e9b5506248aa5efa3b428fc6391232d33595d9da641229a9f76",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/README.md": {
+          "sha256": "67adde54696b6ea392a015447816a651b55c235d2c3857ff35ee7f6b7112664b",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/expected.txt": {
+          "sha256": "4e4a4ceb677aba835c30f13b4ff964ffcad187e85337aafd9515b95438587aa4",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main.go": {
+          "sha256": "c455123f5719c07af26f7deb21dbbbe056ab42b375acb6d21c3176f26461df88",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/cordis/main_test.go": {
+          "sha256": "3265f6a13b90b22328f40223a55c35af7583fc20fb8e249f75197044140a5e3f",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "5b1c0e3b104c84789a9cce2a7ff1f2d169612b14ec924ab8aa5fe5006516d59b",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/README.md": {
+          "sha256": "be991869a5bb02e6afc88d8f8a03c6e34fb7dd4b5d7969894c1936147b6d9519",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "11527f343ea356eee64e4819d4679d4e82561dab8d06f0e952163ade105ae699",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "62a07d92fb239e1573666813c0fd53817e9720a413ae6e7440ac4a19f8e2f1e1",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "Makefile": {
+          "sha256": "66f032300b92bba1c2edaef984115b175b3173374e03ad5eb668dd5af947f191",
+          "executable": false,
+          "symlink": null
+        },
+        ".github/workflows/check.yml": {
+          "sha256": "f97b4e3a9a0cae8394c845b28d63c43655443910acb53b5483aa30c0c31cc0d4",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "3375da1f40de5e9b5506248aa5efa3b428fc6391232d33595d9da641229a9f76",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/cordis/api.md": {
+          "sha256": "f510474bd1f3691b633e1c5305c497c38394a305a37750eb9a3d53112b4a279a",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main.go": {
+          "sha256": "11527f343ea356eee64e4819d4679d4e82561dab8d06f0e952163ade105ae699",
+          "executable": false,
+          "symlink": null
+        },
+        "scripts/doccheck/main_test.go": {
+          "sha256": "62a07d92fb239e1573666813c0fd53817e9720a413ae6e7440ac4a19f8e2f1e1",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "936578352beed2d5603162febe1512715c88763f580e44936ba9e9308f7f1292",
+      "review": {
+        "node": "acceptance",
+        "attempt": "18f0db0c6ec84144ab07e19d3a80f7fc",
+        "revision": "6d859405d21fae249646b2dcc6ec626c92efe85545a07b23d985a9d24239b030",
+        "subject": "936578352beed2d5603162febe1512715c88763f580e44936ba9e9308f7f1292",
+        "reviewer": "codex-root",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "repository",
+          "runtime",
+          "documentation",
+          "gates"
+        ],
+        "evidence": [
+          "Makefile",
+          ".github/workflows/check.yml",
+          "docs/testing.md",
+          "docs/cordis/api.md",
+          "scripts/doccheck/main.go",
+          "scripts/doccheck/main_test.go"
+        ],
+        "findings": []
+      }
+    }
+  ]
+}

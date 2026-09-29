@@ -1,0 +1,22 @@
+name: check
+on: [push, pull_request]
+jobs:
+  check:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Go format
+        shell: bash
+        run: test -z "$(gofmt -l cordis examples scripts)"
+      - run: go vet ./...
+      - run: go test -race -count=1 -timeout=60s -coverprofile=coverage.out ./...
+      - run: go run ./scripts/doccheck -coverage coverage.out
+      - run: go run ./scripts/doccheck
+      - run: go build ./...

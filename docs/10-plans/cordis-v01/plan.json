@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "id": "deepseek-harness-go-cordis-v01",
+  "title": "Cordis Go v0.1 GitHub 发布准备验收",
+  "objectives": {
+    "repository": "单 module 仓库架构与渐进路线清晰",
+    "runtime": "Cordis 生命周期、服务、作用域、事件与清理可用",
+    "documentation": "每个包有说明、公开注释、行为文档和示例",
+    "gates": "必需检查及拒绝样例通过，并保留可审阅证据"
+  },
+  "constraints": [
+    "只修改新项目，原 DSH 只读",
+    "必需门禁失败不推进后继",
+    "语义审阅为同一代理独立步骤，independent=false",
+    "本机证据不能替代未执行的 CI",
+    "用户授权公开仓库 gosomea/deepseek-harness-go；先完成本地门禁再推送"
+  ],
+  "documents": [
+    "docs/10-plans/cordis-v01/plans.md"
+  ],
+  "final": "acceptance",
+  "nodes": [
+    {
+      "id": "foundation",
+      "title": "仓库与范围验收",
+      "kind": "gate",
+      "objectives": [
+        "repository"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "go.mod",
+        "docs/architecture.md",
+        "docs/roadmap.md",
+        "docs/cordis/source-map.md"
+      ],
+      "outputs": [
+        "docs/architecture.md",
+        "docs/roadmap.md",
+        "docs/cordis/source-map.md"
+      ],
+      "writes": [],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "go-version",
+          "argv": [
+            "go",
+            "version"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module",
+          "argv": [
+            "go",
+            "list",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": false
+    },
+    {
+      "id": "runtime",
+      "title": "核心行为验收",
+      "kind": "gate",
+      "objectives": [
+        "runtime"
+      ],
+      "depends_on": [
+        "foundation"
+      ],
+      "requires_gates": [
+        "foundation"
+      ],
+      "inputs": [
+        "go.mod",
+        "cordis/service.go",
+        "cordis/events_test.go",
+        "cordis/events.go",
+        "cordis/plugin.go",
+        "cordis/doc.go",
+        "cordis/lifecycle.go",
+        "cordis/context.go",
+        "cordis/fiber.go",
+        "cordis/runtime_test.go",
+        "cordis/effect.go",
+        "cordis/lifecycle_test.go",
+        "examples/cordis/main.go",
+        "examples/cordis/main_test.go",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "outputs": [
+        "cordis/service.go",
+        "cordis/events_test.go",
+        "cordis/events.go",
+        "cordis/README.md",
+        "cordis/plugin.go",
+        "cordis/doc.go",
+        "cordis/lifecycle.go",
+        "cordis/context.go",
+        "cordis/fiber.go",
+        "cordis/runtime_test.go",
+        "cordis/effect.go",
+        "cordis/lifecycle_test.go",
+        "examples/cordis/expected.txt",
+        "examples/cordis/README.md",
+        "examples/cordis/main.go",
+        "examples/cordis/main_test.go"
+      ],
+      "writes": [],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "runtime-tests",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cordis",
+            "./examples/cordis"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": false
+    },
+    {
+      "id": "acceptance",
+      "title": "全目标交付验收",
+      "kind": "gate",
+      "objectives": [
+        "repository",
+        "runtime",
+        "documentation",
+        "gates"
+      ],
+      "depends_on": [
+        "foundation",
+        "runtime"
+      ],
+      "requires_gates": [
+        "foundation",
+        "runtime"
+      ],
+      "inputs": [
+        ".github/workflows/check.yml",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "Makefile",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "cordis/README.md",
+        "cordis/context.go",
+        "cordis/doc.go",
+        "cordis/effect.go",
+        "cordis/events.go",
+        "cordis/events_test.go",
+        "cordis/fiber.go",
+        "cordis/lifecycle.go",
+        "cordis/lifecycle_test.go",
+        "cordis/plugin.go",
+        "cordis/runtime_test.go",
+        "cordis/service.go",
+        "docs/10-plans/cordis-v01/plans.md",
+        "docs/README.md",
+        "docs/architecture.md",
+        "docs/cordis/api.md",
+        "docs/cordis/events.md",
+        "docs/cordis/lifecycle.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md",
+        "docs/cordis/tutorial.md",
+        "docs/development.md",
+        "docs/roadmap.md",
+        "docs/testing.md",
+        "examples/cordis/README.md",
+        "examples/cordis/expected.txt",
+        "examples/cordis/main.go",
+        "examples/cordis/main_test.go",
+        "go.mod",
+        "scripts/doccheck/README.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "outputs": [
+        "Makefile",
+        ".github/workflows/check.yml",
+        "docs/testing.md",
+        "docs/cordis/api.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "writes": [],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

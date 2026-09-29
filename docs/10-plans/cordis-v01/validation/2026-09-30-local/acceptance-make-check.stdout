@@ -1,0 +1,11 @@
+go vet ./...
+go test -race -count=1 -timeout=60s -coverprofile=coverage.out ./...
+ok  	deepseek-harness-go/cordis	2.449s	coverage: 97.7% of statements
+ok  	deepseek-harness-go/examples/cordis	1.774s	coverage: 73.2% of statements
+ok  	deepseek-harness-go/scripts/doccheck	2.159s	coverage: 90.0%
+go run ./scripts/doccheck -coverage coverage.out
+Cordis coverage: 97.7%
+documentation gate passed
+go run ./scripts/doccheck
+documentation gate passed
+go build ./...
