@@ -43,3 +43,7 @@
 ## Windows 检出修复（第三版）
 
 首次 GitHub CI 的 Windows 格式检查失败；Linux 全部通过，macOS 各检查通过但任务被矩阵提前取消。增加 `.gitattributes` 固定文本 LF；矩阵设置 `fail-fast: false`，格式失败时列出文件。用 `core.autocrlf=true` 的本机临时 clone 复现并验证检出行为，再按原门禁重新验收；不降低任何检查要求。
+
+## Windows 命令解析修复（第四版）
+
+第二次 CI 的 Linux/macOS 全部通过；Windows 的格式与 vet 通过，测试命令在启动前报 `no required module provides package .out`。Windows 默认 PowerShell 拆分覆盖率 flag 的值；将工作流 run shell 统一为 Bash，保持竞态、覆盖率和其他门禁不变。对应提交的三平台 CI 作为最终远端证据。
