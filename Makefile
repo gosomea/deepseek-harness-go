@@ -1,7 +1,7 @@
-.PHONY: check fmt-check vet test coverage docs api demo build
+.PHONY: check fmt-check vet test coverage docs doc-examples api demo build
 .NOTPARALLEL:
 
-check: fmt-check vet test coverage docs build
+check: fmt-check vet test coverage docs doc-examples build
 
 fmt-check:
 	@test -z "$$(gofmt -l cordis examples scripts)" || { gofmt -l cordis examples scripts; exit 1; }
@@ -17,6 +17,9 @@ coverage:
 
 docs:
 	go run ./scripts/doccheck
+
+doc-examples:
+	go run ./scripts/doccheck -examples
 
 api:
 	go run ./scripts/doccheck -write-api

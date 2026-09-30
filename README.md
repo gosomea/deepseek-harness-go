@@ -1,44 +1,63 @@
+---
+description: "通过可运行的 Go 插件示例学习 DSH 的依赖、生命周期与组合方式。"
+kind: "project-overview"
+---
+
 # deepseek-harness-go
 
-用 Go 逐步重建 DeepSeek Harness 的插件架构。当前实现 **Cordis 核心 v0.1**，用于学习、验证插件组合和为后续 Harness 模块建立基础。项目使用 Go 1.22 和标准库，Go module 为 `github.com/gosomea/deepseek-harness-go`；尚无模型调用、会话持久化或 Agent CLI。
+## 概述
+
+你可以用 Go 写出插件、声明服务依赖，并观察依赖消失和恢复时插件如何停止与重新启动。本仓库面向已经掌握 Go 函数、接口、错误处理和基本 goroutine 用法，想理解 DeepSeek Harness（DSH）架构的读者。当前可运行部分是 Cordis 核心 v0.1，使用 Go 1.22 和标准库；实现范围与差异由[源码对应表](docs/cordis/source-map.md)说明。
+
+## 目录
+
+- [快速开始](#快速开始)
+- [学习路径](#学习路径)
+- [开发与验证](#开发与验证)
+- [授权](#授权)
 
 ## 快速开始
+
+安装 Go 1.22 或更新版本和 Git，然后在终端执行：
 
 ```sh
 git clone https://github.com/gosomea/deepseek-harness-go.git
 cd deepseek-harness-go
-go version
-make check
 go run ./examples/cordis
 ```
 
-在本项目根目录执行。Windows 的 CI 使用 [工作流中的 Go 命令](.github/workflows/check.yml)，不依赖 Make。示例的完整预期输出在 [expected.txt](examples/cordis/expected.txt)，每次门禁都会比对。
+示例不需要模型密钥或网络服务，成功时输出如下。计数器出现后 greeter 启动；计数器移除后 greeter 停止并等待，新计数器出现后它重新启动。
 
-## 阅读顺序
-
-1. [项目架构](docs/architecture.md)：为什么先写 Cordis，后续模块放在哪里。
-2. [第一个插件](docs/cordis/tutorial.md)：运行示例，观察服务加入、消失和恢复。
-3. [生命周期](docs/cordis/lifecycle.md)、[服务与作用域](docs/cordis/services.md)、[事件](docs/cordis/events.md)：三个核心行为说明。
-4. [源码对应表](docs/cordis/source-map.md)：从 Go 实现回到本机 DSH 的 TypeScript 参考。
-5. [API](docs/cordis/api.md)：由公开 Go 注释生成的接口参考。
-6. [测试与门禁](docs/testing.md)：如何判断本阶段可以交付。
-7. [实施计划](docs/10-plans/cordis-v01/plans.md)：目标、依赖和验收证据。
-
-## 目录
-
-```text
-cordis/                插件、生命周期、服务、作用域和事件
-examples/cordis/        完整可运行示例与输出快照
-docs/                  架构、教程、行为说明、开发与测试
-docs/10-plans/          执行计划与阶段验收证据
-scripts/doccheck/      文档、API、覆盖率门禁及失败样例
-.github/workflows/     独立仓库 CI 配置
+```text output-file=examples/cordis/expected.txt
+before provider: pending
+greeter started
+hello #1
+greeter stopped
+after provider removal: pending
+greeter started
+hello again #1
+greeter stopped
 ```
 
-后续模块的布局和阶段条件由 [架构文档](docs/architecture.md) 与 [路线图](docs/roadmap.md) 定义。只在开始实现模块时创建源码目录。
+如果 Go 提示找不到 module，请回到包含 `go.mod` 的仓库根目录。注册依赖尚未出现时得到 `pending` 是这个示例的正常结果；定位其他状态和错误可查[开发说明](docs/development.md#调试生命周期)。
 
-## 开发约定
+## 学习路径
 
-每个 Go 包同时交付包说明、公开接口注释、行为测试与使用示例。修改代码时同步维护对应的文档；生成的 API 通过 `make api` 更新。[AGENTS.md](AGENTS.md) 约束后续 AI 修改，[贡献指南](CONTRIBUTING.md) 说明人工修改流程。
+这条路径从概念进入可运行程序，再转向行为参考与源码。第一次学习无需先阅读验收报告。
 
-本项目是基于 Cordis 行为的 Go 实现；与 TypeScript 的差异详见 [源码对应与范围](docs/cordis/source-map.md)。授权与参考源码见 [第三方声明](THIRD_PARTY_NOTICES.md) 和 [MIT License](LICENSE)。
+1. [从 Go 理解 Cordis 与 DSH](docs/cordis/go-primer.md)：把接口、注入、取消和清理与 DSH 概念对应起来。
+2. [写第一个插件](docs/cordis/tutorial.md)：运行最小插件，再加入服务依赖和恢复。
+3. [生命周期](docs/cordis/lifecycle.md)、[服务](docs/cordis/services.md)与[事件](docs/cordis/events.md)：按正在修改的行为查阅时序、错误和并发规则。
+4. [源码对应表](docs/cordis/source-map.md)：从一个问题进入 Go 实现与固定版本的 TypeScript 源码。
+
+[文档索引](docs/README.md)提供按学习与查阅目的组织的入口；[项目架构](docs/architecture.md)描述当前运行时，[路线图](docs/roadmap.md)说明后续 Loader、Session、Tool、Model 和 Agent Loop 的实现顺序。
+
+## 开发与验证
+
+准备修改代码时，先读[贡献指南](CONTRIBUTING.md)和[开发规则](AGENTS.md)。macOS/Linux 安装 Make 后运行 `make check`；完整检查包含竞态检测，需要启用 CGO 并具备本机 C 编译器。Windows 可按[测试说明](docs/testing.md)执行同样的 Go 命令，CI 使用 Bash。
+
+每个包交付自己的 README、公开注释、示例和行为测试。[文档规范](docs/documentation.md)定义 Go 版的模板与示例标记，[测试与门禁](docs/testing.md)定义可执行验收要求。Go module 为 `github.com/gosomea/deepseek-harness-go`，领域包、示例与文档的位置见[架构](docs/architecture.md#仓库布局)。
+
+## 授权
+
+本项目基于 Cordis 的行为使用 Go 组织实现，授权见 [MIT License](LICENSE)，参考来源与版权见[第三方声明](THIRD_PARTY_NOTICES.md)。

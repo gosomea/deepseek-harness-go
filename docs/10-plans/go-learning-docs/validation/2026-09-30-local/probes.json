@@ -1,0 +1,42 @@
+[
+  {
+    "probe": "valid repository",
+    "exit": 0,
+    "output": "documentation gate passed\n"
+  },
+  {
+    "probe": "empty use section",
+    "exit": 1,
+    "output": "/var/folders/kg/klnm7xcn56lbsvcwp5tqnxh00000gn/T/cordis-doc-gate-probes-k255cp7x/checkout/cordis/README.md: section 使用 needs explanatory content\n"
+  },
+  {
+    "probe": "type-invalid program",
+    "exit": 1,
+    "output": "/var/folders/kg/klnm7xcn56lbsvcwp5tqnxh00000gn/T/cordis-doc-gate-probes-k255cp7x/checkout/cordis/README.md:29: runnable hello: Go example compilation failed: exit status 1\n# command-line-arguments\n../../cordis-doc-example-3489086926/main.go:26:8: undefined: fmt.DoesNotExist\n\n"
+  },
+  {
+    "probe": "incorrect expected output",
+    "exit": 1,
+    "output": "/var/folders/kg/klnm7xcn56lbsvcwp5tqnxh00000gn/T/cordis-doc-gate-probes-k255cp7x/checkout/cordis/README.md:29: runnable hello output mismatch\nwant:\nhello started\nchanged output\n\ngot:\nhello started\nhello stopped\n\n"
+  },
+  {
+    "probe": "tutorial plugin",
+    "exit": 0,
+    "output": "hello started\nhello stopped\n"
+  },
+  {
+    "probe": "tutorial dependency",
+    "exit": 0,
+    "output": "before provider: pending\ncounter value: 1\nafter provider: active\ngreeter stopped\n"
+  },
+  {
+    "probe": "missing dependency exercise",
+    "exit": 0,
+    "output": "before provider: pending\nafter provider: pending\n"
+  },
+  {
+    "probe": "tutorial recovery",
+    "exit": 0,
+    "output": "before provider: pending\ncounter value: 1\nafter provider: active\ngreeter stopped\nafter removal: pending\ncounter value: 1\ngreeter stopped\n"
+  }
+]

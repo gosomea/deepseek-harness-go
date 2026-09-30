@@ -18,7 +18,9 @@ Provide 返回可手动取消注册的 Disposer，同时自动参与 Fiber 清�
 
 `root.Isolate("model", nil)` 为 model 创建新的 Scope，返回不修改父视图的新 Context。这个视图继承其他服务的名称空间；如果没有在新 Scope 提供 model，读取返回 ErrServiceNotFound，不会回退到全局 model。
 
-```go
+以下为作用域接口片段，假设调用方已经用 `cordis.New()` 建立 root；完整宿主程序见[教程](tutorial.md)。
+
+```go fragment
 scope := cordis.NewScope()
 a := root.Isolate("model", scope)
 b := root.Isolate("model", scope)

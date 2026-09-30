@@ -2,21 +2,32 @@
 
 ## 参考来源
 
-参考本机 `/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness/vendor/cordis`，版本 `@deepseek-ai/cordis` 4.0.4，Git 提交 `00102833dfaee1da9f48a3a8eae9d34005a75218`。读取时 `vendor/cordis` 没有未提交修改。参考的九个 TypeScript 文件共 2,696 行。版权与授权见 [第三方声明](../../THIRD_PARTY_NOTICES.md)。
+参考公开 DSH 仓库的 [vendor/cordis](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis)，版本 `@deepseek-ai/cordis` 4.0.4，固定 Git 提交 `00102833dfaee1da9f48a3a8eae9d34005a75218`。参考的九个 TypeScript 文件共 2,696 行；版权与授权见[第三方声明](../../THIRD_PARTY_NOTICES.md)。所有 TypeScript 链接指向同一个版本，读者无需具备原作者的本机目录。
+
+## 按问题阅读
+
+先运行[教程](tutorial.md)，再按问题选对应文件。Go 代码是本仓库的实现，TypeScript 是固定版本的参考；相同目的不意味着全部 API 或并发语义相同。
+
+| 问题 | Go 入口 | TypeScript 入口 |
+| --- | --- | --- |
+| 注册后为什么有一个 Fiber？ | [Context.Plugin](../../cordis/context.go)、[Fiber](../../cordis/fiber.go) | [registry.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/registry.ts) |
+| 依赖消失时如何释放并等待恢复？ | [lifecycle.go](../../cordis/lifecycle.go) | [fiber.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/fiber.ts) |
+| 服务如何查找和隔离？ | [service.go](../../cordis/service.go)、[Context.Isolate](../../cordis/context.go) | [reflect.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/reflect.ts)、[context.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/context.ts) |
+| 监听器如何分发和释放？ | [events.go](../../cordis/events.go)、[effect.go](../../cordis/effect.go) | [events.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/events.ts)、[fiber.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/fiber.ts) |
 
 ## 对应关系
 
 | TypeScript | Go | 当前选择 |
 | --- | --- | --- |
-| `context.ts` | `context.go` | 显式方法与不可变 Scope 视图 |
-| `registry.ts` | `plugin.go`、Context.Plugin、Fibers | 每次注册一个 Fiber，名称为诊断标签 |
-| `fiber.ts` | `fiber.go`、`lifecycle.go`、`effect.go` | 串行协调、激活版本、取消、回滚与单次清理 |
-| `reflect.ts` | `service.go` | 显式 Provide/Get、Key[T]/Resolve[T] |
-| `service.ts` | 消费侧小接口与 Provider 插件 | 组合替代继承，没有基类 |
-| `events.ts` | `events.go` | 五种分发模式、Next、显式 Filter |
-| `logger.ts` | slog、WithLogger、Context.Logger | 标准库日志带插件字段 |
-| `utils.ts` | 内部 effect、绑定与错误函数 | 保留需要的所有权行为 |
-| `index.ts` | Go package cordis | Go 导出声明形成公共 API |
+| [context.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/context.ts) | [context.go](../../cordis/context.go) | 显式方法与不可变 Scope 视图 |
+| [registry.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/registry.ts) | [plugin.go](../../cordis/plugin.go)、Context.Plugin、Fibers | 每次注册一个 Fiber，名称为诊断标签 |
+| [fiber.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/fiber.ts) | [fiber.go](../../cordis/fiber.go)、[lifecycle.go](../../cordis/lifecycle.go)、[effect.go](../../cordis/effect.go) | 串行协调、激活版本、取消、回滚与单次清理 |
+| [reflect.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/reflect.ts) | [service.go](../../cordis/service.go) | 显式 Provide/Get、Key[T]/Resolve[T] |
+| [service.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/service.ts) | 消费侧小接口与 Provider 插件 | 组合替代继承，没有基类 |
+| [events.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/events.ts) | [events.go](../../cordis/events.go) | 五种分发模式、Next、显式 Filter |
+| [logger.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/logger.ts) | slog、WithLogger、Context.Logger | 标准库日志带插件字段 |
+| [utils.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/utils.ts) | 内部 effect、绑定与错误函数 | 保留需要的所有权行为 |
+| [index.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/index.ts) | Go package cordis | Go 导出声明形成公共 API |
 
 ## 已实现的行为
 

@@ -18,10 +18,27 @@
 | 7 | CLI | 本机交互、会话恢复、装配 profiles | 无密钥启动 smoke；端到端会话和退出清理通过；用户指南可直接操作 |
 | 8 | 扩展 | MCP、权限、压缩、子代理、Web | 每项独立计划和门禁；新增行为走已文档化扩展点 |
 
-当前正在交付阶段 0/1，执行状态以 [Cordis 阶段记录](10-plans/cordis-v01/status.md) 为准。后续阶段均未实现。
+Cordis 核心的首轮验收保存在[原方案](10-plans/cordis-v01/plans.md)，文档修订后的完整交付以[Go 学习文档验收](10-plans/go-learning-docs/status.md)为入口。后续阶段均未实现。
 
 ## 推荐下一步
 
 阶段 2 先做显式 Go 插件目录和 JSON 配置：通过名称找到已编译的 `Plugin`，校验配置后装配插件树。配置载入与 Cordis 的运行时更新分开；等这条链跑通，再决定是否引入 YAML、文件监听和按配置路径保留实例。
 
 TypeScript 的动态 import 和模块 HMR 不适用于 Go 的普通编译程序。以后可以替换配置、重启 Fiber 或重建进程；若需要二进制外插件，单独规划 RPC/子进程协议及其兼容门禁。
+
+## 规划的模块依赖
+
+下图是后续模块的设计方向；它们的实现和验收由上表各阶段推进。当前组合见[架构](architecture.md)。
+
+```mermaid
+flowchart TD
+  CLI[cmd/dsh-go：入口与装配] --> Harness[harness：Agent Loop]
+  CLI --> Loader[loader：配置与插件目录]
+  Harness --> Session[session：事件与重放]
+  Harness --> Tool[tool：注册与执行]
+  Harness --> Model[model：请求与响应]
+  Loader --> Cordis[cordis：生命周期与服务]
+  Session --> Cordis
+  Tool --> Cordis
+  Model --> Cordis
+```

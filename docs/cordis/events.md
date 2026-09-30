@@ -20,7 +20,9 @@
 
 ## Waterfall
 
-```go
+以下片段假设 ctx 为当前激活、root 为宿主根容器；result 和 request 由业务定义。完整事件宿主见[组合示例](../../examples/cordis/main.go)。
+
+```go fragment
 ctx.On("tools/pre-execute", func(e cordis.Event, next cordis.Next) (any, error) {
     // 此处可检查请求，或返回一个否决结果。
     value, err := next()
@@ -40,7 +42,9 @@ root.Events().Waterfall("tools/pre-execute", func() (any, error) {
 
 `ctx.Events()` 默认到达根容器中的所有监听器，服务隔离不会自动隔离事件。需要按服务 Scope 分发时使用：
 
-```go
+以下片段假设 view 是已创建的 Context 服务视图；它与上面的默认广播使用同一个运行时。
+
+```go fragment
 view.Filter(func(listener *cordis.Context) bool {
     return view.SameScope(listener, "model")
 }).Emit("model/ready")

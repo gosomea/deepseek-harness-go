@@ -4,6 +4,6 @@
 
 | 节点 | 状态 | 原因 |
 | --- | --- | --- |
-| foundation | passed |  |
-| runtime | passed |  |
-| acceptance | passed |  |
+| foundation | stale | input, dependency or evidence changed |
+| runtime | stale | input, dependency or evidence changed |
+| acceptance | stale | input, dependency or evidence changed |

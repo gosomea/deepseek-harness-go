@@ -23,10 +23,13 @@ func main() {
 	root := flag.String("root", ".", "repository root")
 	write := flag.Bool("write-api", false, "regenerate Cordis API reference")
 	coverage := flag.String("coverage", "", "require at least 90 percent Cordis statement coverage")
+	examples := flag.Bool("examples", false, "run documented Go programs and compare their output")
 	flag.Parse()
 	var err error
 	if *coverage != "" {
 		err = checkCoverage(*coverage)
+	} else if *examples {
+		err = checkExamples(*root)
 	} else {
 		if *write {
 			var api []byte
@@ -208,15 +211,10 @@ func checkDocs(root string) error {
 	}
 	for dir := range packages {
 		readme := filepath.Join(dir, "README.md")
-		body, err := os.ReadFile(readme)
+		_, err := os.Stat(readme)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("package %s needs README.md", dir))
 			continue
-		}
-		for _, heading := range []string{"职责", "使用", "限制", "验证"} {
-			if !strings.Contains(string(body), "## "+heading+"\n") {
-				errs = append(errs, fmt.Errorf("%s missing section %s", readme, heading))
-			}
 		}
 		// One package comment must exist in each package, including commands.
 		documentedPackage := false
@@ -240,6 +238,14 @@ func checkDocs(root string) error {
 			return filepath.SkipDir
 		}
 		if !d.IsDir() && strings.HasSuffix(path, ".md") {
+			if d.Name() == "README.md" {
+				if err := checkREADME(root, path); err != nil {
+					errs = append(errs, err)
+				}
+			}
+			if err := checkCodeBlocks(root, path, false); err != nil {
+				errs = append(errs, err)
+			}
 			if err := checkLinks(root, path); err != nil {
 				errs = append(errs, err)
 			}
@@ -310,14 +316,14 @@ func checkLinks(root, path string) error {
 }
 
 func stripFences(body string) string {
+	blocks, _ := codeBlocks(body)
 	var out strings.Builder
-	fenced := false
-	for _, line := range strings.Split(body, "\n") {
-		if strings.HasPrefix(strings.TrimSpace(line), "```") {
-			fenced = !fenced
-			continue
+	blockIndex := 0
+	for index, line := range strings.Split(body, "\n") {
+		for blockIndex < len(blocks) && index+1 > blocks[blockIndex].end {
+			blockIndex++
 		}
-		if !fenced {
+		if blockIndex == len(blocks) || index+1 < blocks[blockIndex].line {
 			out.WriteString(line)
 			out.WriteByte('\n')
 		}

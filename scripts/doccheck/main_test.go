@@ -73,7 +73,7 @@ func TestDocumentationGateDetectsREADMEAndAPIDrift(t *testing.T) {
 	if err := checkDocs(root); err == nil || !strings.Contains(err.Error(), "needs README") {
 		t.Fatal(err)
 	}
-	writeFixture(t, root, "cordis/README.md", "# Fixture\n\n## 职责\n\n## 使用\n\n## 限制\n\n## 验证\n")
+	writeFixture(t, root, "cordis/README.md", fixtureREADME("package-library"))
 	if err := checkDocs(root); err != nil {
 		t.Fatal(err)
 	}
