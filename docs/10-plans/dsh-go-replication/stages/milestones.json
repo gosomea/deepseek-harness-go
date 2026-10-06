@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "purpose": "planning-index-not-execution-contract",
+  "source_commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+  "stages": [
+    {
+      "id": "M0",
+      "title": "固定基线与 Cordis 差距审计",
+      "document": "m00-baseline.md",
+      "requires": [],
+      "exit_gate": "G0",
+      "learning_topics": "C01–C04",
+      "slices": [
+        "M0.1",
+        "M0.2",
+        "M0.3",
+        "M0.4"
+      ],
+      "source_paths": [
+        "vendor/cordis/src",
+        "vendor/loader/src",
+        "docs/architecture.zh.md",
+        "docs/capability-seams.zh.md"
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Cordis 下游基础与行为对照",
+      "document": "m01-cordis.md",
+      "requires": [
+        "M0"
+      ],
+      "exit_gate": "G1",
+      "learning_topics": "C01–C04",
+      "slices": [
+        "M1.1",
+        "M1.2",
+        "M1.3",
+        "M1.4",
+        "M1.5"
+      ],
+      "source_paths": [
+        "vendor/cordis/src",
+        "vendor/timer",
+        "vendor/loader/src",
+        "docs/cordis-primer.zh.md",
+        "packages/test-support/loader-smoke"
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Loader、配置身份与最小 Profile",
+      "document": "m02-composition.md",
+      "requires": [
+        "M1"
+      ],
+      "exit_gate": "G2",
+      "learning_topics": "C05",
+      "slices": [
+        "M2.1",
+        "M2.2",
+        "M2.3",
+        "M2.4",
+        "M2.5"
+      ],
+      "source_paths": [
+        "vendor/loader",
+        "vendor/include",
+        "vendor/group",
+        "packages/boot/app-boot",
+        "packages/bundle",
+        "apps/cli"
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "对话词汇、Agent Scope 与内存 Session",
+      "document": "m03-session.md",
+      "requires": [
+        "M1"
+      ],
+      "exit_gate": "G3",
+      "learning_topics": "C06 的数据模型、C07",
+      "slices": [
+        "M3.1",
+        "M3.2",
+        "M3.3",
+        "M3.4",
+        "M3.5"
+      ],
+      "source_paths": [
+        "packages/core/scope",
+        "packages/core/session",
+        "packages/llm/llm",
+        "packages/session/session-projection",
+        "docs/subsystems/session.zh.md"
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "tRPC 模型适配、工具管线与提示词",
+      "document": "m04-model-tools.md",
+      "requires": [
+        "M3"
+      ],
+      "exit_gate": "G4",
+      "learning_topics": "C06 的流与适配、C08",
+      "slices": [
+        "M4.1",
+        "M4.2",
+        "M4.3",
+        "M4.4",
+        "M4.5",
+        "M4.6"
+      ],
+      "source_paths": [
+        "packages/llm/llm",
+        "packages/llm/llm-deepseek",
+        "packages/llm/llm-retry",
+        "packages/core/tools",
+        "packages/core/system-prompt",
+        "docs/tool-execution-pipeline.zh.md"
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "无密钥的完整 Agent 轮次",
+      "document": "m05-agent-loop.md",
+      "requires": [
+        "M2",
+        "M4"
+      ],
+      "exit_gate": "G5",
+      "learning_topics": "C09",
+      "slices": [
+        "M5.1",
+        "M5.2",
+        "M5.3",
+        "M5.4",
+        "M5.5",
+        "M5.6"
+      ],
+      "source_paths": [
+        "packages/core/agent",
+        "packages/core/agent-loop",
+        "packages/core/agent-default-model",
+        "packages/core/agent-tool-presentation",
+        "packages/test-support/agent-loop-testkit",
+        "docs/agent-lifecycle.zh.md"
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Session 持久化、恢复与格式边界",
+      "document": "m06-persistence.md",
+      "requires": [
+        "M5"
+      ],
+      "exit_gate": "G6",
+      "learning_topics": "C10",
+      "slices": [
+        "M6.1",
+        "M6.2",
+        "M6.3",
+        "M6.4",
+        "M6.5",
+        "M6.6"
+      ],
+      "source_paths": [
+        "packages/session/session-persistence",
+        "packages/session/session-persistence-jsonl",
+        "packages/session/session-checkpoint-policy",
+        "packages/session/session-format",
+        "packages/session/session-format-catalog",
+        "docs/subsystems/persistence.zh.md"
+      ]
+    },
+    {
+      "id": "M7",
+      "title": "真实模型、本机执行策略与 CLI",
+      "document": "m07-local-product.md",
+      "requires": [
+        "M6"
+      ],
+      "exit_gate": "G7",
+      "learning_topics": "C06 的真实接入、C11",
+      "slices": [
+        "M7.1",
+        "M7.2",
+        "M7.3",
+        "M7.4",
+        "M7.5",
+        "M7.6",
+        "M7.7"
+      ],
+      "source_paths": [
+        "packages/credentials",
+        "packages/workspace",
+        "packages/fs",
+        "packages/subprocess",
+        "packages/shell",
+        "packages/sandbox",
+        "packages/interaction/user-approval",
+        "packages/interaction/permission-presets",
+        "apps/cli"
+      ]
+    },
+    {
+      "id": "M8",
+      "title": "指令、技能、附件与上下文压缩",
+      "document": "m08-context.md",
+      "requires": [
+        "M7"
+      ],
+      "exit_gate": "G8",
+      "learning_topics": "C12",
+      "slices": [
+        "M8.1",
+        "M8.2",
+        "M8.3",
+        "M8.4",
+        "M8.5",
+        "M8.6",
+        "M8.7"
+      ],
+      "source_paths": [
+        "packages/context",
+        "packages/skill",
+        "packages/attachment",
+        "packages/spill",
+        "packages/compaction",
+        "packages/settings",
+        "packages/preset",
+        "packages/deliverables",
+        "docs/subsystems/compaction.zh.md"
+      ]
+    },
+    {
+      "id": "M9",
+      "title": "子代理、目标与持久任务",
+      "document": "m09-long-tasks.md",
+      "requires": [
+        "M8"
+      ],
+      "exit_gate": "G9",
+      "learning_topics": "C13",
+      "slices": [
+        "M9.1",
+        "M9.2",
+        "M9.3",
+        "M9.4",
+        "M9.5",
+        "M9.6",
+        "M9.7"
+      ],
+      "source_paths": [
+        "packages/subagent",
+        "packages/goal",
+        "packages/plan",
+        "packages/todo",
+        "packages/jobs",
+        "packages/schedule",
+        "packages/workflow",
+        "docs/subsystems/subagent.zh.md",
+        "docs/subsystems/workflow.zh.md"
+      ]
+    },
+    {
+      "id": "M10",
+      "title": "协议、SDK 与远程能力",
+      "document": "m10-protocols.md",
+      "requires": [
+        "M7"
+      ],
+      "exit_gate": "G10",
+      "learning_topics": "C14",
+      "slices": [
+        "M10.1",
+        "M10.2",
+        "M10.3",
+        "M10.4",
+        "M10.5",
+        "M10.6",
+        "M10.7",
+        "M10.8"
+      ],
+      "source_paths": [
+        "packages/api",
+        "packages/host",
+        "packages/sdk",
+        "packages/acp",
+        "packages/typert",
+        "packages/mcp",
+        "packages/lsp",
+        "packages/ssh",
+        "packages/hooks",
+        "packages/web",
+        "packages/subagent"
+      ]
+    },
+    {
+      "id": "M11",
+      "title": "Web 客户端与 Desktop 载体",
+      "document": "m11-clients.md",
+      "requires": [
+        "M10"
+      ],
+      "exit_gate": "G11",
+      "learning_topics": "C15",
+      "slices": [
+        "M11.1",
+        "M11.2",
+        "M11.3",
+        "M11.4",
+        "M11.5",
+        "M11.6"
+      ],
+      "source_paths": [
+        "packages/client",
+        "packages/host/webserver",
+        "packages/host/frontend-static",
+        "apps/web",
+        "apps/desktop-host",
+        "apps/desktop",
+        "docs/subsystems/web-client.zh.md",
+        "docs/subsystems/web-server.zh.md"
+      ]
+    },
+    {
+      "id": "M12",
+      "title": "全域覆盖、互操作与发行收口",
+      "document": "m12-conformance.md",
+      "requires": [
+        "M9",
+        "M11"
+      ],
+      "exit_gate": "G12",
+      "learning_topics": "C16 及各领域补充",
+      "slices": [
+        "M12.1",
+        "M12.2",
+        "M12.3",
+        "M12.4",
+        "M12.5",
+        "M12.6",
+        "M12.7",
+        "M12.8",
+        "M12.9"
+      ],
+      "source_paths": [
+        "packages",
+        "vendor",
+        "apps",
+        "python",
+        "native",
+        "website",
+        "scripts",
+        "benchmarks",
+        "snapshots",
+        "patches",
+        "THIRD_PARTY_NOTICES.md"
+      ]
+    }
+  ]
+}

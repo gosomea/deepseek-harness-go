@@ -39,6 +39,7 @@ kind: "documentation-index"
 | 当前运行时由哪些部分组成？ | [架构](architecture.md) |
 | 后续 Harness 模块按什么顺序实现？ | [路线图](roadmap.md) |
 | DSH 的每个部分如何分配到 Go，怎样算复刻完成？ | [系统方案](10-plans/dsh-go-replication/plans.md)、[能力覆盖](10-plans/dsh-go-replication/capabilities.md)、[共同验收](10-plans/dsh-go-replication/acceptance.md) |
+| 某个阶段具体先做什么、改哪些文件、怎样学习和验收？ | [阶段实施索引](10-plans/dsh-go-replication/stages/index.md) |
 
 ## 开发与验收
 

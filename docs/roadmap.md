@@ -6,6 +6,8 @@
 
 [系统方案](10-plans/dsh-go-replication/plans.md)接续早期 Cordis 与文档计划，统一维护 M0–M12 的范围、依赖和取舍。[能力覆盖表](10-plans/dsh-go-replication/capabilities.md)为固定 DSH 基线的全部包组、vendor、应用与工程支持分配归属。
 
+[阶段实施索引](10-plans/dsh-go-replication/stages/index.md)提供 13 份细化方案、81 个切片；每个阶段列出预计文件、学习实验、失败场景和退出门禁。
+
 ## 两项共同交付
 
 每个阶段同时完成：
