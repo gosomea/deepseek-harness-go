@@ -4,5 +4,5 @@
 
 | 节点 | 状态 | 原因 |
 | --- | --- | --- |
-| documentation | passed |  |
-| acceptance | passed |  |
+| documentation | stale | input, dependency or evidence changed |
+| acceptance | stale | input, dependency or evidence changed |

@@ -50,7 +50,7 @@ greeter stopped
 3. [生命周期](docs/cordis/lifecycle.md)、[服务](docs/cordis/services.md)与[事件](docs/cordis/events.md)：按正在修改的行为查阅时序、错误和并发规则。
 4. [源码对应表](docs/cordis/source-map.md)：从一个问题进入 Go 实现与固定版本的 TypeScript 源码。
 
-[文档索引](docs/README.md)提供按学习与查阅目的组织的入口；[项目架构](docs/architecture.md)描述当前运行时，[路线图](docs/roadmap.md)说明后续 Loader、Session、Tool、Model 和 Agent Loop 的实现顺序。
+[学习地图](docs/learning/index.md)把当前 Cordis 主题与后续完整 DSH 的概念串起来；[文档索引](docs/README.md)提供按问题查阅的入口。[项目架构](docs/architecture.md)描述当前运行时，[系统复刻方案](docs/10-plans/dsh-go-replication/plans.md)规划后续实现及每阶段配套的源码对照、学习实验与门禁。
 
 ## 开发与验证
 

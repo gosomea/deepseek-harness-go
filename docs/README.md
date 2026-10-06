@@ -24,6 +24,8 @@ kind: "documentation-index"
 3. [运行组合示例](../examples/cordis/README.md)：加入事件，观察监听器释放。
 4. [源码对应表](cordis/source-map.md)：按问题阅读 Go 与固定版本的 DSH 源码。
 
+[完整学习地图](learning/index.md)标明当前可学的四个主题和后续 C05–C16 的前置关系。新增主题按[学习笔记模板](learning/note-template.md)同时交付概念对照、完整实验和失败定位；未来主题在实现前保留规划状态。
+
 ## 查阅参考
 
 按当前的问题选择页面，参考页可以独立查阅：
@@ -36,9 +38,10 @@ kind: "documentation-index"
 | 某个公开方法的参数与返回值是什么？ | [生成 API](cordis/api.md) |
 | 当前运行时由哪些部分组成？ | [架构](architecture.md) |
 | 后续 Harness 模块按什么顺序实现？ | [路线图](roadmap.md) |
+| DSH 的每个部分如何分配到 Go，怎样算复刻完成？ | [系统方案](10-plans/dsh-go-replication/plans.md)、[能力覆盖](10-plans/dsh-go-replication/capabilities.md)、[共同验收](10-plans/dsh-go-replication/acceptance.md) |
 
 ## 开发与验收
 
 修改前阅读[开发说明](development.md)、[文档规范](documentation.md)和[贡献指南](../CONTRIBUTING.md)。提交检查由[测试与门禁](testing.md)定义；新增模块同时增加本索引与包 README。
 
-[Cordis v0.1 方案](10-plans/cordis-v01/plans.md)保留首轮验收历史；[Go 学习文档方案](10-plans/go-learning-docs/plans.md)与其[阶段状态](10-plans/go-learning-docs/status.md)记录本次修订。验收报告用于查验证据，不是学习前置材料。
+[系统复刻方案](10-plans/dsh-go-replication/plans.md)及其 [M0 状态](10-plans/dsh-go-replication/status.md)是下一阶段入口。[Cordis v0.1 方案](10-plans/cordis-v01/plans.md)与[Go 学习文档方案](10-plans/go-learning-docs/plans.md)保留各自版本的历史；验收报告用于查验证据，不是学习前置材料。

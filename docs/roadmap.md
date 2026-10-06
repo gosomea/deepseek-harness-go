@@ -1,44 +1,37 @@
-# 逐步实现路线
+# Go 复刻 DSH 路线
 
-## 推进规则
+## 当前起点
 
-每阶段先写范围、接口、示例和门禁，再实现代码。前置阶段的必要检查失败时，不进入依赖它的阶段。每个模块均交付包 README、公开注释、行为文档、示例和测试；文档标准见 [开发规则](../AGENTS.md)，检查标准见 [测试与门禁](testing.md)。
+当前实现是 Cordis 核心 v0.1，范围与差异见 [源码对应表](cordis/source-map.md)。仓库已有分类 README、公开注释、可运行教程、行为测试与 CI。其他 Harness 模块尚未实现；[当前架构](architecture.md)仅描述已有代码。
 
-## 阶段
+[系统方案](10-plans/dsh-go-replication/plans.md)接续早期 Cordis 与文档计划，统一维护 M0–M12 的范围、依赖和取舍。[能力覆盖表](10-plans/dsh-go-replication/capabilities.md)为固定 DSH 基线的全部包组、vendor、应用与工程支持分配归属。
 
-| 阶段 | 模块 | 交付 | 进入下一阶段的条件 |
-| --- | --- | --- | --- |
-| 0 | 仓库与门禁 | Go module、架构、文档索引、测试入口、CI 配置 | 本机 `make check` 通过，门禁拒绝样例通过 |
-| 1 | Cordis v0.1 | Context/Fiber、依赖生命周期、服务隔离、资源清理、事件与示例 | 生命周期、竞态与示例快照通过；差异范围可查；验收记录齐全 |
-| 2 | Loader | 显式插件目录、配置解析、配置到运行时装配 | 无密钥的配置 fixture：正常加载、未知插件、非法配置、重复 provider、卸载清理 |
-| 3 | Session | 内存事件日志、事件类型、重放、再加入 JSONL | append→replay 可重建状态；损坏与未知必读事件明确拒绝；版本规则和恢复文档齐全 |
-| 4 | Tool | 服务定义、Provider、Consumer、结果事件 | fake tool 完整执行快照；参数错误、取消、清理、输出记录有证据 |
-| 5 | Model | 消费接口、fake provider、真实 provider、流式输出 | keyless 流测试通过；真实 API 单独测试并如实报告跳过情况；取消关闭连接 |
-| 6 | Agent Loop | 一轮请求→tool call→执行→再请求→结束 | fake model 的多轮 Session 快照可重放；限制、错误、取消和插件卸载通过 |
-| 7 | CLI | 本机交互、会话恢复、装配 profiles | 无密钥启动 smoke；端到端会话和退出清理通过；用户指南可直接操作 |
-| 8 | 扩展 | MCP、权限、压缩、子代理、Web | 每项独立计划和门禁；新增行为走已文档化扩展点 |
+## 两项共同交付
 
-Cordis 核心的首轮验收保存在[原方案](10-plans/cordis-v01/plans.md)，文档修订后的完整交付以[Go 学习文档验收](10-plans/go-learning-docs/status.md)为入口。后续阶段均未实现。
+每个阶段同时完成：
 
-## 推荐下一步
+1. **复刻**：固定来源的行为契约、Go 实现、失败／取消／恢复测试、显式差异。
+2. **概念对应与学习笔记**：Go 前置知识、问题引入、完整实验、TS↔Go 源码导航和预测练习。
 
-阶段 2 先做显式 Go 插件目录和 JSON 配置：通过名称找到已编译的 `Plugin`，校验配置后装配插件树。配置载入与 Cordis 的运行时更新分开；等这条链跑通，再决定是否引入 YAML、文件监听和按配置路径保留实例。
+阶段完成需要两项都有证据；通过测试或写完笔记都不能单独表示完成。学习内容从[学习地图](learning/index.md)进入；新笔记使用[模板](learning/note-template.md)。具体要求见[共同验收标准](10-plans/dsh-go-replication/acceptance.md)。
 
-TypeScript 的动态 import 和模块 HMR 不适用于 Go 的普通编译程序。以后可以替换配置、重启 Fiber 或重建进程；若需要二进制外插件，单独规划 RPC/子进程协议及其兼容门禁。
+模型调用已选定 [tRPC-Agent-Go 模型层](10-plans/dsh-go-replication/plans.md#模型接入选型trpc-agent-go)，通过本项目 `llm` 契约与 Provider 适配器接入。M4 验证无密钥适配，M7 接入真实端点；Cordis、Session、工具管线和 Agent Loop 按 DSH 行为实现。
 
-## 规划的模块依赖
+## 交付检查点
 
-下图是后续模块的设计方向；它们的实现和验收由上表各阶段推进。当前组合见[架构](architecture.md)。
+| 检查点 | 范围 | 学习结果 |
+| --- | --- | --- |
+| M0–M2 运行时与装配 | 来源审计、Cordis 下游基础、Loader 与最小 profile | 理解插件定义、实例、激活、依赖、资源和配置身份 |
+| M3–M5 最小 Harness | 对话词汇、Session、fake LLM／工具、prompt、Agent Loop | 无密钥运行完整工具轮次，并从日志解释每一步 |
+| M6–M7 本机可用 | 持久化恢复、真实模型、策略、工作区、文件／进程工具、CLI | 理解落盘边界、执行世界、取消与审批 |
+| M8–M9 持续工作 | 上下文、压缩、技能、子代理、目标、持久任务 | 理解预算、会话谱系、持久状态与任务恢复 |
+| M10–M11 协议与界面 | SDK/API/ACP/MCP、远程能力、Web 与 Desktop | 理解 Host 权威状态、协议兼容与客户端投影 |
+| M12 全域收口 | 剩余 Provider／扩展、平台、性能、发行与完整文档 | 能从能力清单定位实现、差异与验证证据 |
 
-```mermaid
-flowchart TD
-  CLI[cmd/dsh-go：入口与装配] --> Harness[harness：Agent Loop]
-  CLI --> Loader[loader：配置与插件目录]
-  Harness --> Session[session：事件与重放]
-  Harness --> Tool[tool：注册与执行]
-  Harness --> Model[model：请求与响应]
-  Loader --> Cordis[cordis：生命周期与服务]
-  Session --> Cordis
-  Tool --> Cordis
-  Model --> Cordis
-```
+检查点是阶段分组，实际依赖见[里程碑 DAG](10-plans/dsh-go-replication/plans.md#里程碑)。最小 Harness、本机可用和完整复刻分别验收；尚未通过兼容检查时，不承诺原 DSH 配置、Session 文件、客户端或插件可直接复用。
+
+## 下一步与证据
+
+先执行 M0：核对固定来源，为已有 Cordis 建立逐行为差距审计，把现有测试与学习实验关联起来，确定 M1 的有限范围；随后进入 Loader。M0 的[执行契约](10-plans/dsh-go-replication/plan.json)和[状态](10-plans/dsh-go-replication/status.md)已经有入口，后续阶段尚未展开成可执行契约。
+
+[Cordis 首轮方案](10-plans/cordis-v01/plans.md)和[Go 学习文档方案](10-plans/go-learning-docs/plans.md)保留原版本的验收历史。新的计划不复用历史“通过”来解锁未来阶段；代码与输入变化后的当前状态由各计划重新验证。

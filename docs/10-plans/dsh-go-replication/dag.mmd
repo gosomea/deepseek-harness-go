@@ -1,0 +1,6 @@
+flowchart TD
+  source-baseline{{"source-baseline: ready"}}
+  cordis-audit{{"cordis-audit: blocked"}}
+  source-baseline --> cordis-audit
+  baseline-acceptance{{"baseline-acceptance: blocked"}}
+  cordis-audit --> baseline-acceptance

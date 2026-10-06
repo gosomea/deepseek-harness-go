@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-baseline",
+  "title": "Go 复刻 DSH：M0 来源与 Cordis 学习基线",
+  "objectives": {
+    "replication": "固定 DSH 基线与全域范围，建立 Cordis 行为差距和 M1 的实现入口",
+    "learning": "为 Go 读者建立概念路径，并将 Cordis 行为关联到现有实验、源码与测试",
+    "evidence": "审计与当前门禁留有真实证据；不把规划、历史检查或显式差异称为完成复刻"
+  },
+  "constraints": [
+    "只执行 M0 基线审计；M1–M12 需按总方案细化为后续契约",
+    "DSH 参考 checkout 只读，使用固定提交对象，排除未提交改动",
+    "本次编写方案只 validate/render；不执行以下节点检查",
+    "不新增运行时功能，不改写历史 validation",
+    "每个节点需要语义评审；独立性如实记录",
+    "保留现有 Go 门禁，不降低覆盖率或绕过依赖",
+    "模型调用选定 tRPC-Agent-Go 模型层，经自有 llm 契约适配；M4 锁定版本并验证适配器，M7 接入真实端点；Agent Loop、Session 与工具管线按 DSH 行为实现"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/plans.md",
+    "docs/10-plans/dsh-go-replication/acceptance.md"
+  ],
+  "final": "baseline-acceptance",
+  "nodes": [
+    {
+      "id": "source-baseline",
+      "title": "审阅固定来源与能力分配",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication/capabilities.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication/capabilities.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication/capabilities.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "inventory-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import json; from pathlib import Path; d=json.loads(Path('docs/10-plans/dsh-go-replication/source-inventory.json').read_text()); g=d['package_groups']; paths=[p for rows in g.values() for p in rows]; assert d['source_commit']=='00102833dfaee1da9f48a3a8eae9d34005a75218'; assert d['group_count']==len(g)==54; assert d['package_count']==len(paths)==len(set(paths))==307; assert len(d['vendor_packages'])==9; assert all(p.startswith('packages/'+k+'/') for k,rows in g.items() for p in rows); print('source inventory structure: OK; semantic source review required')"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "cordis-audit",
+      "title": "审计 Cordis 行为并关联 Go 学习实验",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning"
+      ],
+      "depends_on": [
+        "source-baseline"
+      ],
+      "requires_gates": [
+        "source-baseline"
+      ],
+      "inputs": [
+        ".gitattributes",
+        ".github/workflows/check.yml",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "Makefile",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "cordis/README.md",
+        "cordis/context.go",
+        "cordis/doc.go",
+        "cordis/effect.go",
+        "cordis/events.go",
+        "cordis/events_test.go",
+        "cordis/fiber.go",
+        "cordis/lifecycle.go",
+        "cordis/lifecycle_test.go",
+        "cordis/plugin.go",
+        "cordis/runtime_test.go",
+        "cordis/service.go",
+        "docs/10-plans/cordis-v01/plans.md",
+        "docs/10-plans/cordis-v01/status.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/plan.json",
+        "docs/10-plans/dsh-go-replication/plans.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/go-learning-docs/plans.md",
+        "docs/10-plans/go-learning-docs/status.md",
+        "docs/README.md",
+        "docs/architecture.md",
+        "docs/cordis/api.md",
+        "docs/cordis/events.md",
+        "docs/cordis/go-primer.md",
+        "docs/cordis/lifecycle.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md",
+        "docs/cordis/tutorial.md",
+        "docs/development.md",
+        "docs/documentation.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md",
+        "docs/roadmap.md",
+        "docs/templates/command-example.md",
+        "docs/templates/command-tool.md",
+        "docs/templates/package-library.md",
+        "docs/testing.md",
+        "examples/cordis/README.md",
+        "examples/cordis/expected.txt",
+        "examples/cordis/main.go",
+        "examples/cordis/main_test.go",
+        "go.mod",
+        "scripts/doccheck/README.md",
+        "scripts/doccheck/examples.go",
+        "scripts/doccheck/examples_test.go",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "scripts/doccheck/readme.go",
+        "scripts/doccheck/readme_test.go"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "cordis-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cordis",
+            "./examples/cordis"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "baseline-acceptance",
+      "title": "验收复刻起点与学习路径，确定 M1 切片",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "cordis-audit"
+      ],
+      "requires_gates": [
+        "source-baseline",
+        "cordis-audit"
+      ],
+      "inputs": [
+        ".gitattributes",
+        ".github/workflows/check.yml",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "Makefile",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "cordis/README.md",
+        "cordis/context.go",
+        "cordis/doc.go",
+        "cordis/effect.go",
+        "cordis/events.go",
+        "cordis/events_test.go",
+        "cordis/fiber.go",
+        "cordis/lifecycle.go",
+        "cordis/lifecycle_test.go",
+        "cordis/plugin.go",
+        "cordis/runtime_test.go",
+        "cordis/service.go",
+        "docs/10-plans/cordis-v01/plans.md",
+        "docs/10-plans/cordis-v01/status.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/10-plans/dsh-go-replication/plan.json",
+        "docs/10-plans/dsh-go-replication/plans.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/go-learning-docs/plans.md",
+        "docs/10-plans/go-learning-docs/status.md",
+        "docs/README.md",
+        "docs/architecture.md",
+        "docs/cordis/api.md",
+        "docs/cordis/events.md",
+        "docs/cordis/go-primer.md",
+        "docs/cordis/lifecycle.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md",
+        "docs/cordis/tutorial.md",
+        "docs/development.md",
+        "docs/documentation.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md",
+        "docs/roadmap.md",
+        "docs/templates/command-example.md",
+        "docs/templates/command-tool.md",
+        "docs/templates/package-library.md",
+        "docs/testing.md",
+        "examples/cordis/README.md",
+        "examples/cordis/expected.txt",
+        "examples/cordis/main.go",
+        "examples/cordis/main_test.go",
+        "go.mod",
+        "scripts/doccheck/README.md",
+        "scripts/doccheck/examples.go",
+        "scripts/doccheck/examples_test.go",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "scripts/doccheck/readme.go",
+        "scripts/doccheck/readme_test.go"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md"
+      ],
+      "writes": [],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}
