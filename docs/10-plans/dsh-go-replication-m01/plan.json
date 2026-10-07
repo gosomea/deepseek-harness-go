@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m01",
+  "title": "M1 Cordis 下游基础与行为对照",
+  "objectives": {
+    "replication": "补齐 Loader 与核心插件所需的下游运行时能力，并用固定 TS 参考的差分 trace 证明对应关系",
+    "learning": "把 C01–C04 实验与差分场景对齐，让读者能预测状态、制造失败并定位两侧源码",
+    "evidence": "每个行为有共享输入、两侧 trace、归一化规则和显式差异；不把规划或缺环境当作通过"
+  },
+  "constraints": [
+    "只实现 M1 裁决的下游阻塞项；Proxy、generator 语法、模块 HMR 等不提前补",
+    "DSH 参考 checkout 只读；TS 参考经固定提交的 vendor/cordis 构建产物运行，本地未提交改动不进入基线",
+    "Cordis 维持零第三方运行时依赖",
+    "新增包同时扩展格式、覆盖率、文档与 API 检查范围，不沿用 Cordis 单包选择器",
+    "每个节点需要语义评审；独立性如实记录",
+    "差异不得用归一化抹除；清理错误语义等分歧必须单独记录"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication/stages/m01-cordis.md"
+  ],
+  "final": "m01-handover",
+  "nodes": [
+    {
+      "id": "availability-predicate",
+      "title": "补条件可用性谓词，让 Loader 的 Service.check 有等价物",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "Makefile",
+        "go.mod",
+        "cordis/README.md",
+        "cordis/context.go",
+        "cordis/service.go",
+        "cordis/lifecycle.go",
+        "cordis/fiber.go",
+        "cordis/plugin.go",
+        "cordis/effect.go",
+        "cordis/events.go",
+        "docs/cordis/events.md",
+        "docs/cordis/lifecycle.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md"
+      ],
+      "outputs": [
+        "cordis/context.go",
+        "cordis/lifecycle.go",
+        "cordis/lifecycle_test.go",
+        "cordis/service.go",
+        "docs/cordis/api.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md"
+      ],
+      "writes": [
+        "cordis/",
+        "docs/cordis/api.md",
+        "docs/cordis/services.md",
+        "docs/cordis/source-map.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "cordis-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cordis"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "parity-harness",
+      "title": "建立共享场景、两侧 trace 与归一化规则",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning"
+      ],
+      "depends_on": [
+        "availability-predicate"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "Makefile",
+        "cordis/context.go",
+        "cordis/effect.go",
+        "cordis/events.go",
+        "cordis/fiber.go",
+        "cordis/lifecycle.go",
+        "cordis/plugin.go",
+        "cordis/service.go",
+        "docs/README.md",
+        "docs/cordis/source-map.md",
+        "docs/testing.md",
+        "go.mod",
+        "scripts/doccheck/examples.go",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "outputs": [
+        "Makefile",
+        "docs/README.md",
+        "docs/testing.md",
+        "internal/testkit/README.md",
+        "internal/testkit/compare.go",
+        "internal/testkit/compare_more_test.go",
+        "internal/testkit/compare_test.go",
+        "internal/testkit/doc.go",
+        "internal/testkit/parity.go",
+        "internal/testkit/parity_test.go",
+        "internal/testkit/provenance_test.go",
+        "internal/testkit/replay_test.go",
+        "internal/testkit/scenario_test.go",
+        "internal/testkit/steps.go",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "testdata/parity/cordis/DIVERGENCES.md",
+        "testdata/parity/cordis/README.md",
+        "testdata/parity/cordis/expected/cleanup-order-and-panic.ts.txt",
+        "testdata/parity/cordis/expected/config-update.ts.txt",
+        "testdata/parity/cordis/expected/dependency-pending-recovery.ts.txt",
+        "testdata/parity/cordis/expected/event-dispatch-modes.ts.txt",
+        "testdata/parity/cordis/expected/self-dispose-during-apply.ts.txt",
+        "testdata/parity/cordis/expected/transitive-consumers.ts.txt",
+        "testdata/parity/cordis/provenance.json",
+        "testdata/parity/cordis/runner-ts.mjs",
+        "testdata/parity/cordis/scenarios/cleanup-order-and-panic.json",
+        "testdata/parity/cordis/scenarios/config-update.json",
+        "testdata/parity/cordis/scenarios/dependency-pending-recovery.json",
+        "testdata/parity/cordis/scenarios/event-dispatch-modes.json",
+        "testdata/parity/cordis/scenarios/self-dispose-during-apply.json",
+        "testdata/parity/cordis/scenarios/transitive-consumers.json"
+      ],
+      "writes": [
+        "Makefile",
+        "docs/README.md",
+        "docs/testing.md",
+        "internal/",
+        "scripts/doccheck/",
+        "testdata/parity/cordis/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "parity-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "./internal/testkit"
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m01-handover",
+      "title": "收敛 M1 契约、文档与学习入口并执行完整门禁",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "parity-harness"
+      ],
+      "requires_gates": [
+        "availability-predicate",
+        "parity-harness"
+      ],
+      "inputs": [
+        "Makefile",
+        "go.mod",
+        "AGENTS.md",
+        "README.md",
+        "cordis/README.md",
+        "cordis/context.go",
+        "cordis/service.go",
+        "docs/README.md",
+        "docs/architecture.md",
+        "docs/cordis/api.md",
+        "docs/cordis/source-map.md",
+        "docs/learning/index.md",
+        "docs/learning/note-template.md",
+        "docs/roadmap.md",
+        "docs/testing.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "docs/10-plans/dsh-go-replication/stages/m01-cordis.md",
+        "internal/testkit/README.md",
+        "testdata/parity/cordis/README.md",
+        "testdata/parity/cordis/DIVERGENCES.md",
+        "testdata/parity/cordis/provenance.json"
+      ],
+      "outputs": [
+        "docs/cordis/source-map.md",
+        "docs/cordis/services.md",
+        "cordis/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/testing.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/cordis/source-map.md",
+        "docs/cordis/services.md",
+        "cordis/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/testing.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

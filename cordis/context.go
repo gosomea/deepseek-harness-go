@@ -151,6 +151,15 @@ func (c *Context) Wait(ctx context.Context) error {
 	}
 }
 
+// Refresh re-evaluates every conditional service and reconciles the tree.
+// Call it after external state read by a ProvideWhen predicate changes;
+// consumers whose dependency became unavailable unload, and those whose
+// dependency returned become Pending and reactivate. It is a no-op when the
+// tree is already settled, so it is safe to call from any goroutine.
+func (c *Context) Refresh() {
+	c.rt.reconcile()
+}
+
 // Close permanently disposes the root tree and waits for all lifecycle cleanup.
 // Call it from outside lifecycle callbacks. Cancellation bounds the wait only;
 // plugin code must cooperate with GoContext cancellation to stop its own work.

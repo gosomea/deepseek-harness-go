@@ -1,0 +1,84 @@
+{
+  "id": "dependency-pending-recovery",
+  "title": "Consumer waits for a missing service, activates when it appears, unloads and recovers when availability flips.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "gate",
+      "name": "gate",
+      "provides": [
+        "gate"
+      ],
+      "ready": false
+    },
+    {
+      "op": "register",
+      "as": "consumer",
+      "name": "consumer",
+      "inject": [
+        "gate"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "gateUnavailable"
+    },
+    {
+      "op": "setReady",
+      "as": "gate",
+      "ready": true
+    },
+    {
+      "op": "notify",
+      "names": [
+        "gate"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "gateAvailable"
+    },
+    {
+      "op": "setReady",
+      "as": "gate",
+      "ready": false
+    },
+    {
+      "op": "notify",
+      "names": [
+        "gate"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "gateRetracted"
+    },
+    {
+      "op": "setReady",
+      "as": "gate",
+      "ready": true
+    },
+    {
+      "op": "notify",
+      "names": [
+        "gate"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "gateRestored"
+    }
+  ]
+}

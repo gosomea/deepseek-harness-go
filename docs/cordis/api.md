@@ -112,6 +112,17 @@ Do not call Wait from Apply or Cleanup: they drive the work being awaited.
 func (c *Context) Wait(ctx context.Context) error
 ```
 
+## *Context.Refresh
+
+Refresh re-evaluates every conditional service and reconciles the tree.
+Call it after external state read by a ProvideWhen predicate changes;
+consumers whose dependency became unavailable unload, and those whose
+dependency returned become Pending and reactivate. It is a no-op when the
+tree is already settled, so it is safe to call from any goroutine.
+```go
+func (c *Context) Refresh()
+```
+
 ## *Context.Close
 
 Close permanently disposes the root tree and waits for all lifecycle cleanup.
@@ -401,6 +412,20 @@ Provide publishes a service when its owner becomes Active. A service is
 automatically removed on unload. Duplicate providers in one scope are errors.
 ```go
 func (c *Context) Provide(name string, value any) (Cleanup, error)
+```
+
+## *Context.ProvideWhen
+
+ProvideWhen publishes a service whose availability also depends on check.
+Consumers stay Pending while check reports false and unload when it turns
+false, even though the provider itself stays Active. Call Refresh after
+external state read by check changes so the tree reconciles.
+
+check runs while the runtime lock is held, so it must be a pure predicate
+over the provider's own state. Calling back into Context from check
+deadlocks. A nil check means the service is always available.
+```go
+func (c *Context) ProvideWhen(name string, value any, check func() bool) (Cleanup, error)
 ```
 
 ## *Context.Get

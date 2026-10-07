@@ -85,7 +85,9 @@ hello stopped
 
 ## 进一步阅读
 
-先看[Go 概念对照](../docs/cordis/go-primer.md)，再按任务查阅[服务与作用域](../docs/cordis/services.md)、[事件分发](../docs/cordis/events.md)。希望回到 DSH 实现时使用[源码对应表](../docs/cordis/source-map.md)，可运行的组合示例在[examples/cordis](../examples/cordis/README.md)。
+先看[Go 概念对照](../docs/cordis/go-primer.md)，再按任务查阅[服务与作用域](../docs/cordis/services.md)、[事件分发](../docs/cordis/events.md)。条件可用性的使用与并发条件见[服务与作用域的条件可用性一节](../docs/cordis/services.md#条件可用性)。
+
+希望回到 DSH 实现时使用[源码对应表](../docs/cordis/source-map.md)，可运行的组合示例在[examples/cordis](../examples/cordis/README.md)。要确认行为与固定 TypeScript 参考一致，看[差分场景说明](../testdata/parity/cordis/README.md)与[已声明差异](../testdata/parity/cordis/DIVERGENCES.md)；对照工具在[internal/testkit](../internal/testkit/README.md)。
 
 ## 验证
 
@@ -93,4 +95,6 @@ hello stopped
 
 ## 限制
 
-本包不创建模型请求或模型可见文本，因此不单列模型体验章节。它没有 TypeScript 的动态属性代理或模块热更新；完整范围见[源码对应表](../docs/cordis/source-map.md)。生命周期回调串行执行；运行时只保护自己的注册表，服务与监听器负责其共享状态，安全条件见[并发与等待](../docs/cordis/lifecycle.md#并发与等待)。
+本包不创建模型请求或模型可见文本，因此不单列模型体验章节。它没有 TypeScript 的动态属性代理、`intercept` 分层配置、per-entry isolate 或模块热更新；完整范围见[源码对应表](../docs/cordis/source-map.md)。生命周期回调串行执行；运行时只保护自己的注册表，服务与监听器负责其共享状态，安全条件见[并发与等待](../docs/cordis/lifecycle.md#并发与等待)。
+
+`ProvideWhen` 的谓词在运行时锁内执行，必须是只读自身状态的纯函数：在谓词里回调 `Context` 会死锁。`Refresh` 幂等，可在任意 goroutine 调用。

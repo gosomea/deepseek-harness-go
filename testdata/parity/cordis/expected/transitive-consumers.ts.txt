@@ -1,0 +1,15 @@
+apply p
+apply c1
+apply c2
+observe allActive
+state p=active
+state c1=active
+state c2=active
+cleanup p:returned
+cleanup c1:returned
+cleanup c2:returned
+disposed p
+observe providerDisposed
+state p=disposed
+state c1=pending
+state c2=pending

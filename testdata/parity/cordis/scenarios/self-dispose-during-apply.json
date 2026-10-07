@@ -1,0 +1,22 @@
+{
+  "id": "self-dispose-during-apply",
+  "title": "A plugin that disposes itself while Apply runs still owns the cleanup it returned.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "self",
+      "name": "self",
+      "selfDispose": true,
+      "cleanups": [
+        "effect"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "afterSelfDispose"
+    }
+  ]
+}

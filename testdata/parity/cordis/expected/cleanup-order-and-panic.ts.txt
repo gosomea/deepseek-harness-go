@@ -1,0 +1,11 @@
+apply res
+observe active
+state res=active
+cleanup res:returned
+cleanup res:third
+cleanup res:panic
+cleanup res:second
+cleanup res:first
+close ok
+observe closed
+state res=disposed

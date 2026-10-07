@@ -1,0 +1,5 @@
+apply self
+cleanup self:returned
+cleanup self:effect
+observe afterSelfDispose
+state self=disposed

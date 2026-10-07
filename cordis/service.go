@@ -14,18 +14,50 @@ type binding struct {
 	value any
 	owner *Fiber
 	epoch uint64
+	check func() bool
 }
 
 func (c *Context) key(name string) serviceKey { return serviceKey{name, c.scopes[name]} }
 
 func available(b *binding) bool {
-	return b != nil && !b.owner.disposed && b.owner.state == Active && b.owner.err == nil &&
-		b.owner.revision == b.owner.loadedRevision
+	if b == nil || b.owner.disposed || b.owner.state != Active || b.owner.err != nil ||
+		b.owner.revision != b.owner.loadedRevision {
+		return false
+	}
+	return checkPasses(b)
+}
+
+// checkPasses runs a provider's conditional availability predicate. A predicate
+// that panics or returns false reports the service as unavailable, matching the
+// reference behaviour where a throwing check removes the dependency.
+func checkPasses(b *binding) (ok bool) {
+	if b.check == nil {
+		return true
+	}
+	defer func() {
+		if reason := recover(); reason != nil {
+			ok = false
+			b.owner.rt.logger.Error("cordis: availability check panicked", "service", b.key.name, "panic", reason)
+		}
+	}()
+	return b.check()
 }
 
 // Provide publishes a service when its owner becomes Active. A service is
 // automatically removed on unload. Duplicate providers in one scope are errors.
 func (c *Context) Provide(name string, value any) (Cleanup, error) {
+	return c.ProvideWhen(name, value, nil)
+}
+
+// ProvideWhen publishes a service whose availability also depends on check.
+// Consumers stay Pending while check reports false and unload when it turns
+// false, even though the provider itself stays Active. Call Refresh after
+// external state read by check changes so the tree reconciles.
+//
+// check runs while the runtime lock is held, so it must be a pure predicate
+// over the provider's own state. Calling back into Context from check
+// deadlocks. A nil check means the service is always available.
+func (c *Context) ProvideWhen(name string, value any, check func() bool) (Cleanup, error) {
 	if name == "" || nilValue(value) {
 		return nil, fmt.Errorf("cordis: service needs a name and non-nil value")
 	}
@@ -40,7 +72,7 @@ func (c *Context) Provide(name string, value any) (Cleanup, error) {
 		r.mu.Unlock()
 		return nil, fmt.Errorf("%w: %s", ErrDuplicateService, name)
 	}
-	b := &binding{key, value, c.fiber, c.epoch}
+	b := &binding{key: key, value: value, owner: c.fiber, epoch: c.epoch, check: check}
 	r.services[key] = b
 	e := c.addEffectLocked("provide:"+name, func() error {
 		r.mu.Lock()

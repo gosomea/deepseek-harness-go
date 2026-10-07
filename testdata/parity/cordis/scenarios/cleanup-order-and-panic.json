@@ -1,0 +1,45 @@
+{
+  "id": "cleanup-order-and-panic",
+  "title": "Independent cleanups run in reverse registration order and a panic in one does not stop the others.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "res",
+      "name": "res",
+      "cleanups": [
+        "first",
+        "second",
+        "panic",
+        "third"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "active"
+    },
+    {
+      "op": "close"
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "closed"
+    }
+  ],
+  "divergences": [
+    {
+      "go": [
+        "close error=cleanup-failed"
+      ],
+      "reference": [
+        "close ok"
+      ],
+      "reason": "Go reports cleanup failures to the caller: Close/Wait accumulate them and return a joined error, so a panicking cleanup is observable. The reference logs each cleanup failure and resolves dispose() successfully, so its root disposer reports ok. Go's stricter surface is deliberate - a caller that cannot observe a failed cleanup cannot decide whether teardown was safe - and it is asserted by TestChildrenDisposedAndCleanupContinuesAfterPanic. Both runtimes still run every remaining cleanup exactly once, and the trace records the same cleanup order and final state."
+    }
+  ]
+}

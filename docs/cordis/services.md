@@ -30,8 +30,20 @@ b := root.Isolate("model", scope)
 
 Scope 是对象身份，允许把同一个 Scope 复用到多个视图。各视图仍由原 Fiber 激活拥有；Isolate 只建立服务视图，不创建新的 Fiber 或独立的资源生命周期。需要独立释放时，应在视图下注册插件。
 
+## 条件可用性
+
+Provider 可以不只看自己是否 Active，还要求一个额外条件成立，消费者才会激活。用 `ProvideWhen` 注册谓词；条件不成立时虽然 Provider 仍是 Active，依赖它的消费者保持 Pending。
+
+```go fragment
+published, err := ctx.ProvideWhen("gate", value, func() bool { return ready() })
+```
+
+外部状态变化后调用 `root.Refresh()` 重新求值：条件由假转真时消费者进入 Pending 并激活；由真转假时消费者卸载，Provider 不受影响。这条路径对应 DSH Loader 用 `[Service.check]` 让依赖方等待条目装载完成的用法。
+
+谓词在运行时锁内执行，因此必须是只读自身状态的纯函数：回调 Context 会死锁。谓词 panic 会被当作“不可用”处理，并记录一条错误日志，不会让整棵树崩溃；`Refresh` 幂等，可以在任何 goroutine 调用。
+
 ## 错误与限制
 
 ErrDuplicateService 表示同名同 Scope 冲突；ErrServiceNotFound 表示尚不可用；ErrServiceType 表示消费类型不匹配；ErrInactive 表示 Context 激活已过期或不允许操作。用 `errors.Is` 判断，错误文本用于定位名称。
 
-当前没有服务代理、访问器、别名、方法装饰器、availability check 或 intercept 配置合并。服务对象直接共享；锁和线程安全由实现方负责。范围对照见 [源码对应表](source-map.md)。
+当前没有服务代理、访问器、别名、方法装饰器或 intercept 配置合并。服务对象直接共享；锁和线程安全由实现方负责。范围对照见 [源码对应表](source-map.md)。

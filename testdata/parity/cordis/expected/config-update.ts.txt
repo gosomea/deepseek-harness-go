@@ -1,0 +1,11 @@
+apply cfg
+observe initial
+state cfg=active
+update cfg=rejected
+observe invalidRejected
+state cfg=active
+cleanup cfg:returned
+apply cfg
+update cfg=ok
+observe validRestart
+state cfg=active

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"reflect"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -26,6 +27,109 @@ func closeRoot(t *testing.T, ctx *cordis.Context) {
 	defer cancel()
 	if err := ctx.Close(deadline); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestConditionalAvailabilityGatesConsumers(t *testing.T) {
+	root := cordis.New()
+	defer closeRoot(t, root)
+	var (
+		ready        atomic.Bool
+		panicking    atomic.Bool
+		applyCount   atomic.Int32
+		cleanupCount atomic.Int32
+	)
+	provider := mustPlugin(t, root, cordis.Plugin{Name: "provider", Apply: func(ctx *cordis.Context, _ any) (cordis.Cleanup, error) {
+		_, err := ctx.ProvideWhen("gate", "value", func() bool {
+			if panicking.Load() {
+				panic("check exploded")
+			}
+			return ready.Load()
+		})
+		return nil, err
+	}}, nil)
+	consumer := mustPlugin(t, root, cordis.Plugin{Name: "consumer", Inject: []string{"gate"}, Apply: func(ctx *cordis.Context, _ any) (cordis.Cleanup, error) {
+		applyCount.Add(1)
+		return func() error {
+			cleanupCount.Add(1)
+			if ctx.GoContext().Err() == nil {
+				t.Error("consumer cleanup ran without cancellation")
+			}
+			// The injected binding stays readable throughout cleanup.
+			if _, err := cordis.Resolve(ctx, cordis.NewKey[string]("gate")); err != nil {
+				t.Errorf("dependency unreadable during cleanup: %v", err)
+			}
+			return nil
+		}, nil
+	}}, nil)
+
+	// The provider is Active, but its predicate reports the service unavailable.
+	if provider.State() != cordis.Active {
+		t.Fatalf("provider %v", provider.State())
+	}
+	if consumer.State() != cordis.Pending {
+		t.Fatalf("consumer should wait for the predicate: %v", consumer.State())
+	}
+
+	ready.Store(true)
+	root.Refresh()
+	if consumer.State() != cordis.Active {
+		t.Fatalf("consumer should activate once the predicate passes: %v", consumer.State())
+	}
+
+	// Retracting availability unloads the consumer without unloading the provider.
+	ready.Store(false)
+	root.Refresh()
+	if provider.State() != cordis.Active {
+		t.Fatalf("provider must stay active: %v", provider.State())
+	}
+	if consumer.State() != cordis.Pending {
+		t.Fatalf("consumer should unload: %v", consumer.State())
+	}
+
+	// A throwing predicate is treated as unavailable, not as a crash.
+	panicking.Store(true)
+	root.Refresh()
+	if consumer.State() != cordis.Pending {
+		t.Fatalf("throwing predicate should keep the consumer pending: %v", consumer.State())
+	}
+	// Recovery needs both the predicate to stop panicking and availability to
+	// genuinely hold: a panicking check must not be mistaken for success.
+	panicking.Store(false)
+	root.Refresh()
+	if consumer.State() != cordis.Pending {
+		t.Fatalf("availability is still retracted, consumer should stay pending: %v", consumer.State())
+	}
+	ready.Store(true)
+	root.Refresh()
+	if consumer.State() != cordis.Active {
+		t.Fatalf("consumer should recover: %v", consumer.State())
+	}
+
+	if got := applyCount.Load(); got != 2 {
+		t.Fatalf("apply count %d, want 2", got)
+	}
+	if got := cleanupCount.Load(); got != 1 {
+		t.Fatalf("cleanup count %d, want 1", got)
+	}
+}
+
+func TestUnconditionalProvideStaysAvailable(t *testing.T) {
+	root := cordis.New()
+	defer closeRoot(t, root)
+	mustPlugin(t, root, cordis.Plugin{Name: "provider", Apply: func(ctx *cordis.Context, _ any) (cordis.Cleanup, error) {
+		_, err := cordis.Provide(ctx, cordis.NewKey[int]("n"), 1)
+		return nil, err
+	}}, nil)
+	root.Refresh()
+	value, err := cordis.Resolve(root, cordis.NewKey[int]("n"))
+	if err != nil || value != 1 {
+		t.Fatalf("value %d err %v", value, err)
+	}
+	// Refresh must not disturb an unconditional binding.
+	root.Refresh()
+	if value, err := cordis.Resolve(root, cordis.NewKey[int]("n")); err != nil || value != 1 {
+		t.Fatalf("after refresh value %d err %v", value, err)
 	}
 }
 

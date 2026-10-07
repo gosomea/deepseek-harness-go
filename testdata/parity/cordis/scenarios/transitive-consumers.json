@@ -1,0 +1,66 @@
+{
+  "id": "transitive-consumers",
+  "title": "Multi-level consumers release before their provider and observe the injected binding during cleanup.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "p",
+      "name": "p",
+      "provides": [
+        "a"
+      ]
+    },
+    {
+      "op": "register",
+      "as": "c1",
+      "name": "c1",
+      "inject": [
+        "a"
+      ],
+      "provides": [
+        "b"
+      ]
+    },
+    {
+      "op": "register",
+      "as": "c2",
+      "name": "c2",
+      "inject": [
+        "b"
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "allActive"
+    },
+    {
+      "op": "dispose",
+      "as": "p"
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "providerDisposed"
+    }
+  ],
+  "divergences": [
+    {
+      "go": [
+        "cleanup c2:returned",
+        "cleanup c1:returned",
+        "cleanup p:returned"
+      ],
+      "reference": [
+        "cleanup p:returned",
+        "cleanup c1:returned",
+        "cleanup c2:returned"
+      ],
+      "reason": "The set is identical - every consumer releases before its provider, each exactly once - but the order inside one teardown pass differs. The reference unloads each fiber's disposables concurrently (Promise.all over the disposables list), so sibling order is not a committed property; Go runs one serial reconciliation driver, so independent cleanups execute in a deterministic reverse-registration order. Consumers still always precede the provider they depend on, which is the ordering the acceptance criteria require; only the order between independent siblings is observable here."
+    }
+  ]
+}

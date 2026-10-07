@@ -1,0 +1,50 @@
+{
+  "id": "config-update",
+  "title": "An invalid update leaves the running activation untouched; a valid one restarts it with the new config.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "cfg",
+      "name": "cfg",
+      "validate": true,
+      "config": {
+        "n": "good-1"
+      }
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "initial"
+    },
+    {
+      "op": "update",
+      "as": "cfg",
+      "config": {
+        "n": "bad-2"
+      }
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "invalidRejected"
+    },
+    {
+      "op": "update",
+      "as": "cfg",
+      "config": {
+        "n": "good-3"
+      }
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "observe",
+      "note": "validRestart"
+    }
+  ]
+}

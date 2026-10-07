@@ -1,0 +1,65 @@
+{
+  "id": "event-dispatch-modes",
+  "title": "Emit, serial, bail and waterfall observe listener order, bail values and veto behaviour.",
+  "steps": [
+    {
+      "op": "register",
+      "as": "host",
+      "name": "host",
+      "listeners": [
+        {
+          "event": "ev",
+          "seq": 1,
+          "kind": "log"
+        },
+        {
+          "event": "ev",
+          "seq": 2,
+          "kind": "bail",
+          "value": "stop"
+        },
+        {
+          "event": "ev",
+          "seq": 3,
+          "kind": "log",
+          "prepend": true
+        }
+      ]
+    },
+    {
+      "op": "settle"
+    },
+    {
+      "op": "emit",
+      "event": "ev"
+    },
+    {
+      "op": "observe",
+      "note": "afterEmit"
+    },
+    {
+      "op": "serial",
+      "event": "ev"
+    },
+    {
+      "op": "observe",
+      "note": "afterSerial"
+    },
+    {
+      "op": "bail",
+      "event": "ev"
+    },
+    {
+      "op": "observe",
+      "note": "afterBail"
+    },
+    {
+      "op": "waterfall",
+      "event": "ev"
+    },
+    {
+      "op": "observe",
+      "note": "afterWaterfall"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "source_repository": "https://github.com/deepseek-ai/deepseek-harness",
+  "source_commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+  "reference_package": "vendor/cordis",
+  "reference_version": "4.0.4",
+  "reference_entry": "vendor/cordis/lib/index.js",
+  "reference_entry_sha256": "6a9394c0877ff45218818c6e815edd038f8057e1a1deb390a8d43ec81c57691e",
+  "reference_source_files": 9,
+  "reference_tree_clean": true,
+  "reference_tree_clean_meaning": "git status on vendor/cordis matched the fixed commit when the traces were recorded; the local checkout's 55 unrelated modifications were not involved",
+  "recorded_on": "2026-10-06",
+  "recorded_with": {
+    "node": "v24.19.0",
+    "runner": "testdata/parity/cordis/runner-ts.mjs"
+  },
+  "record_command": "node testdata/parity/cordis/runner-ts.mjs <DSH>/vendor/cordis/lib/index.js testdata/parity/cordis/scenarios/<scenario>.json > testdata/parity/cordis/expected/<scenario>.ts.txt",
+  "determinism_check": "the same scenario was recorded five times and produced identical bytes",
+  "live_verification": "TestLiveReferenceTraceMatchesRecorded replays the recorded scenarios against the same build and compares them to these files; it is skipped when the build or Node is unavailable",
+  "traces": {
+    "cleanup-order-and-panic.ts.txt": "2c0fbe841fa9c8f93e4f64757680b688cfc034ac58ad33f1f3e909706931f835",
+    "config-update.ts.txt": "4823f078bbbbc6a21883c7fbf0a45878f432dff3fb8497d0ef4cc5e2f94ae33c",
+    "dependency-pending-recovery.ts.txt": "b025cd1b19dc844532a4c4f9d6d0e5405b5d5611bf2273b5c2ee1123d4d49068",
+    "event-dispatch-modes.ts.txt": "b1f813db8e08428b81c9847ad08f6da1b8be17ac8535623edb711578395012e1",
+    "self-dispose-during-apply.ts.txt": "2e8ced11b0069bac510281a16326020e1b9734a0f34ebb6d58b3809523b4b541",
+    "transitive-consumers.ts.txt": "c46be670b822253cd6c2e53f9ce7d16a5c876d3595fb1078375dbd371d14d615"
+  },
+  "reuse": "these traces are the reference side of the Cordis parity scenarios; regenerating them requires re-reviewing testdata/parity/cordis/DIVERGENCES.md"
+}

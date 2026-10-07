@@ -1,0 +1,16 @@
+apply gate
+observe gateUnavailable
+state gate=active
+state consumer=pending
+apply consumer
+observe gateAvailable
+state gate=active
+state consumer=active
+cleanup consumer:returned
+observe gateRetracted
+state gate=active
+state consumer=pending
+apply consumer
+observe gateRestored
+state gate=active
+state consumer=active

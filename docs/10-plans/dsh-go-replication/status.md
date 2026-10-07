@@ -1,9 +1,9 @@
 # 执行状态（自动生成）
 
-计划版本：`329d2b20a35f14cfb186c712357e6d6e34e30138bd0fbd2fdbc392fc8e21f720`
+计划版本：`a4dbef64185795fbbbe8b3f613ea66cfa36089ada1ea4ea67b53b0332f1abda9`
 
 | 节点 | 状态 | 原因 |
 | --- | --- | --- |
-| source-baseline | ready |  |
-| cordis-audit | blocked | dependencies not passed or stale: source-baseline |
-| baseline-acceptance | blocked | dependencies not passed or stale: cordis-audit |
+| source-baseline | passed |  |
+| cordis-audit | passed |  |
+| baseline-acceptance | passed |  |

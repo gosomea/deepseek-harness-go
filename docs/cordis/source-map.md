@@ -13,6 +13,8 @@
 | 注册后为什么有一个 Fiber？ | [Context.Plugin](../../cordis/context.go)、[Fiber](../../cordis/fiber.go) | [registry.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/registry.ts) |
 | 依赖消失时如何释放并等待恢复？ | [lifecycle.go](../../cordis/lifecycle.go) | [fiber.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/fiber.ts) |
 | 服务如何查找和隔离？ | [service.go](../../cordis/service.go)、[Context.Isolate](../../cordis/context.go) | [reflect.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/reflect.ts)、[context.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/context.ts) |
+| 服务“暂时不可用”怎样让消费者等待？ | [Context.ProvideWhen](../../cordis/service.go)、[Context.Refresh](../../cordis/context.go) | [reflect.ts 的 provide check](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/reflect.ts#L277) |
+| 两侧行为是否一致，差异记在哪？ | [internal/testkit](../../internal/testkit/README.md)、[差分场景](../../testdata/parity/cordis/README.md) | [vendor/cordis 构建产物](https://github.com/deepseek-ai/deepseek-harness/tree/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis) |
 | 监听器如何分发和释放？ | [events.go](../../cordis/events.go)、[effect.go](../../cordis/effect.go) | [events.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/events.ts)、[fiber.ts](https://github.com/deepseek-ai/deepseek-harness/blob/00102833dfaee1da9f48a3a8eae9d34005a75218/vendor/cordis/src/fiber.ts) |
 
 ## 对应关系
@@ -31,7 +33,7 @@
 
 ## 已实现的行为
 
-插件实例、父子所有权、必需服务等待/失效/恢复、Provider 重启带动 Consumer 重启、按服务名隔离与相同 Scope 共享、依赖快照供清理读取、倒序释放、手动清理被所有者等待、错误与 panic 回滚、配置校验/更新/重启、Once/Prepend/Global/Filter、五种事件分发、诊断快照与命名日志。
+插件实例、父子所有权、必需服务等待/失效/恢复、条件可用性谓词（对应 `[Service.check]`）、Provider 重启带动 Consumer 重启、按服务名隔离与相同 Scope 共享、依赖快照供清理读取、倒序释放、手动清理被所有者等待、错误与 panic 回滚、配置校验/更新/重启、Once/Prepend/Global/Filter、五种事件分发、诊断快照与命名日志。
 
 ## 有意采用的 Go 行为
 
@@ -42,9 +44,11 @@
 - Serial/Bail 使用同一同步实现；Parallel 使用 goroutine 并等待所有回调。
 - Root.Close 永久结束容器；Root 不支持 restart。TypeScript 根 disposer 的可重启行为不在本版范围。
 - 事件过滤为显式 Dispatcher 谓词，服务 Scope 不自动决定事件范围。
+- 条件可用性用显式 `ProvideWhen` 谓词加 `Refresh` 重新求值，代替 `provide(name, value, check)` 加 `reflect.notify` 的隐式触发；谓词 panic 记为不可用并记录日志。
+- 清理错误在 Go 侧累积并由 `Wait`/返回错误暴露；TypeScript 的 `_unload` 只记录日志、不向调用者传播，`dispose()` 仍然成功。该差异记入[差分记录](../../testdata/parity/cordis/DIVERGENCES.md)。
 
 ## 未实现
 
-Context.extend 元数据、intercept 配置合并、Set/Accessor/Mixin、service availability check、traceable proxy、生成器/异步生成器 Effect、嵌套 Effect 诊断树、internal/* 拦截事件、内部状态通知、Standard Schema 适配、Volatile config、Loader/YAML include、Timer、模块 HMR 与客户端。
+Context.extend 元数据、intercept 配置合并、Set/Accessor/Mixin、traceable proxy、生成器/异步生成器 Effect、嵌套 Effect 诊断树、internal/* 拦截事件、内部状态通知、Standard Schema 适配、Volatile config、Loader/YAML include、Timer、模块 HMR 与客户端。
 
 本版目标是可验证的生命周期与注入基础，并非 Cordis 4.0.4 的完整 API 兼容实现。下一层按 [路线图](../roadmap.md) 增加；涉及行为差异时同步维护本页及测试。
