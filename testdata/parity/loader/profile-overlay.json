@@ -1,0 +1,126 @@
+{
+  "id": "profile-overlay",
+  "title": "按序 overlay 的替换与 required 语义",
+  "source_commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+  "source_files": [
+    "vendor/include/src/index.ts (applyEntryPatches)",
+    "packages/boot/app-boot/src/profile.ts (bundle order)"
+  ],
+  "semantics": [
+    "层按声明顺序应用，后面的层覆盖前面层对同一 id 的字段",
+    "insert 补丁在目标分组或根上追加条目；非 insert 补丁只修改已存在的条目",
+    "非 insert 补丁的 name 与目标不符时跳过并记录诊断，不改动该条目",
+    "没有任何匹配的补丁被跳过并记录诊断，不静默成功",
+    "输入不被修改：每个层从上一层的副本继续"
+  ],
+  "layers": [
+    {
+      "source": "bundle/base",
+      "patches": [
+        {
+          "id": "",
+          "insert": [
+            {
+              "id": "greeter",
+              "name": "greeter",
+              "config": {
+                "level": 1,
+                "label": "base"
+              }
+            },
+            {
+              "id": "gate",
+              "group": true,
+              "config": [
+                {
+                  "id": "inner",
+                  "name": "worker",
+                  "config": {
+                    "size": 1
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "bundle/extra",
+      "patches": [
+        {
+          "id": "greeter",
+          "config": {
+            "level": 2,
+            "label": "extra"
+          },
+          "inject": [
+            "clock"
+          ]
+        },
+        {
+          "id": "missing-target",
+          "config": {
+            "ignored": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "profile/own",
+      "patches": [
+        {
+          "id": "inner",
+          "config": {
+            "size": 9
+          }
+        },
+        {
+          "id": "",
+          "insert": [
+            {
+              "id": "added",
+              "name": "worker"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "required": [
+    "greeter",
+    "gate"
+  ],
+  "expected": {
+    "entries": [
+      {
+        "id": "greeter",
+        "name": "greeter",
+        "group": false
+      },
+      {
+        "id": "gate",
+        "name": "",
+        "group": true
+      },
+      {
+        "id": "added",
+        "name": "worker",
+        "group": false
+      }
+    ],
+    "greeter_config": {
+      "level": 2,
+      "label": "extra"
+    },
+    "greeter_inject": [
+      "clock"
+    ],
+    "inner_config": {
+      "size": 9
+    },
+    "skipped": [
+      "missing-target"
+    ]
+  }
+}

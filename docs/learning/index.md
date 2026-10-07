@@ -4,7 +4,7 @@
 
 你需要掌握 Go 的函数、接口、错误处理，随后在涉及并发的实验中学习 goroutine、通道和 `context.Context`。不要求先掌握 TypeScript、Cordis 或 Agent 框架。先运行一个小程序，解释它为什么这样工作，再沿着源码对应读两种实现。
 
-当前能直接学习和运行的是 Cordis；其他主题属于[复刻路线](../10-plans/dsh-go-replication/plans.md)中的未来阶段。本页把学习路径与能力建设对应起来，未实现主题不会给出假装可运行的命令。
+当前能直接学习和运行的是 Cordis 与 M2 的装配层（C01–C05）；其他主题属于[复刻路线](../10-plans/dsh-go-replication/plans.md)中的未来阶段。本页把学习路径与能力建设对应起来，未实现主题不会给出假装可运行的命令。
 
 每个未来主题的实验和验收已在[阶段方案](../10-plans/dsh-go-replication/stages/index.md)细化。阶段页给出要做的实验，所属模块教程在实现后提供真正可运行的命令与输出。
 
@@ -19,13 +19,43 @@
 
 建议先完整阅读教程，再根据问题查参考页。第一次运行后，先预测“把依赖名称改成不存在的名称会怎样”，再实际修改并比较状态；恢复名称后观察激活。源码入口由对应表维护，不要求读者先通读九个 TS 文件。
 
+### 四个主题与审计行为的对应
+
+[M0 的 Cordis 行为审计](../10-plans/dsh-go-replication/cordis-audit.md) 把每个已实现行为定位到固定 TS 源码、Go 入口、测试名和本页的读者实验。按主题查时使用下面的对应：
+
+| 主题 | 审计中的行为类 | 想验证时先看的测试 |
+| --- | --- | --- |
+| C01 插件与实例 | 第 1 类 | [`TestInvalidPluginAndCanceledContextRejectWork`](../../cordis/runtime_test.go) |
+| C02 运行时依赖 | 第 2 类 | [`TestDependencyLossRestartsAndKeepsCleanupAccess`](../../cordis/lifecycle_test.go) |
+| C03 资源所有权 | 第 3 类 | [`TestManualDisposerJoinedAndReentrantMutation`](../../cordis/lifecycle_test.go) |
+| C04 事件与隔离 | 第 4、5 类 | [`TestFilterIsExplicitAndGlobalBypassesIt`](../../cordis/events_test.go) |
+
+### 用差分场景验证四个主题
+
+C01–C04 的每个行为都有对应的共享场景：同一份 JSON 分别喂给 Go 运行时与固定的 TypeScript 参考，两侧 trace 逐行比较。运行方式：
+
+```sh
+go test -v ./internal/testkit
+```
+
+| 主题 | 场景 | 可以亲手验证的现象 |
+| --- | --- | --- |
+| C01 插件与实例 | [`self-dispose-during-apply`](../../testdata/parity/cordis/scenarios/self-dispose-during-apply.json) | Apply 中自卸载后，实例状态是 `disposed`，返回的清理仍被执行 |
+| C02 运行时依赖 | [`dependency-pending-recovery`](../../testdata/parity/cordis/scenarios/dependency-pending-recovery.json) | 可用性由假转真时消费者激活；由真转假时消费者卸载而 Provider 保持 Active |
+| C03 资源所有权 | [`cleanup-order-and-panic`](../../testdata/parity/cordis/scenarios/cleanup-order-and-panic.json)、[`transitive-consumers`](../../testdata/parity/cordis/scenarios/transitive-consumers.json) | 清理倒序执行、panic 后其余清理继续；消费者先于 Provider 释放 |
+| C04 事件与隔离 | [`event-dispatch-modes`](../../testdata/parity/cordis/scenarios/event-dispatch-modes.json) | Emit/Serial/Bail/Waterfall 的调用顺序与 bail 短路 |
+
+预测再运行：先写下你预期的 trace 行，再执行测试并对比。差异不等于错误——[`DIVERGENCES.md`](../../testdata/parity/cordis/DIVERGENCES.md) 记录了两条已声明的差异（清理错误语义与独立兄弟节点的清理顺序），每条都写明理由。
+
+审计页列出 M1 仍未关闭的缺口（Loader 依赖的内部事件、`intercept` 分层配置、per-entry isolate）。这些能力没有 Go 实现，本页不会给出假装可运行的命令。
+
 ## 后续学习地图
 
 下表均为规划。每个主题上线时，要先交付完整实验与失败说明，再把名称变成实际笔记链接。主题编号用于稳定导航，不要求一主题恰好一篇文章。
 
 | 主题 | 前置主题 | 你要回答的问题 | Go 视角与 DSH 对应 | 阶段 |
 | --- | --- | --- | --- | --- |
-| C05 配置与装配 | C01–C04 | 为什么配置条目和插件实例需要不同身份？ | 显式注册表、工厂、结构体配置 ↔ Entry、Loader、profile、bundle | M2 |
+| C05 配置与装配 | C01–C04 | 为什么配置条目和插件实例需要不同身份？ | 显式注册表、工厂、结构体配置 ↔ Entry、Loader、profile、bundle | M2，已可学：[概念对照](../loader/go-primer.md)、[装配树](../loader/entry-tree.md)、[更新语义](../loader/update-semantics.md)、[Bundle 与就绪](../loader/profile.md)、[装配教程](../loader/tutorial.md) |
 | C06 对话与流 | Go 数据类型与接口 | 一条 assistant message 为什么不能等同于一次 HTTP chunk？ | DSH 消息／流 ↔ 本项目 Go 类型 ↔ tRPC 模型请求／响应；assembler 与取消 | M3–M4，M7 真实接入 |
 | C07 事件溯源 | C04、C06 | 为什么 Session 不直接保存一份 messages 数组？ | append-only log、纯函数 fold ↔ SessionEvent、deriveMessages、projection | M3 |
 | C08 能力与工具 | C02、C06–C07 | 工具函数为什么需要定义、提供方和执行管线？ | 小接口、Provider、middleware ↔ seam、schema、guard、tool-call/result | M4 |

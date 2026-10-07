@@ -1,0 +1,837 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m02",
+  "title": "M2 Loader、配置身份与最小 Profile",
+  "objectives": {
+    "replication": "用一份 JSON 配置装配出稳定、可更新的已编译插件树，让 Entry 身份、Fiber 绑定、启停与最小 profile 与固定 DSH 参考行为对应",
+    "learning": "让 Go 读者从显式注册表与结构体配置出发，解释 Entry、Loader、profile 与 bundle 的分工，并区分声明树与运行树",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、行为测试与显式差异；规划、缺环境与未验项不进入通过分子"
+  },
+  "constraints": [
+    "所有权不变量：任何节点的 inputs 不得被链上更晚的节点写入；不得使用目录级 writes 覆盖他人的 outputs；检查只断言本节点有权写入或由已通过前驱产出的文件",
+    "共享门禁文件 scripts/doccheck/main.go、scripts/doccheck/main_test.go、Makefile、docs/testing.md 由多个切片先后修改，因此不出现在任何 inputs 中，也不作为非最终节点的 outputs；它们由 g2-acceptance 作为本轮最终状态冻结",
+    "stages/index.md 的处置：G2 节点描述要求更新索引的当前起点与 M2 状态，因此 g2-acceptance 更新了它（当前起点表新增 M2、下一步由 M2 改为 M3、M1 未关闭项指向 M2 主题页的裁决章节）。实测确认该文件属 M0 契约的 documents，其内容哈希参与 M0 revision 计算：改动使 M0 revision 由 a4dbef641857 变为 d215b7d6ffd7，M0 三个节点随之变为 plan changed; revise required。这是按节点描述执行的已知代价，如实记录；stages/m02-composition.md 与 M0 契约的其余 documents 未改",
+    "等待模型审查的工具（task_submit_plan、task_report_stage、task_request_completion）由外层 run_code 以 timeoutMs: 900000 调用；审查仍由 Supervisor 执行，不绕过。120000ms 期限取消尚在运行的审查是已发生的真实故障，契约必须避免重演",
+    "保留工作区既有改动（internal/、testdata/、docs/10-plans/dsh-go-replication-m01/ 等 M1 交付物），不覆盖其他人的工作",
+    "遵循项目 AGENTS.md 的代码、文档与交付门禁规则：分类 README、包注释、公开注释、Markdown 链接、完整程序与输出",
+    "只报告真实运行的命令、退出码与提交；不用本地通过替代未完成的线上验收",
+    "DSH 参考 checkout 只读；固定提交为 00102833dfaee1da9f48a3a8eae9d34005a75218，本地改动不进入基线",
+    "JSON 是首个配置输入形式；patch 替换／合并、默认值、惰性注入与 disabled 的语义必须逐项说明",
+    "临时静态注册不得宣传为 npm 动态安装兼容；YAML include、惰性表达式、配置 HMR 与原 profile 兼容属 M12.2",
+    "新运行时包在创建它的切片内即登记进 scripts/doccheck 的 coverageRequirement，并受不低于 90% 语句覆盖率门禁约束",
+    "不新增第三方 Go 运行时依赖",
+    "每个节点需要语义评审；独立性如实记录",
+    "唯一允许的目录级 write 是 g2-acceptance 的 docs/10-plans/dsh-go-replication-m02/validation/：协议要求 export 每次写入新的 run 目录且不覆盖历史证据，因此该目录不是产物而是证据容器，不参与 outputs 校验",
+    "docs/testing.md 同时是 m21-entry 与 g2-acceptance 的 write：m21 登记新包时同步受门禁包清单，g2 在收口时核对最终一致。该文件不属于任何节点的 outputs，也不出现在 inputs 中，因此它的中间状态不会使任何已通过节点的产物失效",
+    "loader/entry.go 是 m21-entry 的产物，但 m22-tree 的测试发现其 Resolve 会对未定义 Validate 的插件调用 nil 函数并 panic。修复必须落在 Resolve 本身，因此该文件同时列入 m22-tree 的 writes；后果是 m21-entry 的内层 receipt 因产物指纹变化而 stale，这一事实在 m22-tree 的证据中如实报告，不由 m22 静默改写 m21 的结论",
+    "m23-update 改写了四个上游产物：m21 的 loader/entry.go（新增 group 字段与 setPath）、m22 的 loader/group.go（新增 setGroup）、m22 的 loader/tree.go（调用 setGroup 并恢复 t.order 追加）、m22 的 loader/tree_test.go（修掉 TestTreeCloseWithCanceledContextReportsTheBoundary 的取消上下文竞态断言）。四者均列入 m23 的 writes。后果：m21-entry 与 m22-tree 的内层 receipt 因产物指纹变化而 stale（m22 的树与测试两侧都被触碰，stale 范围覆盖两者），按协议需由评审/控制器在其当前产物上重新验收，不得由下游节点自证前驱（语义死锁），也不得回退真实缺陷修复",
+    "app/ 的测试分布在 app/profile_test.go（fixture 驱动）、app/core_test.go（层顺序与就绪判定）与 app/coverage_test.go（补丁变体与覆盖分支）三个文件；三者都登记在 m24-profile 的 outputs 中",
+    "module-index 检查断言新包以 ../<pkg>/README.md 的形式同时出现在 docs/README.md 与 docs/roadmap.md，而不是要求 docs/<pkg>/ 目录：app 的事实归 docs/loader/profile.md 维护，AGENTS.md 不允许同一事实写在两处",
+    "m25-cli 改写了 m21 的产物 loader/README.md（补上指向 cmd/dsh-go/README.md 与 docs/loader/tutorial.md 的交叉链接），并修正了本计划自身的 m25 checks 与 constraints。二者因此列入 m25 的 writes：loader/README.md 不是本节点 outputs，其 receipt stale 范围覆盖 m21-entry，须由评审/控制器在当前产物上重新验收，不得由下游节点自证前驱；plan.json 属本计划的契约文档，其修改同样如实登记",
+    "G2 收口的两处范围决定：(a) 格式门禁从固定目录清单改为遍历仓库 Go 源码（scripts/doccheck/fmt.go 的 checkFormatting），因此 Makefile、CI 与 docs/testing.md 同步改用 go run ./scripts/doccheck -fmt——旧清单漏掉 loader/、app/、cmd/、internal/，实际放进未格式化文件仍能通过；(b) stages/index.md 按节点描述更新，代价与实测见上一条 constraint"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m02/plans.md"
+  ],
+  "final": "g2-acceptance",
+  "nodes": [
+    {
+      "id": "m21-entry",
+      "title": "M2.1 定义 Entry 与配置 codec",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "loader/doc.go",
+        "loader/entry.go",
+        "loader/catalog.go",
+        "loader/config.go",
+        "loader/entry_test.go",
+        "loader/config_test.go",
+        "loader/README.md",
+        "docs/loader/go-primer.md"
+      ],
+      "writes": [
+        "loader/doc.go",
+        "loader/entry.go",
+        "loader/catalog.go",
+        "loader/config.go",
+        "loader/entry_test.go",
+        "loader/config_test.go",
+        "loader/README.md",
+        "docs/loader/go-primer.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "loader-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./loader/..."
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = \"github.com/gosomea/deepseek-harness-go/\"\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in [\"loader/\"] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "npm-disclaimer",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = \"本包只支持显式编译期注册：不提供 npm 动态安装、模块 HMR 或原 profile 兼容。\"\nproblems = []\nfor name in [\"loader/README.md\"]:\n    p = pathlib.Path(name)\n    if not p.is_file():\n        problems.append(name + ': missing file')\n        continue\n    if text not in p.read_text(encoding='utf-8'):\n        problems.append(name + ': missing npm/HMR/profile disclaimer')\nprint('npm disclaimer: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [[\"docs/loader/go-primer.md\",[\"## 从熟悉的 Go 写法出发\",\"## 最小实验\",\"## 先预测，再观察\",\"## 两种实现怎样对应\",\"## 失败与定位\"]]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "gap-adjudication",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntopic = pathlib.Path('docs/10-plans/dsh-go-replication-m02/plans.md').read_text(encoding='utf-8')\ngaps = ['internal/plugin', 'internal/config', 'internal/update', 'Context.intercept', 'per-entry isolate', 'Context.extend']\nmissing = [g for g in gaps if g not in topic]\nupstream = [p for p in ('docs/10-plans/dsh-go-replication/cordis-audit.md',) if not pathlib.Path(p).is_file()]\nproblems = ['unadjudicated gap: ' + g for g in missing] + ['missing upstream page: ' + p for p in upstream]\nprint('gap adjudication: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m22-tree",
+      "title": "M2.2 装配树与分组绑定",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m21-entry"
+      ],
+      "requires_gates": [
+        "m21-entry"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "loader/entry.go",
+        "loader/catalog.go",
+        "loader/config.go",
+        "docs/loader/go-primer.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "loader/tree.go",
+        "loader/group.go",
+        "loader/dump.go",
+        "loader/tree_test.go",
+        "loader/group_test.go",
+        "docs/loader/entry-tree.md",
+        "loader/dump_test.go"
+      ],
+      "writes": [
+        "loader/tree.go",
+        "loader/group.go",
+        "loader/dump.go",
+        "loader/tree_test.go",
+        "loader/group_test.go",
+        "docs/loader/entry-tree.md",
+        "loader/dump_test.go",
+        "loader/entry.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "loader-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./loader/..."
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m23-update",
+      "title": "M2.3 按 ID 更新与启停语义",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m22-tree"
+      ],
+      "requires_gates": [
+        "m22-tree"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "loader/entry.go",
+        "loader/tree.go",
+        "loader/group.go",
+        "docs/loader/entry-tree.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "loader/update.go",
+        "loader/update_test.go",
+        "loader/update_more_test.go",
+        "docs/loader/update-semantics.md"
+      ],
+      "writes": [
+        "loader/update.go",
+        "loader/update_test.go",
+        "loader/update_more_test.go",
+        "docs/loader/update-semantics.md",
+        "loader/entry.go",
+        "loader/group.go",
+        "loader/tree.go",
+        "loader/tree_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "loader-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./loader/..."
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [[\"docs/loader/update-semantics.md\",[\"## 从熟悉的 Go 写法出发\",\"## 最小实验\",\"## 先预测，再观察\",\"## 两种实现怎样对应\",\"## 失败与定位\"]]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m24-profile",
+      "title": "M2.4 最小 profile 与 overlay",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m23-update"
+      ],
+      "requires_gates": [
+        "m23-update"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "loader/update.go",
+        "loader/entry.go",
+        "docs/loader/update-semantics.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "app/doc.go",
+        "app/profile.go",
+        "app/bundle.go",
+        "app/profile_test.go",
+        "app/README.md",
+        "docs/loader/profile.md",
+        "testdata/parity/loader/profile-overlay.json",
+        "app/core_test.go",
+        "app/coverage_test.go"
+      ],
+      "writes": [
+        "app/doc.go",
+        "app/profile.go",
+        "app/bundle.go",
+        "app/profile_test.go",
+        "app/README.md",
+        "docs/loader/profile.md",
+        "testdata/parity/loader/profile-overlay.json",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "app/core_test.go",
+        "app/coverage_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "app-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./app/..."
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = \"github.com/gosomea/deepseek-harness-go/\"\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in [\"loader/\",\"app/\"] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "npm-disclaimer",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = \"本包只支持显式编译期注册：不提供 npm 动态安装、模块 HMR 或原 profile 兼容。\"\nproblems = []\nfor name in [\"app/README.md\"]:\n    p = pathlib.Path(name)\n    if not p.is_file():\n        problems.append(name + ': missing file')\n        continue\n    if text not in p.read_text(encoding='utf-8'):\n        problems.append(name + ': missing npm/HMR/profile disclaimer')\nprint('npm disclaimer: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m25-cli",
+      "title": "M2.5 CLI 入口与可运行示例",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m24-profile"
+      ],
+      "requires_gates": [
+        "m24-profile"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "app/profile.go",
+        "app/bundle.go",
+        "loader/README.md",
+        "loader/update.go",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "cmd/dsh-go/main.go",
+        "cmd/dsh-go/main_test.go",
+        "cmd/dsh-go/README.md",
+        "examples/loader/main.go",
+        "examples/loader/main_test.go",
+        "examples/loader/expected.txt",
+        "examples/loader/README.md",
+        "docs/loader/tutorial.md",
+        "docs/README.md",
+        "docs/learning/index.md",
+        "docs/roadmap.md"
+      ],
+      "writes": [
+        "cmd/dsh-go/main.go",
+        "cmd/dsh-go/main_test.go",
+        "cmd/dsh-go/README.md",
+        "examples/loader/main.go",
+        "examples/loader/main_test.go",
+        "examples/loader/expected.txt",
+        "examples/loader/README.md",
+        "docs/loader/tutorial.md",
+        "docs/README.md",
+        "docs/learning/index.md",
+        "docs/roadmap.md",
+        "loader/README.md",
+        "docs/10-plans/dsh-go-replication-m02/plan.json"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "cmd-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=60s",
+            "./cmd/dsh-go/..."
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-run",
+          "argv": [
+            "go",
+            "run",
+            "./examples/loader"
+          ],
+          "cwd": ".",
+          "timeout": 240,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "npm-disclaimer",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = \"本包只支持显式编译期注册：不提供 npm 动态安装、模块 HMR 或原 profile 兼容。\"\nproblems = []\nfor name in [\"loader/README.md\",\"docs/loader/tutorial.md\"]:\n    p = pathlib.Path(name)\n    if not p.is_file():\n        problems.append(name + ': missing file')\n        continue\n    if text not in p.read_text(encoding='utf-8'):\n        problems.append(name + ': missing npm/HMR/profile disclaimer')\nprint('npm disclaimer: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [[\"docs/loader/tutorial.md\",[\"## 从熟悉的 Go 写法出发\",\"## 最小实验\",\"## 先预测，再观察\",\"## 两种实现怎样对应\",\"## 失败与定位\"]],[\"docs/loader/go-primer.md\",[\"## 从熟悉的 Go 写法出发\",\"## 最小实验\",\"## 先预测，再观察\",\"## 两种实现怎样对应\",\"## 失败与定位\"]],[\"docs/loader/update-semantics.md\",[\"## 从熟悉的 Go 写法出发\",\"## 最小实验\",\"## 先预测，再观察\",\"## 两种实现怎样对应\",\"## 失败与定位\"]]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nreadme = pathlib.Path('docs/README.md').read_text(encoding='utf-8')\nroadmap = pathlib.Path('docs/roadmap.md').read_text(encoding='utf-8')\npkgs = [\"loader/\", \"app/\"]\nbad = [p for p in pkgs if ('../' + p + 'README.md') not in readme or ('../' + p + 'README.md') not in roadmap]\nprint('module index: OK' if not bad else 'not linked as ../<pkg>/README.md from docs/README.md and docs/roadmap.md: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g2-acceptance",
+      "title": "G2 阶段验收与交接",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m25-cli"
+      ],
+      "requires_gates": [
+        "m25-cli"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/10-plans/dsh-go-replication-m02/plan.json",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m02-composition.md",
+        "docs/documentation.md",
+        "docs/learning/note-template.md",
+        "loader/README.md",
+        "app/README.md",
+        "docs/loader/tutorial.md",
+        "examples/loader/expected.txt",
+        "cmd/dsh-go/README.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/cordis-audit.md"
+      ],
+      "outputs": [
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "Makefile",
+        "docs/testing.md",
+        "scripts/doccheck/fmt.go",
+        "scripts/doccheck/fmt_test.go",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "Makefile",
+        "docs/testing.md",
+        "docs/10-plans/dsh-go-replication-m02/status.md",
+        "docs/10-plans/dsh-go-replication-m02/dag.mmd",
+        "docs/10-plans/dsh-go-replication-m02/validation/",
+        "scripts/doccheck/fmt.go",
+        "scripts/doccheck/fmt_test.go",
+        ".github/workflows/check.yml",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-m02"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = \"github.com/gosomea/deepseek-harness-go/\"\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in [\"loader/\",\"app/\"] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "npm-disclaimer",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = \"本包只支持显式编译期注册：不提供 npm 动态安装、模块 HMR 或原 profile 兼容。\"\nproblems = []\nfor name in [\"loader/README.md\",\"docs/loader/tutorial.md\"]:\n    p = pathlib.Path(name)\n    if not p.is_file():\n        problems.append(name + ': missing file')\n        continue\n    if text not in p.read_text(encoding='utf-8'):\n        problems.append(name + ': missing npm/HMR/profile disclaimer')\nprint('npm disclaimer: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+--- declared ---
+store [plugin]
+cache [plugin]
+off [plugin] disabled
+--- running ---
+store [plugin] state=active
+cache [plugin] state=active
+off [plugin] disabled state=not-mounted
+entry cache        state=active
+entry off          state=disabled
+entry store        state=active
+active=2 total=3

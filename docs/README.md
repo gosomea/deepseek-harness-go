@@ -38,8 +38,14 @@ kind: "documentation-index"
 | 某个公开方法的参数与返回值是什么？ | [生成 API](cordis/api.md) |
 | 当前运行时由哪些部分组成？ | [架构](architecture.md) |
 | 后续 Harness 模块按什么顺序实现？ | [路线图](roadmap.md) |
+| Go 实现与固定 TypeScript 参考怎样对照，差异记在哪？ | [差分场景说明](../testdata/parity/cordis/README.md)、[已声明差异](../testdata/parity/cordis/DIVERGENCES.md)、[对照工具](../internal/testkit/README.md) |
 | DSH 的每个部分如何分配到 Go，怎样算复刻完成？ | [系统方案](10-plans/dsh-go-replication/plans.md)、[能力覆盖](10-plans/dsh-go-replication/capabilities.md)、[共同验收](10-plans/dsh-go-replication/acceptance.md) |
 | 某个阶段具体先做什么、改哪些文件、怎样学习和验收？ | [阶段实施索引](10-plans/dsh-go-replication/stages/index.md) |
+| 配置文档怎么写、命令行怎么检查、出错怎么看？ | [装配教程](loader/tutorial.md)、[dsh-go 命令](../cmd/dsh-go/README.md) |
+| 配置条目和插件实例为什么分开、工厂目录怎么建？ | [loader 包](../loader/README.md)、[Go 概念对照](loader/go-primer.md) |
+| 条目怎么组成父子树、关闭时谁释放？ | [装配树](loader/entry-tree.md) |
+| 运行中改配置、禁用、跨组移动各自什么语义？ | [更新与启停](loader/update-semantics.md) |
+| 多个配置来源谁覆盖谁、哪些条目必须成功？ | [app 包](../app/README.md)、[Bundle 与就绪](loader/profile.md) |
 
 ## 开发与验收
 

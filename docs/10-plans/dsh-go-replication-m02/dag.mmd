@@ -1,0 +1,12 @@
+flowchart TD
+  m21-entry{{"m21-entry: passed"}}
+  m22-tree{{"m22-tree: passed"}}
+  m21-entry --> m22-tree
+  m23-update{{"m23-update: passed"}}
+  m22-tree --> m23-update
+  m24-profile{{"m24-profile: passed"}}
+  m23-update --> m24-profile
+  m25-cli{{"m25-cli: passed"}}
+  m24-profile --> m25-cli
+  g2-acceptance{{"g2-acceptance: passed"}}
+  m25-cli --> g2-acceptance

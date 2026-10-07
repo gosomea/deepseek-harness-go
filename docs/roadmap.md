@@ -2,7 +2,7 @@
 
 ## 当前起点
 
-当前实现是 Cordis 核心 v0.1，范围与差异见 [源码对应表](cordis/source-map.md)。仓库已有分类 README、公开注释、可运行教程、行为测试与 CI。其他 Harness 模块尚未实现；[当前架构](architecture.md)仅描述已有代码。
+当前实现是 Cordis 核心加上 M2 的装配层，范围与差异见 [源码对应表](cordis/source-map.md)。仓库已有分类 README、公开注释、可运行教程、行为测试与 CI。M0（来源与差距审计）、M1（Cordis 下游基础与行为对照）与 M2（Loader、配置身份与最小 Profile）都已通过各自执行契约：M2 交付 [loader](../loader/README.md)（条目身份、工厂目录、JSON 编解码、父子树、更新与启停）与 [app](../app/README.md)（命名 bundle、按序 overlay、required 就绪判定），并加上 [cmd/dsh-go](../cmd/dsh-go/README.md) 配置检查入口。Session、LLM、工具与 Agent Loop 尚未实现；[当前架构](architecture.md)仅描述已有代码。
 
 [系统方案](10-plans/dsh-go-replication/plans.md)接续早期 Cordis 与文档计划，统一维护 M0–M12 的范围、依赖和取舍。[能力覆盖表](10-plans/dsh-go-replication/capabilities.md)为固定 DSH 基线的全部包组、vendor、应用与工程支持分配归属。
 
@@ -34,6 +34,12 @@
 
 ## 下一步与证据
 
-先执行 M0：核对固定来源，为已有 Cordis 建立逐行为差距审计，把现有测试与学习实验关联起来，确定 M1 的有限范围；随后进入 Loader。M0 的[执行契约](10-plans/dsh-go-replication/plan.json)和[状态](10-plans/dsh-go-replication/status.md)已经有入口，后续阶段尚未展开成可执行契约。
+M0 已核对固定来源、建立[逐行为审计](10-plans/dsh-go-replication/cordis-audit.md)并把既有测试与学习实验关联起来；[M0 契约](10-plans/dsh-go-replication/plan.json)三个节点全部通过。
+
+M1 把审计判定的下游阻塞展开成 [M1 契约](10-plans/dsh-go-replication-m01/plan.json)：补条件可用性谓词（对应 Loader 的 `[Service.check]`），并建立 [Go 与固定 TypeScript 参考的差分对照](10-plans/dsh-go-replication/cordis-audit.md#m1-执行结果)。六个共享场景逐行比较两侧 trace，差异必须显式声明且带理由。
+
+M2 把 Loader、配置身份与最小 profile 展开成 [M2 契约](10-plans/dsh-go-replication-m02/plans.md)：六个节点串行交付条目与工厂目录、父子树与分组、按 ID 更新与启停、bundle/profile 与 overlay、CLI 与示例。学习入口从[概念对照](loader/go-primer.md)到[装配教程](loader/tutorial.md)。YAML include、`!!js` 惰性表达式、配置热重载与原 profile 兼容明确归属 M12.2。
+
+**下一步是 M3**：对话词汇、Agent Scope 与内存 Session。M2 已交出 loader 的条目身份、工厂目录、父子树、更新与启停，以及 app 的 bundle/profile 与 required 就绪判定；M1 未关闭的缺口已在 [M2 主题页](10-plans/dsh-go-replication-m02/plans.md#m1-遗留缺口的归属裁决)逐项裁决归属，其中 YAML include、`!!js` 惰性表达式、配置热重载与原 profile 兼容明确归属 M12.2，不得因为 M2 通过就认为这些能力已可用。
 
 [Cordis 首轮方案](10-plans/cordis-v01/plans.md)和[Go 学习文档方案](10-plans/go-learning-docs/plans.md)保留原版本的验收历史。新的计划不复用历史“通过”来解锁未来阶段；代码与输入变化后的当前状态由各计划重新验证。
