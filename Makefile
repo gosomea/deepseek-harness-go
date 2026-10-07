@@ -4,7 +4,7 @@
 check: fmt-check vet test coverage docs doc-examples build
 
 fmt-check:
-	@test -z "$$(gofmt -l cordis examples scripts)" || { gofmt -l cordis examples scripts; exit 1; }
+	go run ./scripts/doccheck -fmt
 
 vet:
 	go vet ./...

@@ -17,13 +17,7 @@ jobs:
           go-version-file: go.mod
           cache: false
       - name: Go format
-        shell: bash
-        run: |
-          files="$(gofmt -l cordis examples scripts)"
-          if [[ -n "$files" ]]; then
-            printf '%s\n' "$files"
-            exit 1
-          fi
+        run: go run ./scripts/doccheck -fmt
       - run: go vet ./...
       - run: go test -race -count=1 -timeout=60s -coverprofile=coverage.out ./...
       - run: go run ./scripts/doccheck -coverage coverage.out

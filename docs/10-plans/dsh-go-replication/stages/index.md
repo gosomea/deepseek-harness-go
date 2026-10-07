@@ -65,4 +65,18 @@ M9 先交付 workflow seam 与 fake 引擎；原 DSH workflow 的生产 PTC Prov
 
 ## 当前起点
 
-先按 [M0](m00-baseline.md)审阅来源和 Cordis 缺口，随后进入 [M1](m01-cordis.md)。本次提交细化文档，不领取实现节点；模型调用保持已确认的 tRPC-Agent-Go 模型层路线。
+M0、M1 与 M2 均已通过各自的执行契约：
+
+| 阶段 | 契约 | 状态 |
+| --- | --- | --- |
+| M0 固定基线与 Cordis 差距审计 | [plan.json](../plan.json) | 三个节点通过；审计见 [cordis-audit.md](../cordis-audit.md) |
+| M1 Cordis 下游基础与行为对照 | [plan.json](../../dsh-go-replication-m01/plan.json) | 三个节点通过；结果见 [M1 执行结果](../cordis-audit.md#m1-执行结果) |
+| M2 Loader、配置身份与最小 Profile | [plan.json](../../dsh-go-replication-m02/plan.json) | 六个节点通过；入口见 [M2 主题页](../../dsh-go-replication-m02/plans.md) |
+
+**下一步是 M3**：按 [M3 细化方案](m03-session.md)在本阶段展开前，先把切片关联到复刻与学习两个目标，建立独立 `plan.json`，并把预计目录展开为具体 inputs/outputs 与真实检查。
+
+M2 的未验项与 M12.2 归属记在 [M2 主题页的 G2 收口一节](../../dsh-go-replication-m02/plans.md#g2-收口的范围决定)：本阶段只交付 JSON 输入形式与显式编译期注册，不声称可读取原 DSH profile、加载 npm 插件或支持配置热重载。
+
+M1 通过不代表 M1 页列出的全部缺口都已关闭：M1 只实现了审计判定为下游阻塞且在 M1 范围内的部分。未关闭项（`internal/plugin`／`internal/config`／`internal/update` 事件、`Context.intercept` 分层配置、per-entry isolate、`Context.extend` 的 Go 等价物）在 [M2 主题页](../../dsh-go-replication-m02/plans.md#m1-遗留缺口的归属裁决)逐项给出归属裁决。
+
+模型调用保持已确认的 tRPC-Agent-Go 模型层路线。

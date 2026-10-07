@@ -6,10 +6,10 @@
 
 | 门禁 | 检查 | 失败条件 |
 | --- | --- | --- |
-| 格式 | `gofmt -l` | 任意源码未格式化 |
+| 格式 | `go run ./scripts/doccheck -fmt` | 仓库内任意 Go 源码未格式化，或源码无法解析 |
 | 静态检查 | `go vet ./...` | vet 报告问题 |
 | 行为与竞态 | `go test -race -count=1 -timeout=60s -coverprofile=coverage.out ./...` | 行为断言、竞态或超时 |
-| 覆盖率 | `go run ./scripts/doccheck -coverage coverage.out` | Cordis 语句覆盖率低于 90%，或没有对应统计 |
+| 覆盖率 | `go run ./scripts/doccheck -coverage coverage.out` | 任一受门禁的运行时包语句覆盖率低于 90%，或该包没有对应统计 |
 | 示例快照 | `examples/cordis` 的测试 | 实际输出与 expected.txt 不一致 |
 | 包文档 | `go run ./scripts/doccheck` | 包缺 README 或包注释；类型、元数据、必需章节或顺序不符；正文为空 |
 | 文档程序 | `go run ./scripts/doccheck -examples` | 完整程序无法编译、非零退出、超时或 stdout 与预期不符 |
@@ -19,7 +19,7 @@
 | API 新鲜度 | 同上 | API 与代码及注释生成结果不一致 |
 | 编译 | `go build ./...` | 库、示例或工具不能编译 |
 
-macOS/Linux 使用 Make；Windows 或没有 Make 的环境，从仓库根目录按顺序执行以下 Go 命令。格式检查运行 `gofmt -l cordis examples scripts`，输出必须为空；其后任一命令非零都表示失败。
+macOS/Linux 使用 Make；Windows 或没有 Make 的环境，从仓库根目录按顺序执行以下 Go 命令。格式检查运行 `go run ./scripts/doccheck -fmt`，它遍历仓库内的 Go 源码而不是固定目录清单，因此新包自动被覆盖；其后任一命令非零都表示失败。
 
 ```sh
 go vet ./...
@@ -32,7 +32,7 @@ go build ./...
 
 竞态检测需要 CGO 与 C 编译器。检查器的 Go 程序标记、输出和非空规则由[文档规范](documentation.md)维护；接口片段不会被当成独立程序运行。示例超时覆盖编译与执行，单个程序失败不会视为文档通过。
 
-90% 是本项目 Cordis v0.1 的语句覆盖率下限，不等同于 DSH 的每文件 100% 覆盖规则，也不证明全部行为正确。重点时序必须有独立行为测试。新运行时包加入时，同步扩展覆盖率检查；不要沿用仅检查 Cordis 的选择器后声称覆盖了其他包。
+90% 是本项目运行时包的语句覆盖率下限，不等同于 DSH 的每文件 100% 覆盖规则，也不证明全部行为正确。重点时序必须有独立行为测试。受门禁的包在 [门禁实现](../scripts/doccheck/main.go) 的 `coverageRequirement` 中逐个列出：新运行时包必须显式加入，清单之外或被遗漏的包会因“没有覆盖数据”而失败，不会因为未被选择而悄悄通过。当前受门禁的包是 `cordis`、`internal/testkit`、`loader` 与 `app`；每个包都在创建它的同一切片内登记，见 [M2 执行契约](10-plans/dsh-go-replication-m02/plans.md)。
 
 ## 行为与证据
 
@@ -57,6 +57,13 @@ go build ./...
 | 显式作用域过滤、Global 绕过过滤 | `TestFilterIsExplicitAndGlobalBypassesIt` |
 | 跳过已移除监听器、事件 panic 可观察 | `TestDispatchSkipsRemovedListenersAndRecoversPanics` |
 | 文档入口可运行、输出未偏离示例说明 | `TestDemoMatchesDocumentedOutput` |
+| 条件可用性谓词控制消费者等待、卸载与恢复，谓词 panic 记为不可用 | `TestConditionalAvailabilityGatesConsumers` |
+| 无条件服务不受 Refresh 影响 | `TestUnconditionalProvideStaysAvailable` |
+| Go trace 与固定 TypeScript 参考的录制 trace 逐行一致 | `TestReplayMatchesRecordedReferenceTrace` |
+| 录制 trace 与实时参考一致（需要固定构建产物，缺失时跳过） | `TestLiveReferenceTraceMatchesRecorded` |
+| 比较器拒绝未声明差异、未发生声明与无理由声明 | `TestCompareTracesRejectsUndeclaredDifferences`、`TestCompareTracesAppliesOnlyUsedDivergences` |
+| 参考 trace 的录制来源与哈希可核对 | `TestReferenceTracesMatchProvenance` |
+| 覆盖率门禁对每个受门禁包分别拒绝缺失与低于阈值 | `TestCoverageGateChecksEveryGatedPackage` |
 
 测试源见 [生命周期测试](../cordis/lifecycle_test.go)、[运行时测试](../cordis/runtime_test.go)、[事件测试](../cordis/events_test.go) 和 [示例测试](../examples/cordis/main_test.go)。文档门禁拒绝样例见 [工具测试](../scripts/doccheck/main_test.go)。
 

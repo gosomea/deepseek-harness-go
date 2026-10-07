@@ -83,19 +83,43 @@ func TestDocumentationGateDetectsREADMEAndAPIDrift(t *testing.T) {
 	}
 }
 
-func TestCoverageGateRejectsEmptyAndBelowThresholdProfiles(t *testing.T) {
+// TestCoverageGateChecksEveryGatedPackage pins both directions of the coverage
+// gate. Every gated runtime package must appear in the profile: a package that
+// is merely absent used to look identical to one with complete coverage, so
+// adding a package without extending the gate would have gone unnoticed.
+func TestCoverageGateChecksEveryGatedPackage(t *testing.T) {
 	root := t.TempDir()
 	for _, tc := range []struct {
+		name    string
 		profile string
 		bad     bool
 	}{
-		{"mode: atomic\n", true},
-		{"mode: atomic\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:1.1,2.1 9 1\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:3.1,4.1 1 0\n", false},
-		{"mode: atomic\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:1.1,2.1 8 1\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:3.1,4.1 2 0\n", true},
+		{"empty-profile", "mode: atomic\n", true},
+		{"all-gated-packages-pass", "mode: atomic\n" + cordisPass + testkitPass + loaderPass + appPass, false},
+		{"cordis-below-threshold", "mode: atomic\n" + cordisFail + testkitPass + loaderPass, true},
+		{"testkit-below-threshold", "mode: atomic\n" + cordisPass + testkitFail + loaderPass, true},
+		{"loader-below-threshold", "mode: atomic\n" + cordisPass + testkitPass + loaderFail + appPass, true},
+		{"app-below-threshold", "mode: atomic\n" + cordisPass + testkitPass + loaderPass + appFail, true},
+		{"testkit-missing", "mode: atomic\n" + cordisPass + loaderPass + appPass, true},
+		{"cordis-missing", "mode: atomic\n" + testkitPass + loaderPass + appPass, true},
+		{"loader-missing", "mode: atomic\n" + cordisPass + testkitPass + appPass, true},
+		{"app-missing", "mode: atomic\n" + cordisPass + testkitPass + loaderPass, true},
+		{"unrelated-package-only", "mode: atomic\ngithub.com/gosomea/deepseek-harness-go/other/a.go:1.1,2.1 9 1\n", true},
 	} {
-		path := writeFixture(t, root, "coverage.out", tc.profile)
-		if (checkCoverage(path) != nil) != tc.bad {
-			t.Fatal(tc.profile)
-		}
+		t.Run(tc.name, func(t *testing.T) {
+			path := writeFixture(t, root, "coverage.out", tc.profile)
+			if (checkCoverage(path) != nil) != tc.bad {
+				t.Fatalf("profile %q: bad = %v", tc.profile, tc.bad)
+			}
+		})
 	}
 }
+
+const cordisPass = "github.com/gosomea/deepseek-harness-go/cordis/a.go:1.1,2.1 9 1\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:3.1,4.1 1 0\n"
+const cordisFail = "github.com/gosomea/deepseek-harness-go/cordis/a.go:1.1,2.1 8 1\ngithub.com/gosomea/deepseek-harness-go/cordis/a.go:3.1,4.1 2 0\n"
+const testkitPass = "github.com/gosomea/deepseek-harness-go/internal/testkit/a.go:1.1,2.1 9 1\ngithub.com/gosomea/deepseek-harness-go/internal/testkit/a.go:3.1,4.1 1 0\n"
+const testkitFail = "github.com/gosomea/deepseek-harness-go/internal/testkit/a.go:1.1,2.1 8 1\ngithub.com/gosomea/deepseek-harness-go/internal/testkit/a.go:3.1,4.1 2 0\n"
+const loaderPass = "github.com/gosomea/deepseek-harness-go/loader/a.go:1.1,2.1 9 1\ngithub.com/gosomea/deepseek-harness-go/loader/a.go:3.1,4.1 1 0\n"
+const loaderFail = "github.com/gosomea/deepseek-harness-go/loader/a.go:1.1,2.1 8 1\ngithub.com/gosomea/deepseek-harness-go/loader/a.go:3.1,4.1 2 0\n"
+const appPass = "github.com/gosomea/deepseek-harness-go/app/a.go:1.1,2.1 9 1\ngithub.com/gosomea/deepseek-harness-go/app/a.go:3.1,4.1 1 0\n"
+const appFail = "github.com/gosomea/deepseek-harness-go/app/a.go:1.1,2.1 8 1\ngithub.com/gosomea/deepseek-harness-go/app/a.go:3.1,4.1 2 0\n"

@@ -24,12 +24,15 @@ func main() {
 	write := flag.Bool("write-api", false, "regenerate Cordis API reference")
 	coverage := flag.String("coverage", "", "require at least 90 percent Cordis statement coverage")
 	examples := flag.Bool("examples", false, "run documented Go programs and compare their output")
+	formatting := flag.Bool("fmt", false, "require every Go source file to be gofmt-clean")
 	flag.Parse()
 	var err error
 	if *coverage != "" {
 		err = checkCoverage(*coverage)
 	} else if *examples {
 		err = checkExamples(*root)
+	} else if *formatting {
+		err = checkFormatting(*root)
 	} else {
 		if *write {
 			var api []byte
@@ -343,32 +346,66 @@ func slug(title string) string {
 	return out.String()
 }
 
+// coverageRequirement is the minimum statement coverage per gated package.
+// Each runtime package is listed explicitly: adding a package must be a
+// deliberate act, so that a new package cannot be silently excluded from the
+// gate by leaving it off this list.
+var coverageRequirement = []struct {
+	prefix string
+	label  string
+}{
+	{"github.com/gosomea/deepseek-harness-go/cordis/", "Cordis"},
+	{"github.com/gosomea/deepseek-harness-go/internal/testkit/", "testkit"},
+	{"github.com/gosomea/deepseek-harness-go/loader/", "loader"},
+	{"github.com/gosomea/deepseek-harness-go/app/", "app"},
+}
+
 func checkCoverage(path string) error {
 	body, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	var total, covered int
+	type tally struct{ total, covered int }
+	tallies := map[string]*tally{}
+	for _, requirement := range coverageRequirement {
+		tallies[requirement.prefix] = &tally{}
+	}
 	for _, line := range strings.Split(string(body), "\n") {
-		if !strings.HasPrefix(line, "github.com/gosomea/deepseek-harness-go/cordis/") {
-			continue
-		}
 		fields := strings.Fields(line)
 		if len(fields) != 3 {
-			return fmt.Errorf("invalid coverage line: %s", line)
+			continue
 		}
-		var statements, count int
-		if _, err := fmt.Sscanf(fields[1]+" "+fields[2], "%d %d", &statements, &count); err != nil {
-			return err
-		}
-		total += statements
-		if count > 0 {
-			covered += statements
+		for _, requirement := range coverageRequirement {
+			if !strings.HasPrefix(line, requirement.prefix) {
+				continue
+			}
+			var statements, count int
+			if _, err := fmt.Sscanf(fields[1]+" "+fields[2], "%d %d", &statements, &count); err != nil {
+				return fmt.Errorf("invalid coverage line: %s", line)
+			}
+			current := tallies[requirement.prefix]
+			current.total += statements
+			if count > 0 {
+				current.covered += statements
+			}
 		}
 	}
-	if total == 0 || covered*100 < total*90 {
-		return fmt.Errorf("Cordis coverage below 90%%: %d/%d statements", covered, total)
+	var errs []error
+	for _, requirement := range coverageRequirement {
+		current := tallies[requirement.prefix]
+		if current.total == 0 {
+			errs = append(errs, fmt.Errorf("%s has no coverage data; is the package built and tested?", requirement.label))
+			continue
+		}
+		// Compare with integer arithmetic so the threshold is exact, and print
+		// one decimal so a package only just above the floor is visible rather
+		// than rounded up to a comfortable-looking number.
+		if current.covered*100 < current.total*90 {
+			errs = append(errs, fmt.Errorf("%s coverage below 90%%: %d/%d statements",
+				requirement.label, current.covered, current.total))
+			continue
+		}
+		fmt.Printf("%s coverage: %.1f%%\n", requirement.label, 100*float64(current.covered)/float64(current.total))
 	}
-	fmt.Printf("Cordis coverage: %.1f%%\n", 100*float64(covered)/float64(total))
-	return nil
+	return errors.Join(errs...)
 }
