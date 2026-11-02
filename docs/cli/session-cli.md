@@ -103,7 +103,9 @@ go test -count=1 -run 'TestResumeReportsUnsettledWork|TestResumeDoesNotReExecute
 | Go 入口 | [plugins/local](../../plugins/local/README.md)（`authorize` 与工具）、[persistence](../../persistence/README.md)（`Resume`/`Restore`）、[agentloop](../../agentloop/README.md)（轮次与取消）；`cmd/dsh-go` 承载入口 |
 | 保持的行为 | 副作用先过策略；拒绝不留痕迹；取消终止进程树；退出等待释放；恢复只描述不重放；非交互政策确定 |
 | Go 表达 | 小接口 + 显式装配；`ErrPolicyDenied` 让拒绝成为可分类事实；`context` 贯穿取消；`Resume` 返回描述而非动作 |
-| 不等价边界 | 本阶段 CLI 的**无密钥 E2E 用 fake 模型**；真实端点 smoke **单列且缺密钥记未验证**；账户平台登录、完整原生能力、持久终端与全部 shell Provider 属后续里程碑；Windows 的 shell 与路径规则单独验证，不以 Bash 测试代替 |
+| 不等价边界 | 本阶段 CLI 的**无密钥 E2E 用 fake 模型**；真实端点 smoke **单列且缺密钥记未验证，不记为通过**；账户平台登录、完整原生能力、持久终端与全部 shell Provider 属后续里程碑；Windows 的 shell 与路径规则单独验证，不以 Bash 测试代替 |
+| 真实端点实测 | 2026-11-02 用内网 OpenAI 兼容代理跑通 `llmtrpc.Smoke`：五个模型（`deepseek-v4.1-flash-external`、`deepseek-v4-flash`、`deepseek-v4-pro`、`glm-5.3-external`、`kimi-k3.1-pro-external`）各连续两次 `smoke=passed`。凭据仅来自 `DSH_LLM_*` 环境变量，不入库；该代理偶发限流（观测到瞬时 403 与空流，重试即恢复），单次 `failed` 应先重试再判定 |
+| 差分实测 | 同日以 `CORDIS_REFERENCE_LIB` + `DSH_PACKAGES` 指向固定参考，跑通 Cordis 与 Session 两族实时差分；Session 侧 6 个场景（`message-projection`、`surface-replacement`、`rejection-cases`、`replay-consistency`、`audit-events-do-not-enter-history`、`empty-message-placeholder`）全部一致 |
 
 ## 一次操作的时序与所有权
 

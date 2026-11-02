@@ -66,7 +66,8 @@ go test -race -count=1 ./plugins/llmtrpc/...
 
 ## 限制
 
-- **没有真实端点**。全部检查在 `httptest` 回环上进行；凭据与联网验证属 M7，缺密钥不算通过。
+- **离线门禁不含真实端点**。`make check` 的全部检查在 `httptest` 回环上进行，不依赖密钥与外网，这是有意为之：离线门禁永远可跑。
+- **真实端点另跑且已实测**：`Smoke`/`SmokeConfigFromEnvironment` 在本机门禁之外单独运行。2026-11-02 用内网 OpenAI 兼容代理实测，五个模型各连续两次 `smoke=passed`，含 reasoning 模型的 `reasoning_content` 通路；缺密钥时返回 `skipped-no-credential`，**不是通过**。代理偶发限流，单次 `failed` 应先重试。
 - **框架语义基于 v1.11.2 探测**。升级后需重新探测并更新差异清单。
 - **未实现**：`assistant-stream` 的紧凑 attempt 记录（M6）、图片与附件的 offload（M8）、reasoning 签名（面向 AWS Bedrock）、`IMAGE_OFFLOAD_REQUIRED`。
 - **provider 错误的 `code` 字段未使用**：provider 之间该字段类型不一致，状态码单独从状态行恢复。
