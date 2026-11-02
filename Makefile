@@ -1,4 +1,4 @@
-.PHONY: check fmt-check vet test coverage docs doc-examples api demo build
+.PHONY: check fmt-check vet test coverage docs doc-examples api demo parity build
 .NOTPARALLEL:
 
 check: fmt-check vet test coverage docs doc-examples build
@@ -26,6 +26,13 @@ api:
 
 demo:
 	go run ./examples/cordis
+
+# parity runs the two differential families against their recorded reference
+# traces. It is not part of `check`: the live half needs the fixed reference
+# build (DSH_PACKAGES / CORDIS_REFERENCE_LIB) and is skipped without it, so
+# gating check on it would report an environment as a result.
+parity:
+	go test -count=1 -run 'Parity|Reference' ./internal/testkit
 
 build:
 	go build ./...

@@ -1,0 +1,15 @@
+flowchart TD
+  m41-llm-stream{{"m41-llm-stream: passed"}}
+  m42-assembler{{"m42-assembler: passed"}}
+  m41-llm-stream --> m42-assembler
+  m43-llmtrpc{{"m43-llmtrpc: passed"}}
+  m42-assembler --> m43-llmtrpc
+  m44-tools{{"m44-tools: passed"}}
+  m45-systemprompt{{"m45-systemprompt: passed"}}
+  m42-assembler --> m45-systemprompt
+  m44-tools --> m45-systemprompt
+  m46-examples{{"m46-examples: passed"}}
+  m43-llmtrpc --> m46-examples
+  m45-systemprompt --> m46-examples
+  g4-acceptance{{"g4-acceptance: passed"}}
+  m46-examples --> g4-acceptance

@@ -1,0 +1,12 @@
+flowchart TD
+  m31-llm{{"m31-llm: passed"}}
+  m32-scope{{"m32-scope: passed"}}
+  m31-llm --> m32-scope
+  m33-session{{"m33-session: passed"}}
+  m32-scope --> m33-session
+  m34-projection{{"m34-projection: passed"}}
+  m33-session --> m34-projection
+  m35-example{{"m35-example: passed"}}
+  m34-projection --> m35-example
+  g3-acceptance{{"g3-acceptance: passed"}}
+  m35-example --> g3-acceptance

@@ -1,0 +1,26 @@
+flowchart TD
+  m121-ledger{{"m121-ledger: passed"}}
+  m122-config-compat{{"m122-config-compat: passed"}}
+  m121-ledger --> m122-config-compat
+  m123-session-format{{"m123-session-format: passed"}}
+  m121-ledger --> m123-session-format
+  m124-ptc-workflow{{"m124-ptc-workflow: passed"}}
+  m121-ledger --> m124-ptc-workflow
+  m125-experimental{{"m125-experimental: passed"}}
+  m121-ledger --> m125-experimental
+  m126-credentials-telemetry{{"m126-credentials-telemetry: passed"}}
+  m121-ledger --> m126-credentials-telemetry
+  m127-native-bench{{"m127-native-bench: passed"}}
+  m121-ledger --> m127-native-bench
+  m128-release{{"m128-release: passed"}}
+  m121-ledger --> m128-release
+  m129-docs-website{{"m129-docs-website: passed"}}
+  m122-config-compat --> m129-docs-website
+  m123-session-format --> m129-docs-website
+  m124-ptc-workflow --> m129-docs-website
+  m125-experimental --> m129-docs-website
+  m126-credentials-telemetry --> m129-docs-website
+  m127-native-bench --> m129-docs-website
+  m128-release --> m129-docs-website
+  g12-acceptance{{"g12-acceptance: passed"}}
+  m129-docs-website --> g12-acceptance

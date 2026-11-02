@@ -1,0 +1,49 @@
+{
+  "id": "rejected-input",
+  "title": "被拒绝的工具调用仍产生规范化结果，轮次继续",
+  "inputs": [
+    "call a tool the model cannot have"
+  ],
+  "scripts": [
+    [
+      {
+        "type": "tool-call-delta",
+        "index": 0,
+        "id": "call-1",
+        "name": "absent_tool",
+        "arguments": "{}"
+      },
+      {
+        "type": "block-end",
+        "index": 0,
+        "id": "call-1",
+        "name": "absent_tool",
+        "arguments": "{}"
+      },
+      {
+        "type": "finish",
+        "index": 0,
+        "finish": "tool-calls"
+      }
+    ],
+    [
+      {
+        "type": "text-delta",
+        "index": 0,
+        "text": "understood"
+      },
+      {
+        "type": "finish",
+        "index": 0,
+        "finish": "stop"
+      }
+    ]
+  ],
+  "tools": [
+    {
+      "name": "read_file",
+      "content": "contents"
+    }
+  ],
+  "actions": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "route-switch",
+  "title": "切换摘要路由后 Provider 身份变化而非静默继承",
+  "kind": "route-switch",
+  "routes": ["route-a", "route-b"],
+  "expect": {
+    "routeChanged": true
+  }
+}

@@ -1,0 +1,1170 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m04",
+  "title": "Go 复刻 DSH：M4 tRPC 模型适配、工具管线与提示词",
+  "objectives": {
+    "replication": "同一套 DSH-Go 请求、流与完成契约同时接到 fake Provider 与 tRPC-Agent-Go 模型层；plugins/llmtrpc 是唯一框架导入边界；fake 工具经过可观测的 schema 校验、准入、单调 guard 与 post/finalize 顺序，并有回环 HTTP fixture 与跨 Provider 契约证据",
+    "learning": "让 Go 读者从 delta、message 与 attempt 的区别出发，解释流式显示为什么不等于持久事实；用被拒绝的 fake 工具解释能力、策略与「拒绝不进工具体」；说明提示词片段的顺序为何可确定性比较",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、行为测试与显式差异；必要检查无密钥、无外网；参考构建产物缺失时差分检查跳过并记为未验证，不记为通过"
+  },
+  "constraints": [
+    "只执行 M4；M5 的 Agent 循环与 inbox、M6 的持久化与磁盘格式、M7 的真实端点与凭据、M8 的压缩与附件都不进入本阶段。M4 只交付无密钥、可离线运行的模型契约、工具管线与提示词装配",
+    "DSH 参考 checkout 只读；固定提交为 00102833dfaee1da9f48a3a8eae9d34005a75218，本地未提交改动不进入基线",
+    "锁定 trpc.group/trpc-go/trpc-agent-go v1.11.2（其 go.mod 要求 go 1.21+，本项目 go 1.22 满足），go.mod 与 go.sum 随之提交；版本、工具链与许可记录进主题页与源码对应表，不在实现中浮动版本",
+    "框架导入边界：只有 plugins/llmtrpc 可以 import trpc.group/trpc-go/trpc-agent-go；llm/、tools/、systemprompt/、session/、agentloop/ 与其他包不得出现该导入。该不变量由 boundary 检查断言，不靠约定",
+    "无密钥、无外网：全部必要检查在本地运行；tRPC 适配器用 httptest 回环服务与固定 SSE fixture 验证；真实端点的联网 smoke 属 M7，单列且不把缺密钥当通过",
+    "参考构建产物缺失（DSH_PACKAGES 未指向固定参考 packages，或对应 lib/ 构建产物不存在）时差分检查跳过并记为未验证，不记为通过；已记录的参考 trace 仍参与比较",
+    "所有权不变量：任何节点的 inputs 不得被链上更晚的节点写入；不使用目录级 writes；检查只断言本节点有权写入、或由已通过前驱产出的文件",
+    "验证材料导出：每个节点的 verify 之后由 render/export 写入 docs/10-plans/dsh-go-replication-m04/validation/<run-id>/，每次导出使用新的 run-id，不覆盖也不改写历史 run；旧证据继续证明旧提交，不得把旧计划长期显示为当前通过。export 只导出已经 verify 过的结果，不代替检查",
+    "共享门禁文件 scripts/doccheck/main.go、scripts/doccheck/main_test.go、docs/testing.md 被 m41-llm-stream、m44-tools、m45-systemprompt 先后修改（每个新运行时包在同一片内登记进 coverageRequirement）。它们因此不出现在任何节点的 inputs，也不作为非最终节点的 outputs；最终状态由 g4-acceptance 冻结",
+    "docs/README.md、docs/roadmap.md、docs/learning/index.md 只在 g4-acceptance 写一次：阶段中途把 M4 标成「当前可学」会与事实不符，多次写入只会让已通过节点连续 stale",
+    "docs/10-plans/dsh-go-replication/stages/index.md 列在 M0 契约的 documents 中，其内容哈希参与 M0 revision 计算；g4 更新它会使 M0 三个节点变为 plan changed; revise required（M2 与 M3 已使 M0 处于该状态）。这是按阶段交接要求执行 g4 的已知代价，如实记录",
+    "不得降低运行时包 90% 语句覆盖率阈值，也不得降低 Makefile 与 scripts/doccheck 定义的任何其他门禁来适配失败结果；失败一律修实现而非改门禁定义。确需改门禁定义时必须同时新增有效与无效样例、另立记录，并在 validation/<run-id> 留证；g4 的 gate-integrity 检查断言覆盖率比较式与 Makefile 子命令未被削弱",
+    "新运行时包 tools/、systemprompt/、plugins/llmtrpc/ 在创建它的同一切片内登记进 scripts/doccheck 的 coverageRequirement，并受不低于 90% 语句覆盖率门禁约束",
+    "M4 细化方案把 M4.4 写成独立于 M4.1–M4.3 的分支。本契约保留两条根：m41-llm-stream 与 m44-tools，在 m45-systemprompt 汇合；执行仍按当前默认串行推进",
+    "每个节点需要语义评审；独立性如实记录（当前由作者完成评审，记为 independent: false）",
+    "保留工作区既有改动（cordis/、loader/、app/、cmd/、llm/、scope/、session/、internal/、testdata/parity/ 等已交付物），不覆盖其他人的工作",
+    "遵循项目 AGENTS.md 的代码、文档与交付门禁规则：分类 README、包注释、公开注释、Markdown 链接、完整程序与输出。每个新包交付 README、行为参考与可运行实验",
+    "只报告真实运行的命令、退出码与提交；本地通过不代表 CI 已通过。阶段报告与主题页必须写出实际运行过的命令、退出码与结果",
+    "本契约只描述 M4 的切片与门禁；M5–M12 的范围仍由其细化页维护，不因本阶段通过而获得任何可用状态"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m04/plans.md"
+  ],
+  "final": "g4-acceptance",
+  "nodes": [
+    {
+      "id": "m41-llm-stream",
+      "title": "M4.1 冻结请求、流与 fake Provider",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/doc.go",
+        "llm/message.go",
+        "llm/content.go",
+        "llm/codec.go",
+        "llm/README.md",
+        "docs/llm/go-primer.md",
+        "internal/testkit/README.md"
+      ],
+      "outputs": [
+        "llm/request.go",
+        "llm/stream.go",
+        "llm/usage.go",
+        "llm/provider.go",
+        "llm/error.go",
+        "llm/request_test.go",
+        "llm/stream_test.go",
+        "llm/provider_test.go",
+        "llm/stream_coverage_test.go",
+        "internal/testkit/fakellm.go",
+        "internal/testkit/fakellm_test.go",
+        "docs/llm/streaming.md"
+      ],
+      "writes": [
+        "llm/request.go",
+        "llm/stream.go",
+        "llm/usage.go",
+        "llm/provider.go",
+        "llm/error.go",
+        "llm/request_test.go",
+        "llm/stream_test.go",
+        "llm/provider_test.go",
+        "llm/stream_coverage_test.go",
+        "internal/testkit/fakellm.go",
+        "internal/testkit/fakellm_test.go",
+        "docs/llm/streaming.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "llm-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./llm/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "testkit-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M4.1 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/llm/streaming.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m42-assembler",
+      "title": "M4.2 assembler 与 Provider 注册表",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m41-llm-stream"
+      ],
+      "requires_gates": [
+        "m41-llm-stream"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/stream.go",
+        "llm/request.go",
+        "llm/provider.go",
+        "llm/error.go",
+        "llm/README.md",
+        "internal/testkit/fakellm.go",
+        "llm/stream_test.go"
+      ],
+      "outputs": [
+        "llm/assembler.go",
+        "llm/registry.go",
+        "llm/assembler_test.go",
+        "llm/registry_test.go",
+        "llm/assembler_coverage_test.go"
+      ],
+      "writes": [
+        "llm/assembler.go",
+        "llm/registry.go",
+        "llm/assembler_test.go",
+        "llm/registry_test.go",
+        "llm/assembler_coverage_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "llm-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./llm/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "assembler-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Assembler|Registry|Delta|Usage",
+            "./llm/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/llm/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m43-llmtrpc",
+      "title": "M4.3 tRPC 模型适配与回环 fixture",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m42-assembler"
+      ],
+      "requires_gates": [
+        "m42-assembler"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/stream.go",
+        "llm/provider.go",
+        "llm/request.go",
+        "llm/error.go",
+        "llm/usage.go",
+        "llm/assembler.go",
+        "llm/registry.go",
+        "llm/README.md"
+      ],
+      "outputs": [
+        "plugins/llmtrpc/doc.go",
+        "plugins/llmtrpc/adapter.go",
+        "plugins/llmtrpc/translate.go",
+        "plugins/llmtrpc/capability.go",
+        "plugins/llmtrpc/adapter_test.go",
+        "plugins/llmtrpc/translate_test.go",
+        "plugins/llmtrpc/loopback_test.go",
+        "plugins/llmtrpc/README.md",
+        "testdata/parity/llmtrpc/README.md",
+        "testdata/parity/llmtrpc/provenance.json",
+        "testdata/parity/llmtrpc/sse/text-reasoning-toolcall.txt",
+        "testdata/parity/llmtrpc/sse/api-error.txt",
+        "testdata/parity/llmtrpc/sse/truncated-stream.txt",
+        "docs/llm/trpc-adapter.md",
+        "go.mod",
+        "go.sum",
+        "plugins/llmtrpc/adapter_coverage_test.go"
+      ],
+      "writes": [
+        "plugins/llmtrpc/doc.go",
+        "plugins/llmtrpc/adapter.go",
+        "plugins/llmtrpc/translate.go",
+        "plugins/llmtrpc/capability.go",
+        "plugins/llmtrpc/adapter_test.go",
+        "plugins/llmtrpc/translate_test.go",
+        "plugins/llmtrpc/loopback_test.go",
+        "plugins/llmtrpc/README.md",
+        "testdata/parity/llmtrpc/README.md",
+        "testdata/parity/llmtrpc/provenance.json",
+        "testdata/parity/llmtrpc/sse/text-reasoning-toolcall.txt",
+        "testdata/parity/llmtrpc/sse/api-error.txt",
+        "testdata/parity/llmtrpc/sse/truncated-stream.txt",
+        "docs/llm/trpc-adapter.md",
+        "go.mod",
+        "go.sum",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md",
+        "plugins/llmtrpc/adapter_coverage_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "llmtrpc-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/llmtrpc/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "llm-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./llm/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nneedle = 'trpc.group/trpc-go/trpc-agent-go'\nbad = []\nfor p in sorted(pathlib.Path('.').rglob('*.go')):\n    if '.git' in p.parts or not p.is_file():\n        continue\n    if 'plugins/llmtrpc' in p.as_posix():\n        continue\n    if needle in p.read_text(encoding='utf-8'):\n        bad.append(p.as_posix())\nprint('framework import boundary: OK' if not bad else 'trpc types leaked outside plugins/llmtrpc: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'plugins/llmtrpc/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M4.3 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/llm/trpc-adapter.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m44-tools",
+      "title": "M4.4 工具 schema、准入与执行管线",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/message.go",
+        "llm/content.go",
+        "scope/key.go",
+        "scope/README.md",
+        "docs/scope/go-primer.md",
+        "llm/README.md"
+      ],
+      "outputs": [
+        "tools/doc.go",
+        "tools/types.go",
+        "tools/schema.go",
+        "tools/registry.go",
+        "tools/pipeline.go",
+        "tools/guard.go",
+        "tools/types_test.go",
+        "tools/schema_test.go",
+        "tools/pipeline_test.go",
+        "tools/tools_coverage_test.go",
+        "tools/README.md",
+        "docs/tools/go-primer.md",
+        "docs/tools/execution-pipeline.md"
+      ],
+      "writes": [
+        "tools/doc.go",
+        "tools/types.go",
+        "tools/schema.go",
+        "tools/registry.go",
+        "tools/pipeline.go",
+        "tools/guard.go",
+        "tools/types_test.go",
+        "tools/schema_test.go",
+        "tools/pipeline_test.go",
+        "tools/tools_coverage_test.go",
+        "tools/README.md",
+        "docs/tools/go-primer.md",
+        "docs/tools/execution-pipeline.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "tools-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./tools/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "pipeline-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Pipeline|Guard|Schema|Registry",
+            "./tools/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'tools/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M4.4 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/tools/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']], ['docs/tools/execution-pipeline.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m45-systemprompt",
+      "title": "M4.5 提示词片段与工具 schema 装配",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m42-assembler",
+        "m44-tools"
+      ],
+      "requires_gates": [
+        "m42-assembler",
+        "m44-tools"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/request.go",
+        "llm/assembler.go",
+        "tools/types.go",
+        "tools/schema.go",
+        "tools/registry.go",
+        "tools/README.md",
+        "scope/carrier.go"
+      ],
+      "outputs": [
+        "systemprompt/doc.go",
+        "systemprompt/fragment.go",
+        "systemprompt/assembly.go",
+        "systemprompt/assembly_test.go",
+        "systemprompt/systemprompt_coverage_test.go",
+        "systemprompt/README.md",
+        "docs/systemprompt/assembly.md"
+      ],
+      "writes": [
+        "systemprompt/doc.go",
+        "systemprompt/fragment.go",
+        "systemprompt/assembly.go",
+        "systemprompt/assembly_test.go",
+        "systemprompt/systemprompt_coverage_test.go",
+        "systemprompt/README.md",
+        "docs/systemprompt/assembly.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "systemprompt-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./systemprompt/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'tools/', 'systemprompt/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M4.5 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/systemprompt/assembly.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m46-examples",
+      "title": "M4.6 跨 Provider 契约与实验",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m43-llmtrpc",
+        "m45-systemprompt"
+      ],
+      "requires_gates": [
+        "m43-llmtrpc",
+        "m45-systemprompt"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/provider.go",
+        "llm/assembler.go",
+        "plugins/llmtrpc/adapter.go",
+        "plugins/llmtrpc/translate.go",
+        "tools/pipeline.go",
+        "tools/README.md",
+        "systemprompt/assembly.go",
+        "systemprompt/README.md",
+        "internal/testkit/fakellm.go",
+        "testdata/parity/llmtrpc/README.md",
+        "examples/session/main.go",
+        "examples/session/README.md"
+      ],
+      "outputs": [
+        "examples/model/main.go",
+        "examples/model/main_test.go",
+        "examples/model/expected.txt",
+        "examples/model/README.md",
+        "examples/tools/main.go",
+        "examples/tools/main_test.go",
+        "examples/tools/expected.txt",
+        "examples/tools/README.md",
+        "internal/testkit/provider_contract_test.go",
+        "testdata/parity/llmtrpc/DIVERGENCES.md"
+      ],
+      "writes": [
+        "examples/model/main.go",
+        "examples/model/main_test.go",
+        "examples/model/expected.txt",
+        "examples/model/README.md",
+        "examples/tools/main.go",
+        "examples/tools/main_test.go",
+        "examples/tools/expected.txt",
+        "examples/tools/README.md",
+        "internal/testkit/provider_contract_test.go",
+        "testdata/parity/llmtrpc/DIVERGENCES.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-model",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/model/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-tools",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/tools/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "provider-contract",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "ProviderContract",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g4-acceptance",
+      "title": "G4 收口：复刻、学习与证据同时验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m46-examples"
+      ],
+      "requires_gates": [
+        "m46-examples"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m04/plan.json",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m04-model-tools.md",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/learning/note-template.md",
+        "llm/README.md",
+        "tools/README.md",
+        "systemprompt/README.md",
+        "plugins/llmtrpc/README.md",
+        "docs/llm/streaming.md",
+        "docs/llm/trpc-adapter.md",
+        "docs/tools/go-primer.md",
+        "docs/tools/execution-pipeline.md",
+        "docs/systemprompt/assembly.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "examples/model/README.md",
+        "examples/tools/README.md",
+        "testdata/parity/llmtrpc/README.md",
+        "testdata/parity/llmtrpc/DIVERGENCES.md",
+        "Makefile",
+        ".github/workflows/check.yml"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/10-plans/dsh-go-replication-m04/validation/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 1800,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "provider-contract",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "ProviderContract",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "llmtrpc-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/llmtrpc/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nneedle = 'trpc.group/trpc-go/trpc-agent-go'\nbad = []\nfor p in sorted(pathlib.Path('.').rglob('*.go')):\n    if '.git' in p.parts or not p.is_file():\n        continue\n    if 'plugins/llmtrpc' in p.as_posix():\n        continue\n    if needle in p.read_text(encoding='utf-8'):\n        bad.append(p.as_posix())\nprint('framework import boundary: OK' if not bad else 'trpc types leaked outside plugins/llmtrpc: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "gate-integrity",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmk = pathlib.Path('Makefile').read_text(encoding='utf-8')\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nproblems = []\nfor token in ['fmt-check', 'vet', 'test', 'coverage', 'docs', 'doc-examples', 'build']:\n    if token not in mk:\n        problems.append('Makefile lost gate ' + token)\nfor token in ['100 < current.total*90', 'has no coverage data']:\n    if token not in main:\n        problems.append('coverage gate weakened: ' + token)\nprint('gate integrity: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'tools/', 'systemprompt/', 'plugins/llmtrpc/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('G4 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nreadme = pathlib.Path('docs/README.md').read_text(encoding='utf-8')\nroadmap = pathlib.Path('docs/roadmap.md').read_text(encoding='utf-8')\npkgs = ['tools/', 'systemprompt/', 'plugins/llmtrpc/']\nbad = [p for p in pkgs if ('../' + p + 'README.md') not in readme or ('../' + p + 'README.md') not in roadmap]\nprint('module index: OK' if not bad else 'not linked as ../<pkg>/README.md from docs/README.md and docs/roadmap.md: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "stage-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/10-plans/dsh-go-replication/stages/index.md').read_text(encoding='utf-8')\nproblems = []\nif 'dsh-go-replication-m04' not in text:\n    problems.append('stages/index.md does not point at the M4 contract')\nif 'M4' not in text:\n    problems.append('stages/index.md missing M4 handover')\nprint('stage index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "learning-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/learning/index.md').read_text(encoding='utf-8')\nproblems = []\nfor link in ['../tools/go-primer.md', '../llm/streaming.md', '../llm/trpc-adapter.md',\n             '../systemprompt/assembly.md']:\n    if link not in text:\n        problems.append('missing link ' + link)\nif 'C08' not in text:\n    problems.append('C08 is not listed as a current topic')\nfor stale in ['| C08 能力与工具 | C02、C06–C07', 'C08 起属后续阶段']:\n    if stale in text:\n        problems.append('stale future row ' + stale)\nprint('learning index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

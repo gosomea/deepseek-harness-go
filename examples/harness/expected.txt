@@ -1,0 +1,34 @@
+--- event order ---
+seq=0 turn/start
+seq=1 user/message
+seq=2 step/start
+seq=3 request/header
+seq=4 assistant/attempt
+seq=5 assistant/message
+seq=6 tool/call
+seq=7 tool/result
+seq=8 step/end
+seq=9 step/start
+seq=10 request/header
+seq=11 assistant/attempt
+seq=12 assistant/message
+seq=13 step/end
+seq=14 turn/end
+events=15
+--- attempts seen by the provider ---
+requests=2 toolBodyRuns=1
+request[0] provider=fake model=fake-1 messages=1
+  message[0] role=user content="read a.txt" blocks=text
+request[1] provider=fake model=fake-1 messages=3
+  message[0] role=user content="read a.txt" blocks=text
+  message[1] role=assistant content="" blocks=tool-call:read_file
+  message[2] role=tool content="contents of a.txt" blocks=text
+--- history rebuilt from the log ---
+history[0] role=user content="read a.txt" blocks=text
+history[1] role=assistant content="" blocks=tool-call:read_file
+history[2] role=tool content="contents of a.txt" blocks=text
+history[3] role=assistant content="a.txt says hello" blocks=text
+history=4
+second request carries the tool result=true
+--- shutdown ---
+state=disposed

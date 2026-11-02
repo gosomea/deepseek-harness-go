@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "kind": "persistence-scenarios",
+  "reference": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "paths": [
+      "packages/session/session-persistence/src/handle.ts",
+      "packages/session/session-persistence/src/errors.ts",
+      "packages/session/session-persistence-jsonl/src/format.ts",
+      "packages/session/session-persistence-jsonl/src/storage.ts",
+      "packages/session/session-checkpoint-policy",
+      "docs/subsystems/persistence.zh.md"
+    ]
+  },
+  "fixtures": [
+    "scenarios/reopen-consistency.json",
+    "scenarios/second-writer-refused.json",
+    "scenarios/middle-corruption.json",
+    "scenarios/truncated-tail.json",
+    "scenarios/future-version.json"
+  ],
+  "comparison": "same-implementation determinism, not cross-implementation parity (see DIVERGENCES.md D1)",
+  "formatId": "dsh-go-session",
+  "formatVersion": 1,
+  "writesOnlyUnder": "the temporary directory the test creates",
+  "network": "none",
+  "credentials": "none"
+}

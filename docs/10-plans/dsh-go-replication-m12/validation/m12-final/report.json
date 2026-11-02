@@ -1,0 +1,3296 @@
+{
+  "schema_version": 1,
+  "status": {
+    "plan": "dsh-go-replication-m12",
+    "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+    "nodes": {
+      "m121-ledger": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "410e4d2af8964c28ada4cc8bbae1e6b8",
+        "subject": "78511987b3dd2a4515360f4c94d850bd5093106944f48e1e025f2ad05b39e652",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m122-config-compat": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "aaf56ca199a24c64b57cfdadc8415064",
+        "subject": "0f6cf0669989349d859ee818ae6c40c59fd3da0f197622dbf782aa57d97df74f",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m123-session-format": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "84be9848175b48838b57d1ddddd90e68",
+        "subject": "f2e098384a15f7c54c8ee5c78eeb3bba600dc5e50a6afe031cc726d0bd2de7b6",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m124-ptc-workflow": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "d56a8ab05d22496ca560658dc5ac0da2",
+        "subject": "5298e5fe44739ae033982d2e93e64dc9538c1a7a62caf5b9cfd0d9379c69b68e",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m125-experimental": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "bfd393b6d8f447ca9416e29bfacbeb47",
+        "subject": "8cd6b26b8000dac7f1159fc4ce269f66a1c24d0acf2f442f320bebef2387cdda",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m126-credentials-telemetry": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "d5886580bc0e45c8bb24b02122739cf8",
+        "subject": "a1e3e21ccbaecbe0c6f13c6beb30ffb7246ee0987277bac90a59799ba488ed99",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m127-native-bench": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "8d9fdbfa36494c9ebcfa2ceec934b179",
+        "subject": "01a8fe36db82ceda1b8cd0afd0849083f06e0dae5d75c5f39861c4aa7bc4078a",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m128-release": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "4d22299124f84a849ed092c5f6f0e237",
+        "subject": "08b50aeb3aebec0ab686c553fa663a604af4d42e7c8958cf3f3db7c86d42ed9e",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m129-docs-website": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "15c33b0d866d4b1babee58379f82904f",
+        "subject": "3f4f9c363f8709903486ce06c9eda0873caa49fc8262fbc1a6339e2becb97aa5",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "g12-acceptance": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "dc313b2b5b954f27ab69bbaca3f8aa01",
+        "subject": "04c9b94e0a0c72a6631d099aae189795656f704f31f75b1145811366d9628a36",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      }
+    },
+    "complete": true
+  },
+  "events": [
+    {
+      "time": 1792489537.852611,
+      "action": "claim",
+      "node": "m121-ledger",
+      "token": "b82a9bb0655b4791b9b56d3ecab7185a",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489538.1547918,
+      "action": "start",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489538.256858,
+      "action": "verify",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489541.9338691,
+      "action": "awaiting-review",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489542.2488031,
+      "action": "passed",
+      "node": "m121-ledger",
+      "receipt_hash": "b20ee1ad5a47f893f6264f1807c5d6f12702c90852f2113e873e89506f9c453a",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489542.441417,
+      "action": "claim",
+      "node": "m122-gap-record",
+      "token": "30b5cce55d1c4d2bbd1e79b11224c56b",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489542.6717691,
+      "action": "start",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489542.7821,
+      "action": "verify",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489542.988242,
+      "action": "awaiting-review",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489543.3054569,
+      "action": "passed",
+      "node": "m122-gap-record",
+      "receipt_hash": "b9163ed10b1dfbaffc3a94bbfca75cad651eda5d29eae743fdd0c1b867c02d9c",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489543.501436,
+      "action": "claim",
+      "node": "m123-release-record",
+      "token": "c53009f5503b496e88c4116e7c6c8f0a",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489543.7286148,
+      "action": "start",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489543.838676,
+      "action": "verify",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489544.048647,
+      "action": "awaiting-review",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489544.3685582,
+      "action": "passed",
+      "node": "m123-release-record",
+      "receipt_hash": "470c3c58cc16961802dc9a567a4e55ffbd2347496c06bf9e0ceb30fc793aefde",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489544.5913181,
+      "action": "claim",
+      "node": "m124-scope-review",
+      "token": "044a2d5bff4b4d5a9c89135641ab1f70",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489544.8548,
+      "action": "start",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489544.988147,
+      "action": "verify",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489545.22291,
+      "action": "awaiting-review",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489545.599754,
+      "action": "passed",
+      "node": "m124-scope-review",
+      "receipt_hash": "d86767766ccc7e2ceb1997ca7b4369fe765c891d2a3129a5f57cfa971a448d81",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489657.37561,
+      "action": "revise",
+      "node": null,
+      "previous_revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+      "previous_attempts": [
+        "b82a9bb0655b4791b9b56d3ecab7185a",
+        "30b5cce55d1c4d2bbd1e79b11224c56b",
+        "c53009f5503b496e88c4116e7c6c8f0a",
+        "044a2d5bff4b4d5a9c89135641ab1f70"
+      ]
+    },
+    {
+      "time": 1792489657.556004,
+      "action": "claim",
+      "node": "m121-ledger",
+      "token": "0b052037676e442895eac3d9d35d0790",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489657.826421,
+      "action": "start",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489657.9323788,
+      "action": "verify",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489660.665185,
+      "action": "awaiting-review",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489660.973269,
+      "action": "passed",
+      "node": "m121-ledger",
+      "receipt_hash": "fa456570309566fc75328e1c3b43e5757dfe1f06dd72edd2b107f52273a40127",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489661.168113,
+      "action": "claim",
+      "node": "m122-gap-record",
+      "token": "ba396fbf9ff6436a8eb2d3fac462b484",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489661.4024398,
+      "action": "start",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489661.517937,
+      "action": "verify",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489661.736989,
+      "action": "awaiting-review",
+      "node": "m122-gap-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489662.055114,
+      "action": "passed",
+      "node": "m122-gap-record",
+      "receipt_hash": "6f24be40a1b2f88dd6c535e762ac42d7de3bb0b2bc7e91a5de4c565792445a06",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489662.252682,
+      "action": "claim",
+      "node": "m123-release-record",
+      "token": "32b51960d3cc4c75a40a13236de8cc02",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489662.4856472,
+      "action": "start",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489662.599676,
+      "action": "verify",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489662.827404,
+      "action": "awaiting-review",
+      "node": "m123-release-record",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489663.1565728,
+      "action": "passed",
+      "node": "m123-release-record",
+      "receipt_hash": "cf37b517a0216ffa1b81db9aa5f92986032b445bc89177d5125b1a9ceddb7e66",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489663.393674,
+      "action": "claim",
+      "node": "m124-scope-review",
+      "token": "2132ace4538648edb36eb5c05d037d73",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489663.649944,
+      "action": "start",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489663.786347,
+      "action": "verify",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489664.0346959,
+      "action": "awaiting-review",
+      "node": "m124-scope-review",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489664.394067,
+      "action": "passed",
+      "node": "m124-scope-review",
+      "receipt_hash": "382dcaecac8e5455a2eb7ab6d3e24d90fb4ac6884870dca2154f054c80233b31",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489668.724548,
+      "action": "claim",
+      "node": "g12-acceptance",
+      "token": "860e1e5d8bb14e2db85e3020c017cd3a",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489668.977387,
+      "action": "start",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489669.111437,
+      "action": "verify",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489762.9030359,
+      "action": "awaiting-review",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792489763.3040938,
+      "action": "passed",
+      "node": "g12-acceptance",
+      "receipt_hash": "ebba5ee4b8e6a9814b9286e53910db66592adf1dd40d19ed2451d11da135ce12",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490130.1159182,
+      "action": "revise",
+      "node": null,
+      "previous_revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "previous_attempts": [
+        "0b052037676e442895eac3d9d35d0790",
+        "ba396fbf9ff6436a8eb2d3fac462b484",
+        "32b51960d3cc4c75a40a13236de8cc02",
+        "2132ace4538648edb36eb5c05d037d73",
+        "860e1e5d8bb14e2db85e3020c017cd3a"
+      ]
+    },
+    {
+      "time": 1792490130.313725,
+      "action": "claim",
+      "node": "m121-ledger",
+      "token": "410e4d2af8964c28ada4cc8bbae1e6b8",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490130.656607,
+      "action": "start",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490130.78477,
+      "action": "verify",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490134.587132,
+      "action": "awaiting-review",
+      "node": "m121-ledger",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490134.928355,
+      "action": "passed",
+      "node": "m121-ledger",
+      "receipt_hash": "e0afe54e532c8603f5e19a1278ce7f70bb6f184227f9f9b267c24295708b3fce",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490135.151367,
+      "action": "claim",
+      "node": "m122-config-compat",
+      "token": "aaf56ca199a24c64b57cfdadc8415064",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490135.408366,
+      "action": "start",
+      "node": "m122-config-compat",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490135.5404449,
+      "action": "verify",
+      "node": "m122-config-compat",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490135.7729752,
+      "action": "awaiting-review",
+      "node": "m122-config-compat",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490136.132629,
+      "action": "passed",
+      "node": "m122-config-compat",
+      "receipt_hash": "b29f41b1a2fb152c612dd3d48e6941b2e87c5259a86ccebe5ca221554f4cbb04",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490136.353199,
+      "action": "claim",
+      "node": "m123-session-format",
+      "token": "84be9848175b48838b57d1ddddd90e68",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490136.621346,
+      "action": "start",
+      "node": "m123-session-format",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490136.755434,
+      "action": "verify",
+      "node": "m123-session-format",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490136.992076,
+      "action": "awaiting-review",
+      "node": "m123-session-format",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490137.367949,
+      "action": "passed",
+      "node": "m123-session-format",
+      "receipt_hash": "d125a5b6287cd1f4f869cce92348d488b7ae994161069a2a5d6d8a32d812a4c0",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490137.590394,
+      "action": "claim",
+      "node": "m124-ptc-workflow",
+      "token": "d56a8ab05d22496ca560658dc5ac0da2",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490137.859712,
+      "action": "start",
+      "node": "m124-ptc-workflow",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490138.0042088,
+      "action": "verify",
+      "node": "m124-ptc-workflow",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490138.242477,
+      "action": "awaiting-review",
+      "node": "m124-ptc-workflow",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490138.60252,
+      "action": "passed",
+      "node": "m124-ptc-workflow",
+      "receipt_hash": "bed85ac5605ca4383335793eb713a9fcd3c409b810268bbdf9f33c9d880d731d",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490138.8328261,
+      "action": "claim",
+      "node": "m125-experimental",
+      "token": "bfd393b6d8f447ca9416e29bfacbeb47",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490139.093472,
+      "action": "start",
+      "node": "m125-experimental",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490139.227836,
+      "action": "verify",
+      "node": "m125-experimental",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490139.472838,
+      "action": "awaiting-review",
+      "node": "m125-experimental",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490139.8365288,
+      "action": "passed",
+      "node": "m125-experimental",
+      "receipt_hash": "6b3dc60cbf5cdb05a5c69587794e39f419c5c1c4fcff3153feb9907a46b55ed9",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490144.706496,
+      "action": "claim",
+      "node": "m126-credentials-telemetry",
+      "token": "d5886580bc0e45c8bb24b02122739cf8",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490144.9652941,
+      "action": "start",
+      "node": "m126-credentials-telemetry",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490145.100544,
+      "action": "verify",
+      "node": "m126-credentials-telemetry",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490147.380796,
+      "action": "awaiting-review",
+      "node": "m126-credentials-telemetry",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490147.7447622,
+      "action": "passed",
+      "node": "m126-credentials-telemetry",
+      "receipt_hash": "3aafd6994f032e19d9672ac27d3bbee880e84637423d73104319a7f5664c8673",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490147.969932,
+      "action": "claim",
+      "node": "m127-native-bench",
+      "token": "8d9fdbfa36494c9ebcfa2ceec934b179",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490148.2322419,
+      "action": "start",
+      "node": "m127-native-bench",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490148.369417,
+      "action": "verify",
+      "node": "m127-native-bench",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490152.306392,
+      "action": "awaiting-review",
+      "node": "m127-native-bench",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490152.676716,
+      "action": "passed",
+      "node": "m127-native-bench",
+      "receipt_hash": "94aeb88bb3ac5cddcb2c3c3dd57bd46babbd0744ceced4b59ed9cb90576a9af2",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490152.928403,
+      "action": "claim",
+      "node": "m128-release",
+      "token": "4d22299124f84a849ed092c5f6f0e237",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490153.2042408,
+      "action": "start",
+      "node": "m128-release",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490153.3463218,
+      "action": "verify",
+      "node": "m128-release",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490153.582761,
+      "action": "awaiting-review",
+      "node": "m128-release",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490153.971307,
+      "action": "passed",
+      "node": "m128-release",
+      "receipt_hash": "7bfa54c3eb748335013038e2705fee31e2cbabc3236a4f6ceb413c3b24228602",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490154.3298008,
+      "action": "claim",
+      "node": "m129-docs-website",
+      "token": "15c33b0d866d4b1babee58379f82904f",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490154.724969,
+      "action": "start",
+      "node": "m129-docs-website",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490154.989999,
+      "action": "verify",
+      "node": "m129-docs-website",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490155.374159,
+      "action": "awaiting-review",
+      "node": "m129-docs-website",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490156.0219898,
+      "action": "passed",
+      "node": "m129-docs-website",
+      "receipt_hash": "d7a19bd76f3bc1ef80e64aecba91ff48da4792541b6d582b3e5547e35b7241c4",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490161.445336,
+      "action": "claim",
+      "node": "g12-acceptance",
+      "token": "dc313b2b5b954f27ab69bbaca3f8aa01",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490161.789087,
+      "action": "start",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490162.000095,
+      "action": "verify",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490260.493851,
+      "action": "awaiting-review",
+      "node": "g12-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792490261.0616589,
+      "action": "passed",
+      "node": "g12-acceptance",
+      "receipt_hash": "92abff6259febc1bf583d369a9e07bde5e29e96c7180ce45b8368f83144e154f",
+      "previous_attempts": []
+    }
+  ],
+  "receipts": {
+    "m121-ledger": {
+      "node": "m121-ledger",
+      "attempt": "410e4d2af8964c28ada4cc8bbae1e6b8",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "ledger-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792490130.790884,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490133.1248598,
+          "stdout_sha256": "0f68a001836a1a551703833b6eaadad6bd1d260ea71eafd85a9378235f94b225",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-complete",
+          "argv": [
+            "sh",
+            "-c",
+            "out=$(go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json) && echo \"$out\" && echo \"$out\" | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490133.126515,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490134.3760629,
+          "stdout_sha256": "987b05d805510d7cae4d85665d7e127706d710a6197af4f465db8f1441340082",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "internal/conformance/ledger.go": {
+          "sha256": "7ce49303171458f95d79c05f41f4ec94c7b2c5c0be36d8ec14e884a73ed7192f",
+          "executable": false,
+          "symlink": null
+        },
+        "internal/conformance/ledger_test.go": {
+          "sha256": "03808febda7eaf91556287522f0ff2ae8b54332e12735722281941b4161c5a18",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/dispositions.json": {
+          "sha256": "e18b92aa2c92de1658892a5d8bb372d1e80517ff150ffdfb3cec16c55cf42613",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/conformance/ledger.md": {
+          "sha256": "31c1ff42911fd20f16b8b56826a99fc0dee40c37171e0f86daafca3d9431a982",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "78511987b3dd2a4515360f4c94d850bd5093106944f48e1e025f2ad05b39e652",
+      "review": {
+        "node": "m121-ledger",
+        "attempt": "410e4d2af8964c28ada4cc8bbae1e6b8",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "78511987b3dd2a4515360f4c94d850bd5093106944f48e1e025f2ad05b39e652",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "internal/conformance/ledger.go",
+          "internal/conformance/ledger_test.go",
+          "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+          "docs/conformance/ledger.md"
+        ],
+        "findings": []
+      }
+    },
+    "m122-config-compat": {
+      "node": "m122-config-compat",
+      "attempt": "aaf56ca199a24c64b57cfdadc8415064",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "config-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/configuration/compat.md && grep -q 'YAML' docs/configuration/compat.md && grep -qi 'profile' docs/configuration/compat.md && grep -q '未实现' docs/configuration/compat.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490135.547615,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490135.560003,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/configuration/compat.md": {
+          "sha256": "fc5c3d0edbee407e9473011dc07858585692574858bfdfe5cd0b9bb1e064e81e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "0f6cf0669989349d859ee818ae6c40c59fd3da0f197622dbf782aa57d97df74f",
+      "review": {
+        "node": "m122-config-compat",
+        "attempt": "aaf56ca199a24c64b57cfdadc8415064",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "0f6cf0669989349d859ee818ae6c40c59fd3da0f197622dbf782aa57d97df74f",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/configuration/compat.md"
+        ],
+        "findings": []
+      }
+    },
+    "m123-session-format": {
+      "node": "m123-session-format",
+      "attempt": "84be9848175b48838b57d1ddddd90e68",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "format-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/session-format/compat.md && grep -qi 'Session' docs/session-format/compat.md && grep -qi 'migration\\|迁移' docs/session-format/compat.md && grep -q '未实现' docs/session-format/compat.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490136.764192,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490136.7767391,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/session-format/compat.md": {
+          "sha256": "0bbf889c236380d92447f4d7d794b24f66d401ea424530b906f272537a33df75",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "f2e098384a15f7c54c8ee5c78eeb3bba600dc5e50a6afe031cc726d0bd2de7b6",
+      "review": {
+        "node": "m123-session-format",
+        "attempt": "84be9848175b48838b57d1ddddd90e68",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "f2e098384a15f7c54c8ee5c78eeb3bba600dc5e50a6afe031cc726d0bd2de7b6",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/session-format/compat.md"
+        ],
+        "findings": []
+      }
+    },
+    "m124-ptc-workflow": {
+      "node": "m124-ptc-workflow",
+      "attempt": "d56a8ab05d22496ca560658dc5ac0da2",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "ptc-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/ptc/gaps.md && grep -qi 'PTC' docs/ptc/gaps.md && grep -qi 'workflow' docs/ptc/gaps.md && grep -q '未实现\\|gap' docs/ptc/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490138.0123992,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490138.023635,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/ptc/gaps.md": {
+          "sha256": "0a34429352a299923560ecb26a8c3613d39ba5f5cc8c26684de3ff6396ca7436",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "5298e5fe44739ae033982d2e93e64dc9538c1a7a62caf5b9cfd0d9379c69b68e",
+      "review": {
+        "node": "m124-ptc-workflow",
+        "attempt": "d56a8ab05d22496ca560658dc5ac0da2",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "5298e5fe44739ae033982d2e93e64dc9538c1a7a62caf5b9cfd0d9379c69b68e",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/ptc/gaps.md"
+        ],
+        "findings": []
+      }
+    },
+    "m125-experimental": {
+      "node": "m125-experimental",
+      "attempt": "bfd393b6d8f447ca9416e29bfacbeb47",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "experimental-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/experimental/gaps.md && grep -qi 'browser-use' docs/experimental/gaps.md && grep -qi 'computer-use' docs/experimental/gaps.md && grep -qi 'Office\\|document' docs/experimental/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490139.236829,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490139.249109,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/experimental/gaps.md": {
+          "sha256": "18d8137dcaa06465284bd2ac4d2485ddbcd0fb85f224ec81d059edea0f11ce8a",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "8cd6b26b8000dac7f1159fc4ce269f66a1c24d0acf2f442f320bebef2387cdda",
+      "review": {
+        "node": "m125-experimental",
+        "attempt": "bfd393b6d8f447ca9416e29bfacbeb47",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "8cd6b26b8000dac7f1159fc4ce269f66a1c24d0acf2f442f320bebef2387cdda",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/experimental/gaps.md"
+        ],
+        "findings": []
+      }
+    },
+    "m126-credentials-telemetry": {
+      "node": "m126-credentials-telemetry",
+      "attempt": "d5886580bc0e45c8bb24b02122739cf8",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "telemetry-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/telemetry/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792490145.110083,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490147.1290822,
+          "stdout_sha256": "80bfc8c84aac55eeaaee9bc2e1dc25bdfad4921d98deaaf48e7b2993d7efe5ef",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/telemetry/doc.go": {
+          "sha256": "bd5f57faa9d01c9225431611c75e1719e4ea61c639647a7e6a8b3be5fe5ebed3",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/telemetry/telemetry.go": {
+          "sha256": "b49dc44ab5eef3dddf982a8aa21312e6390edf1b1f308951476aaec42e625622",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/telemetry/telemetry_test.go": {
+          "sha256": "78a486cbf8bfeae32f32d8759dd177f84f3da9cd341edd6626a9373369d2b345",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/telemetry/README.md": {
+          "sha256": "7104b0e8d4342fd8a6076fda693c1dca2031044e7abc5427d55dad239107db15",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "a1e3e21ccbaecbe0c6f13c6beb30ffb7246ee0987277bac90a59799ba488ed99",
+      "review": {
+        "node": "m126-credentials-telemetry",
+        "attempt": "d5886580bc0e45c8bb24b02122739cf8",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "a1e3e21ccbaecbe0c6f13c6beb30ffb7246ee0987277bac90a59799ba488ed99",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/telemetry/doc.go",
+          "plugins/telemetry/telemetry.go",
+          "plugins/telemetry/telemetry_test.go",
+          "plugins/telemetry/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m127-native-bench": {
+      "node": "m127-native-bench",
+      "attempt": "8d9fdbfa36494c9ebcfa2ceec934b179",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "bench-run",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -run '^$' -bench . -benchmem ./benchmarks/... && test -f docs/release/platform.md && grep -qi '未验证' docs/release/platform.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490148.3791502,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490152.0851252,
+          "stdout_sha256": "aaaff0603a3d60485cfb85b098b9c94cd7ae2a8c26871af3236268700175acdb",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "benchmarks/doc.go": {
+          "sha256": "f4cb7f6fdcbc854e826f188ff4f8d1ef66c33dbd999eaadd47860bd05c386d9f",
+          "executable": false,
+          "symlink": null
+        },
+        "benchmarks/bench_test.go": {
+          "sha256": "c8a961294068be5f78c87104d80ecbdc1e6d5e0dc6e636068b86e6dfab1ec53b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/release/platform.md": {
+          "sha256": "8bb26c2a8e7096845f63968c6816a2f16263050af1786a5d4df405e446b31bb7",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "01a8fe36db82ceda1b8cd0afd0849083f06e0dae5d75c5f39861c4aa7bc4078a",
+      "review": {
+        "node": "m127-native-bench",
+        "attempt": "8d9fdbfa36494c9ebcfa2ceec934b179",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "01a8fe36db82ceda1b8cd0afd0849083f06e0dae5d75c5f39861c4aa7bc4078a",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "benchmarks/doc.go",
+          "benchmarks/bench_test.go",
+          "docs/release/platform.md"
+        ],
+        "findings": []
+      }
+    },
+    "m128-release": {
+      "node": "m128-release",
+      "attempt": "4d22299124f84a849ed092c5f6f0e237",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "release-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/release/distribution.md && grep -qi 'Python SDK' docs/release/distribution.md && grep -qi '签名' docs/release/distribution.md && test -f docs/release/version.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490153.357533,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490153.364201,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/release/distribution.md": {
+          "sha256": "85a2a2efebc76659e4f899768b91d468642d37855d8bdfecd7780a9157583bb9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/release/gaps.md": {
+          "sha256": "80a9118f8b65256a9fe07e0344699296033356965107ed4f74ec5071bc979a97",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/release/version.md": {
+          "sha256": "af20c2ff6663b7233f7441bd158704f23bce8467a229e8b8ca0f0d82820dfb20",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "08b50aeb3aebec0ab686c553fa663a604af4d42e7c8958cf3f3db7c86d42ed9e",
+      "review": {
+        "node": "m128-release",
+        "attempt": "4d22299124f84a849ed092c5f6f0e237",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "08b50aeb3aebec0ab686c553fa663a604af4d42e7c8958cf3f3db7c86d42ed9e",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/release/distribution.md",
+          "docs/release/gaps.md",
+          "docs/release/version.md"
+        ],
+        "findings": []
+      }
+    },
+    "m129-docs-website": {
+      "node": "m129-docs-website",
+      "attempt": "15c33b0d866d4b1babee58379f82904f",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "website-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/website/index.md && grep -qi '导航' docs/website/index.md && test -f docs/conformance/scope.md && grep -q '不声称完整复刻' docs/conformance/scope.md && grep -q 'verified=30 adapted=25 gap=8' docs/conformance/scope.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490155.002133,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490155.014894,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/website/index.md": {
+          "sha256": "8e7edfcd33a092ea122b8a60c3689044d3adb166d824f8725e0294613457384c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/conformance/scope.md": {
+          "sha256": "eee07670b1842773f569bf9cd1438b5a3698035304913658671d46f202111bac",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "3f4f9c363f8709903486ce06c9eda0873caa49fc8262fbc1a6339e2becb97aa5",
+      "review": {
+        "node": "m129-docs-website",
+        "attempt": "15c33b0d866d4b1babee58379f82904f",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "3f4f9c363f8709903486ce06c9eda0873caa49fc8262fbc1a6339e2becb97aa5",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/website/index.md",
+          "docs/conformance/scope.md"
+        ],
+        "findings": []
+      }
+    },
+    "g12-acceptance": {
+      "node": "g12-acceptance",
+      "attempt": "dc313b2b5b954f27ab69bbaca3f8aa01",
+      "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792490162.0131462,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490208.078079,
+          "stdout_sha256": "13a523452c019527a785c379f3894bb0a2906bf796422af3529f9f713f5a4b41",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490208.07847,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490208.1037529,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792490208.103928,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490210.146118,
+          "stdout_sha256": "e13f433b09efceee9b842cc10ee10456d752bd7e36826cb7087f76c963c98357",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "telemetry-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/telemetry/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792490210.146701,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490212.046177,
+          "stdout_sha256": "b82cea70b00d464d32b5c1398c24bd94752ff12e552bffc4722de87b563fb840",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-complete2",
+          "argv": [
+            "sh",
+            "-c",
+            "go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490212.047014,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490212.670916,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "bench-run2",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -run '^$' -bench . -benchmem ./benchmarks/..."
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792490212.671165,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490216.5818298,
+          "stdout_sha256": "6242085ba725db4bce68b34dc99ce188a8f385879f7f255dc18686cb360ff0d4",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792490216.58211,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490217.392982,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792490217.393211,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490243.425708,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792490243.425973,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792490260.118335,
+          "stdout_sha256": "d0d30bba7db6ac5cbb2624d984c7fd6f76eb3a2f7a57aea27b4e6c87901fb56f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "8ae2c8c7bef525c1ca9d140b6e3d9487248883510c09b9bf938e4ad7cc504cc2",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e7af8fa9eecd9797c0b7a3c0661c7a12ce5320c0c309663c76a2c009c1a74436",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "5af100c4131824715b3b5557bacf814f3f82328667d189de5cccca5739a3bcc1",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "068d5ac3ef0b89d964243d907cf30acb223e9ada0aa5070362ee2ce91e35da50",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "49747da3a7acc8185a1a428182027d209ee9779c761bc5d5d61c2343acfaa9bf",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/index.md": {
+          "sha256": "29d871e2129822e0243f4e0463087c1e2fcb03b8f7b4d4a7277c2b7dfa08482e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/index.md": {
+          "sha256": "04e32ce407eb532c6accaa45e240b655ce6de3e6cad3f0628d53f22884f6d604",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "04c9b94e0a0c72a6631d099aae189795656f704f31f75b1145811366d9628a36",
+      "review": {
+        "node": "g12-acceptance",
+        "attempt": "dc313b2b5b954f27ab69bbaca3f8aa01",
+        "revision": "802cb3d256fd95faa7063f10545ba33213c6564dc530dc70d60e788c152bc838",
+        "subject": "04c9b94e0a0c72a6631d099aae189795656f704f31f75b1145811366d9628a36",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/10-plans/dsh-go-replication-m12/plans.md",
+          "docs/testing.md",
+          "docs/README.md",
+          "docs/roadmap.md",
+          "docs/learning/index.md",
+          "docs/10-plans/dsh-go-replication/stages/index.md"
+        ],
+        "findings": []
+      }
+    }
+  },
+  "history": [
+    {
+      "node": "m121-ledger",
+      "attempt": "b82a9bb0655b4791b9b56d3ecab7185a",
+      "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+      "checks": [
+        {
+          "id": "ledger-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792489538.258014,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489540.9568388,
+          "stdout_sha256": "24a05567ad5cea6e48e3b354025d92ed3cb5308f8c8a39df27f4ac13c0f8b80b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-complete",
+          "argv": [
+            "go",
+            "run",
+            "./cmd/conformance",
+            "-inventory",
+            "docs/10-plans/dsh-go-replication/source-inventory.json",
+            "-dispositions",
+            "docs/10-plans/dsh-go-replication-m12/dispositions.json"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792489540.957438,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489541.735712,
+          "stdout_sha256": "bcd9c79a082de468691c739e572cc068012598571e05794eea42844214861981",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "7fc7c0a2b3fb4ae1276f04801468a2959e06b7232e10955ecf6e391f92441a0a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e007f224f835530ec625ced7a97c35750048891157af4908c7b40339a8ebacf5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "internal/conformance/ledger.go": {
+          "sha256": "7ce49303171458f95d79c05f41f4ec94c7b2c5c0be36d8ec14e884a73ed7192f",
+          "executable": false,
+          "symlink": null
+        },
+        "internal/conformance/ledger_test.go": {
+          "sha256": "03808febda7eaf91556287522f0ff2ae8b54332e12735722281941b4161c5a18",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/dispositions.json": {
+          "sha256": "1354fc724a5d2b6aedb1d38f6fa66bd434c7fbe3dfe5e3f196d1452274ae9154",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/conformance/ledger.md": {
+          "sha256": "5cb9ab7b4c1d375d710080f425a58a8a766cc3708f6a9bf608f56c314a6f0685",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "572f5792ca587594c1684114fe389d6662461dd2da7dc5f79b6bc9c66449b6c5",
+      "review": {
+        "node": "m121-ledger",
+        "attempt": "b82a9bb0655b4791b9b56d3ecab7185a",
+        "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+        "subject": "572f5792ca587594c1684114fe389d6662461dd2da7dc5f79b6bc9c66449b6c5",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "internal/conformance/ledger.go",
+          "internal/conformance/ledger_test.go",
+          "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+          "docs/conformance/ledger.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m122-gap-record",
+      "attempt": "30b5cce55d1c4d2bbd1e79b11224c56b",
+      "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+      "checks": [
+        {
+          "id": "gaps-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/compatibility/gaps.md && grep -q '未验证' docs/compatibility/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489542.783923,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489542.790074,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "7fc7c0a2b3fb4ae1276f04801468a2959e06b7232e10955ecf6e391f92441a0a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e007f224f835530ec625ced7a97c35750048891157af4908c7b40339a8ebacf5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/compatibility/gaps.md": {
+          "sha256": "38ff1555486e79a49f32681db5cccca20a2ec6e66beae77fbbdb93189e5bf9ad",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "3cdd43484196d011299eb4fc807190783b6a96aa6f258558b51b76528b7765e0",
+      "review": {
+        "node": "m122-gap-record",
+        "attempt": "30b5cce55d1c4d2bbd1e79b11224c56b",
+        "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+        "subject": "3cdd43484196d011299eb4fc807190783b6a96aa6f258558b51b76528b7765e0",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/compatibility/gaps.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m123-release-record",
+      "attempt": "c53009f5503b496e88c4116e7c6c8f0a",
+      "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+      "checks": [
+        {
+          "id": "release-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/release/gaps.md && test -f docs/release/version.md && grep -q '未验证' docs/release/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489543.841065,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489543.847297,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "7fc7c0a2b3fb4ae1276f04801468a2959e06b7232e10955ecf6e391f92441a0a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e007f224f835530ec625ced7a97c35750048891157af4908c7b40339a8ebacf5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/release/gaps.md": {
+          "sha256": "80a9118f8b65256a9fe07e0344699296033356965107ed4f74ec5071bc979a97",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/release/version.md": {
+          "sha256": "af20c2ff6663b7233f7441bd158704f23bce8467a229e8b8ca0f0d82820dfb20",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "d6e2a313fe59a4a823fc212710154b5334fdf873c42d30ddca6b5abb80bd961b",
+      "review": {
+        "node": "m123-release-record",
+        "attempt": "c53009f5503b496e88c4116e7c6c8f0a",
+        "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+        "subject": "d6e2a313fe59a4a823fc212710154b5334fdf873c42d30ddca6b5abb80bd961b",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/release/gaps.md",
+          "docs/release/version.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m124-scope-review",
+      "attempt": "044a2d5bff4b4d5a9c89135641ab1f70",
+      "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+      "checks": [
+        {
+          "id": "scope-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/conformance/scope.md && grep -q '不声称完整复刻' docs/conformance/scope.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489544.9919071,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489544.998353,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "7fc7c0a2b3fb4ae1276f04801468a2959e06b7232e10955ecf6e391f92441a0a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "e007f224f835530ec625ced7a97c35750048891157af4908c7b40339a8ebacf5",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/conformance/scope.md": {
+          "sha256": "919945e440c02f131a02b19c3280d20865ef15918c47a7e006b8de386f461d60",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "e1b533605c9cf069637bd57bccc214464589afd54965d46b1e9767ed0bcdadf9",
+      "review": {
+        "node": "m124-scope-review",
+        "attempt": "044a2d5bff4b4d5a9c89135641ab1f70",
+        "revision": "9ef02cb70d88f55f7b165c9714803119e53e16699a22e62fc59981772b24c113",
+        "subject": "e1b533605c9cf069637bd57bccc214464589afd54965d46b1e9767ed0bcdadf9",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/conformance/scope.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m121-ledger",
+      "attempt": "0b052037676e442895eac3d9d35d0790",
+      "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "checks": [
+        {
+          "id": "ledger-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792489657.935807,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489659.857829,
+          "stdout_sha256": "e13f433b09efceee9b842cc10ee10456d752bd7e36826cb7087f76c963c98357",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-complete",
+          "argv": [
+            "sh",
+            "-c",
+            "out=$(go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json) && echo \"$out\" && echo \"$out\" | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792489659.858488,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489660.465324,
+          "stdout_sha256": "987b05d805510d7cae4d85665d7e127706d710a6197af4f465db8f1441340082",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "62f6afc3a338bc1c2fab3f5edffb6e036f9c108625aee53bf847b721d20bb7e8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "internal/conformance/ledger.go": {
+          "sha256": "7ce49303171458f95d79c05f41f4ec94c7b2c5c0be36d8ec14e884a73ed7192f",
+          "executable": false,
+          "symlink": null
+        },
+        "internal/conformance/ledger_test.go": {
+          "sha256": "03808febda7eaf91556287522f0ff2ae8b54332e12735722281941b4161c5a18",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/dispositions.json": {
+          "sha256": "e18b92aa2c92de1658892a5d8bb372d1e80517ff150ffdfb3cec16c55cf42613",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/conformance/ledger.md": {
+          "sha256": "31c1ff42911fd20f16b8b56826a99fc0dee40c37171e0f86daafca3d9431a982",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "6167e37eb37bdb1fbb5ab21824212892b268e41d38c6c5297e5453edcef538c6",
+      "review": {
+        "node": "m121-ledger",
+        "attempt": "0b052037676e442895eac3d9d35d0790",
+        "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+        "subject": "6167e37eb37bdb1fbb5ab21824212892b268e41d38c6c5297e5453edcef538c6",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "internal/conformance/ledger.go",
+          "internal/conformance/ledger_test.go",
+          "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+          "docs/conformance/ledger.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m122-gap-record",
+      "attempt": "ba396fbf9ff6436a8eb2d3fac462b484",
+      "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "checks": [
+        {
+          "id": "gaps-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/compatibility/gaps.md && grep -q '未验证' docs/compatibility/gaps.md && grep -qi 'YAML' docs/compatibility/gaps.md && grep -qi 'Session' docs/compatibility/gaps.md && grep -qi 'PTC' docs/compatibility/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489661.521929,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489661.534251,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "62f6afc3a338bc1c2fab3f5edffb6e036f9c108625aee53bf847b721d20bb7e8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/compatibility/gaps.md": {
+          "sha256": "38ff1555486e79a49f32681db5cccca20a2ec6e66beae77fbbdb93189e5bf9ad",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "4743909e5ca487f0f16b9469b6f513494f7244a3f1977d284b471f81527804f9",
+      "review": {
+        "node": "m122-gap-record",
+        "attempt": "ba396fbf9ff6436a8eb2d3fac462b484",
+        "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+        "subject": "4743909e5ca487f0f16b9469b6f513494f7244a3f1977d284b471f81527804f9",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/compatibility/gaps.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m123-release-record",
+      "attempt": "32b51960d3cc4c75a40a13236de8cc02",
+      "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "checks": [
+        {
+          "id": "release-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/release/gaps.md && test -f docs/release/version.md && grep -q '未验证' docs/release/gaps.md && grep -qi '签名' docs/release/gaps.md && grep -qi 'Python SDK' docs/release/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489662.604008,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489662.616605,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "62f6afc3a338bc1c2fab3f5edffb6e036f9c108625aee53bf847b721d20bb7e8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/release/gaps.md": {
+          "sha256": "80a9118f8b65256a9fe07e0344699296033356965107ed4f74ec5071bc979a97",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/release/version.md": {
+          "sha256": "af20c2ff6663b7233f7441bd158704f23bce8467a229e8b8ca0f0d82820dfb20",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "85fd0dbf83318aaa9d7f241e9b9e2c19f84c70d8e85258404f12708749886e72",
+      "review": {
+        "node": "m123-release-record",
+        "attempt": "32b51960d3cc4c75a40a13236de8cc02",
+        "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+        "subject": "85fd0dbf83318aaa9d7f241e9b9e2c19f84c70d8e85258404f12708749886e72",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/release/gaps.md",
+          "docs/release/version.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m124-scope-review",
+      "attempt": "2132ace4538648edb36eb5c05d037d73",
+      "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "checks": [
+        {
+          "id": "scope-present",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/conformance/scope.md && grep -q '不声称完整复刻' docs/conformance/scope.md && grep -q 'verified=30 adapted=25 gap=8' docs/conformance/scope.md"
+          ],
+          "cwd": ".",
+          "timeout": 60,
+          "started": 1792489663.8001862,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489663.806787,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "62f6afc3a338bc1c2fab3f5edffb6e036f9c108625aee53bf847b721d20bb7e8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/conformance/scope.md": {
+          "sha256": "eee07670b1842773f569bf9cd1438b5a3698035304913658671d46f202111bac",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "13c02cde511770af8696f159e1fab279ef6c0d26f94c8d4342cfb815753661e6",
+      "review": {
+        "node": "m124-scope-review",
+        "attempt": "2132ace4538648edb36eb5c05d037d73",
+        "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+        "subject": "13c02cde511770af8696f159e1fab279ef6c0d26f94c8d4342cfb815753661e6",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/conformance/scope.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "g12-acceptance",
+      "attempt": "860e1e5d8bb14e2db85e3020c017cd3a",
+      "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792489669.11708,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489718.90848,
+          "stdout_sha256": "767a542333c6a6f00778b18df0b170b7836c7be413dbee68fec3adaa8067e29b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792489718.908831,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489718.932193,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792489718.932439,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489721.007262,
+          "stdout_sha256": "d870248b69d05e02ecb1544fb213142583aa720c5420538de047bc010e949e62",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ledger-complete2",
+          "argv": [
+            "sh",
+            "-c",
+            "go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792489721.008561,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489721.604749,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792489721.605026,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489722.387957,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792489722.388227,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489747.351063,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792489747.351298,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792489762.620432,
+          "stdout_sha256": "bf4d881ff1bade423fd51a9c9da4a57aab20efc470a12670a5aac30be48d5651",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plan.json": {
+          "sha256": "62f6afc3a338bc1c2fab3f5edffb6e036f9c108625aee53bf847b721d20bb7e8",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md": {
+          "sha256": "11ae5b30cae37d04946f9d1bc7ee2fd17e0a54b7aa3eda03c80f3f3ed2d741c9",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/source-inventory.json": {
+          "sha256": "a1138d401913b63c6030140c29f1d75a92e5c7de6a8b510d18222085b8322e9c",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m11/plans.md": {
+          "sha256": "cf157d083907e4561cd69615790609e38d4cdd28f6581818b20da2d00a2faf94",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/10-plans/dsh-go-replication-m12/plans.md": {
+          "sha256": "59937d66457070b4da258fe60cc13898d846115cdac074006993864ddd000d6e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "5af100c4131824715b3b5557bacf814f3f82328667d189de5cccca5739a3bcc1",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "068d5ac3ef0b89d964243d907cf30acb223e9ada0aa5070362ee2ce91e35da50",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "49747da3a7acc8185a1a428182027d209ee9779c761bc5d5d61c2343acfaa9bf",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/index.md": {
+          "sha256": "29d871e2129822e0243f4e0463087c1e2fcb03b8f7b4d4a7277c2b7dfa08482e",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/index.md": {
+          "sha256": "04e32ce407eb532c6accaa45e240b655ce6de3e6cad3f0628d53f22884f6d604",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "558ecd1e6bfe97bc56e98e8d9fd62985df8f787871961d8721c7bf9eac2489de",
+      "review": {
+        "node": "g12-acceptance",
+        "attempt": "860e1e5d8bb14e2db85e3020c017cd3a",
+        "revision": "d0604bc5079d633224ab33f36cd6f0e01c9602963e3e0f71d0ddc14d8c9552ef",
+        "subject": "558ecd1e6bfe97bc56e98e8d9fd62985df8f787871961d8721c7bf9eac2489de",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/10-plans/dsh-go-replication-m12/plans.md",
+          "docs/testing.md",
+          "docs/README.md",
+          "docs/roadmap.md",
+          "docs/learning/index.md",
+          "docs/10-plans/dsh-go-replication/stages/index.md"
+        ],
+        "findings": []
+      }
+    }
+  ]
+}

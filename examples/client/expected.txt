@@ -1,0 +1,4 @@
+resumed through: 3
+resynced: false
+composed equals full: true
+resync fallback: true through 5

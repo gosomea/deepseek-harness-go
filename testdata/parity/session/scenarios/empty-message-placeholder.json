@@ -1,0 +1,15 @@
+{
+  "id": "empty-message-placeholder",
+  "title": "An empty system message keeps its surface place and derives to no model message.",
+  "events": [
+    {"type": "system/message", "seq": 0, "time": 1700000000000,
+     "data": {"turn": 1, "step": 1, "message": {"id": "s1", "role": "system", "content": [], "source": {"kind": "system-prompt"}}},
+     "surfaceOp": "append"},
+    {"type": "user/message", "seq": 1, "time": 1700000000001,
+     "data": {"id": "u1", "role": "user", "content": [{"type": "text", "text": "prompt"}], "source": {"kind": "user"}},
+     "surfaceOp": "append"},
+    {"type": "assistant/message", "seq": 2, "time": 1700000000002,
+     "data": {"turn": 1, "step": 1, "message": {"id": "a1", "role": "assistant", "content": [], "source": {"kind": "model", "provider": "fake", "model": "fake-1"}}},
+     "surfaceOp": "append"}
+  ]
+}

@@ -1,0 +1,23 @@
+--- log ---
+seq=0 turn/start          surface=false derives=none
+seq=1 user/message        surface=true  derives="read a.txt"
+seq=2 assistant/attempt   surface=false derives=none
+seq=3 assistant/message   surface=true  derives="let me read it"
+seq=4 tool/call           surface=false derives=none
+seq=5 tool/result         surface=true  derives="file contents"
+seq=6 user/message        surface=true  derives="[image omitted]"
+seq=7 image/offload       surface=false derives=none
+seq=8 turn/end            surface=false derives=none
+log=9 surface=4
+--- model history ---
+[0] user      id=u1       "read a.txt"
+[1] assistant id=a1       "let me read it"
+[2] tool      id=t1       "file contents"
+[3] user      id=u2       "[image omitted]"
+history=4 contentGeneration=1 replaceGeneration=0
+--- without the interpreter ---
+refused=true
+--- rejection ---
+unknown required refused=true logUnchanged=true
+missing surface marker refused=true logUnchanged=true
+bad replacement refused=true logUnchanged=true

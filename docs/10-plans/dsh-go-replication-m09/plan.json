@@ -1,0 +1,743 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m09",
+  "title": "Go 复刻 DSH：M9 子代理、目标与持久任务",
+  "objectives": {
+    "replication": "让父 Agent 委派、等待、继续和取消子 Agent，并使目标、队列与定时任务在恢复后保持可解释的状态；workflow 先交付 seam 与 fake 引擎，生产 PTC Provider 由 M12.4 验收",
+    "learning": "让读者分清生命周期树、会话谱系与持久队列；比较 goroutine 与持久任务；理解 workflow 的编排与执行分离",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、测试与显式差异；make check 真实通过；未实现项如实标注"
+  },
+  "constraints": [
+    "只执行 M9；M10 协议、M11 客户端与 M12 发行不进入本阶段",
+    "DSH 参考 checkout 只读；固定提交 00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "**fork 记录继承事实**：fork 只记录继承到父事件序列某处，不复制父会话成新子事实",
+    "**能力先声明**：能力不符在 Spawn 前拒绝，不得跑到深处才失败",
+    "**深度有界**：registry 限制嵌套深度，防无界生成",
+    "**持久任务不承诺 exactly-once**：可能已产生副作用但结算丢失的 job 记为 unknown，人工裁决，不自动重放",
+    "**可控时钟**：调度器在注入时钟上 tick，测试可确定地推进时间",
+    "**workflow 校验先于执行**：meta 与 args 不满足时任何步骤都不跑",
+    "新包必须加入 scripts/doccheck 的 coverageRequirement 与其 fixture 测试；不得降低 90% 阈值",
+    "节点 outputs 必须与真实交付物一致；主题页记录真实命令与退出码",
+    "遵循 AGENTS.md 文档与交付门禁；每个新包交付 README、包注释、公开注释与可运行实验",
+    "本契约只描述 M9；M10–M12 不因本阶段通过获得可用状态"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m09/plans.md"
+  ],
+  "final": "g9-acceptance",
+  "nodes": [
+    {
+      "id": "m91-subagent-seam",
+      "title": "M9.1 子代理 seam 与注册表",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "capability/subagent/doc.go",
+        "capability/subagent/subagent.go",
+        "capability/subagent/subagent_test.go",
+        "capability/subagent/README.md",
+        "docs/tasks/subagents.md"
+      ],
+      "writes": [
+        "capability/subagent/",
+        "docs/tasks/subagents.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "subagent-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m92-inprocess-provider",
+      "title": "M9.2 进程内 spawn 与 fork",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m91-subagent-seam"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/subagent/doc.go",
+        "plugins/subagent/provider.go",
+        "plugins/subagent/provider_test.go",
+        "plugins/subagent/README.md"
+      ],
+      "writes": [
+        "plugins/subagent/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "subagent-plugin-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m93-control-wait",
+      "title": "M9.3 控制、等待与深度预算",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m92-inprocess-provider"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "capability/subagent/subagent.go"
+      ],
+      "writes": [
+        "capability/subagent/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "control-depth",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "dispose-child",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m94-taskstate",
+      "title": "M9.4 目标、计划与待办投影",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m93-control-wait"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "capability/taskstate/doc.go",
+        "capability/taskstate/taskstate.go",
+        "capability/taskstate/taskstate_test.go",
+        "capability/taskstate/README.md",
+        "docs/tasks/goals.md"
+      ],
+      "writes": [
+        "capability/taskstate/",
+        "docs/tasks/goals.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "taskstate-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/taskstate/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m95-jobs-schedule",
+      "title": "M9.5 持久任务与调度",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m94-taskstate"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "capability/jobs/doc.go",
+        "capability/jobs/jobs.go",
+        "capability/jobs/jobs_test.go",
+        "capability/jobs/README.md",
+        "plugins/schedule/doc.go",
+        "plugins/schedule/scheduler.go",
+        "plugins/schedule/scheduler_test.go",
+        "plugins/schedule/README.md",
+        "docs/tasks/jobs.md"
+      ],
+      "writes": [
+        "capability/jobs/",
+        "plugins/schedule/",
+        "docs/tasks/jobs.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "jobs-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/jobs/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "schedule-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/schedule/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m96-workflow-fake",
+      "title": "M9.6 workflow seam 与 fake 引擎",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m93-control-wait",
+        "m95-jobs-schedule"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "capability/workflow/doc.go",
+        "capability/workflow/workflow.go",
+        "capability/workflow/workflow_test.go",
+        "capability/workflow/README.md",
+        "plugins/workflow/doc.go",
+        "plugins/workflow/engine.go",
+        "plugins/workflow/engine_test.go",
+        "plugins/workflow/README.md",
+        "docs/tasks/workflow.md"
+      ],
+      "writes": [
+        "capability/workflow/",
+        "plugins/workflow/",
+        "docs/tasks/workflow.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "workflow-seam-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/workflow/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "workflow-engine-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/workflow/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m97-examples",
+      "title": "M9.7 示例与跨重启 fixture",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m96-workflow-fake"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "examples/subagents/main.go",
+        "examples/subagents/main_test.go",
+        "examples/subagents/expected.txt",
+        "examples/subagents/README.md",
+        "examples/jobs/main.go",
+        "examples/jobs/main_test.go",
+        "examples/jobs/expected.txt",
+        "examples/jobs/README.md"
+      ],
+      "writes": [
+        "examples/subagents/",
+        "examples/jobs/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-subagents",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/subagents/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-jobs",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/jobs/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g9-acceptance",
+      "title": "G9 子代理与持久任务验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m97-examples"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m09/plan.json",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m09-long-tasks.md",
+        "docs/10-plans/dsh-go-replication-m08/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "subagent-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "subagent-plugin-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/subagent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "taskstate-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/taskstate/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "jobs-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/jobs/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "schedule-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/schedule/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "workflow-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./capability/workflow/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "workflow-plugin-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/workflow/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-subagents2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/subagents/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-jobs2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/jobs/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "profile=$(mktemp -t dsh-covgate.XXXXXX) && go test -count=1 -coverprofile=\"$profile\" ./... >/dev/null && go run ./scripts/doccheck -coverage \"$profile\""
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

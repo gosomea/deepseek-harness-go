@@ -1,0 +1,13 @@
+{
+  "id": "message-projection",
+  "title": "A content projection rewrites one existing message without adding a surface node.",
+  "events": [
+    {"type": "user/message", "seq": 0, "time": 1700000000000,
+     "data": {"id": "u1", "role": "user", "content": [{"type": "text", "text": "look at this"}], "source": {"kind": "user"}},
+     "surfaceOp": "append"},
+    {"type": "image/offload", "seq": 1, "time": 1700000000001, "data": {"target": 0}},
+    {"type": "user/message", "seq": 2, "time": 1700000000002,
+     "data": {"id": "u2", "role": "user", "content": [{"type": "text", "text": "and this"}], "source": {"kind": "user"}},
+     "surfaceOp": "append"}
+  ]
+}

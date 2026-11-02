@@ -1,0 +1,17 @@
+flowchart TD
+  m91-subagent-seam{{"m91-subagent-seam: passed"}}
+  m92-inprocess-provider{{"m92-inprocess-provider: passed"}}
+  m91-subagent-seam --> m92-inprocess-provider
+  m93-control-wait{{"m93-control-wait: passed"}}
+  m92-inprocess-provider --> m93-control-wait
+  m94-taskstate{{"m94-taskstate: passed"}}
+  m93-control-wait --> m94-taskstate
+  m95-jobs-schedule{{"m95-jobs-schedule: passed"}}
+  m94-taskstate --> m95-jobs-schedule
+  m96-workflow-fake{{"m96-workflow-fake: passed"}}
+  m93-control-wait --> m96-workflow-fake
+  m95-jobs-schedule --> m96-workflow-fake
+  m97-examples{{"m97-examples: passed"}}
+  m96-workflow-fake --> m97-examples
+  g9-acceptance{{"g9-acceptance: passed"}}
+  m97-examples --> g9-acceptance

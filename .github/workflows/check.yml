@@ -24,3 +24,8 @@ jobs:
       - run: go run ./scripts/doccheck
       - run: go run ./scripts/doccheck -examples
       - run: go build ./...
+      # The differential families compare against recorded reference traces here.
+      # Their live half needs the fixed reference build and skips without it, so
+      # it is deliberately not wired into this job.
+      - name: Differential parity against recorded reference traces
+        run: go test -count=1 -run 'Parity' ./internal/testkit

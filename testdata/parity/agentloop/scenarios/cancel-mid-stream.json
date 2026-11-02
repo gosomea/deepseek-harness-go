@@ -1,0 +1,13 @@
+{
+  "id": "cancel-mid-stream",
+  "title": "流中途取消：轮次以取消关闭，且不产生成功消息",
+  "inputs": ["start something long"],
+  "scripts": [
+    [
+      { "type": "text-delta", "index": 0, "text": "partial output" },
+      { "type": "finish", "index": 0, "finish": "stop" }
+    ]
+  ],
+  "tools": [],
+  "actions": [{ "kind": "cancel" }]
+}

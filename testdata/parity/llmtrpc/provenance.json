@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "kind": "llmtrpc-loopback-fixtures",
+  "framework": {
+    "module": "trpc.group/trpc-go/trpc-agent-go",
+    "version": "v1.11.2",
+    "modelPackage": "model/openai",
+    "goDirective": "go 1.21",
+    "recordedFrom": "local probe over httptest loopback server"
+  },
+  "reference": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "paths": [
+      "packages/llm/llm/src/types.ts",
+      "packages/llm/llm/src/assembler.ts",
+      "packages/llm/llm-deepseek/src/adapter.ts"
+    ]
+  },
+  "probedFacts": [
+    "Response.Done stays false for a complete stream; IsPartial=false is the terminal signal",
+    "tool-call deltas require openai.WithShowToolCallDelta(true)",
+    "connection failures and API errors arrive as an in-stream Response.Error with Type=stream_error",
+    "ResponseError.Code is empty; the HTTP status appears inside the message text"
+  ],
+  "network": "none; all fixtures are served by an in-process httptest server",
+  "credentials": "none"
+}

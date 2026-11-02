@@ -1,0 +1,29 @@
+--- pipeline ---
+execute call=call-1 name=read_file arguments={"path":"a.txt"}
+observe call=call-1 stage=lookup outcome= detail="resolved to read_file"
+observe call=call-1 stage=validate outcome= detail="arguments satisfy the schema"
+observe call=call-1 stage=pre-execute outcome= detail="admitted by policy"
+observe call=call-1 stage=execute outcome=success detail=""
+observe call=call-1 stage=post-execute outcome=success detail=""
+observe call=call-1 stage=finalize outcome=success detail=""
+  outcome=success attempts=1 isError=false content="contents of a.txt" error=false
+execute call=call-2 name=read_file arguments={}
+observe call=call-2 stage=lookup outcome= detail="resolved to read_file"
+observe call=call-2 stage=validate outcome=input-invalid detail="tools: tool input invalid: arguments is missing required member \"path\""
+  outcome=input-invalid attempts=0 isError=true content="tools: tool input invalid: arguments is missing required member \"path\"" error=true
+execute call=call-3 name=missing_tool arguments={}
+observe call=call-3 stage=lookup outcome=failed detail="tools: tool not found: missing_tool"
+  outcome=failed attempts=0 isError=true content="tools: tool not found: missing_tool" error=true
+execute call=call-4 name=read_file arguments={"path":7}
+observe call=call-4 stage=lookup outcome= detail="resolved to read_file"
+observe call=call-4 stage=validate outcome=input-invalid detail="tools: tool input invalid: arguments.path must be string, got number"
+  outcome=input-invalid attempts=0 isError=true content="tools: tool input invalid: arguments.path must be string, got number" error=true
+bodyRuns=1
+--- guard monotonicity ---
+guards=2
+denied outcome=denied attempts=0 error=true
+denial names the tool=true
+--- prompt assembly ---
+prompt="You read files on request."
+tool=read_file schema={"type":"object","properties":{"path":{"type":"string","description":"file to read"}},"required":["path"]}
+schema carries the enforced constraint=true

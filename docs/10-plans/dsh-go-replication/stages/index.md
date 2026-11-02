@@ -65,17 +65,29 @@ M9 先交付 workflow seam 与 fake 引擎；原 DSH workflow 的生产 PTC Prov
 
 ## 当前起点
 
-M0、M1 与 M2 均已通过各自的执行契约：
+M0、M1、M2 与 M3 均已通过各自的执行契约：
 
 | 阶段 | 契约 | 状态 |
 | --- | --- | --- |
 | M0 固定基线与 Cordis 差距审计 | [plan.json](../plan.json) | 三个节点通过；审计见 [cordis-audit.md](../cordis-audit.md) |
 | M1 Cordis 下游基础与行为对照 | [plan.json](../../dsh-go-replication-m01/plan.json) | 三个节点通过；结果见 [M1 执行结果](../cordis-audit.md#m1-执行结果) |
 | M2 Loader、配置身份与最小 Profile | [plan.json](../../dsh-go-replication-m02/plan.json) | 六个节点通过；入口见 [M2 主题页](../../dsh-go-replication-m02/plans.md) |
+| M3 对话词汇、Agent Scope 与内存 Session | [plan.json](../../dsh-go-replication-m03/plan.json) | 六个节点按契约推进；入口见 [M3 主题页](../../dsh-go-replication-m03/plans.md) |
+| M4 tRPC 模型适配、工具管线与提示词 | [plan.json](../../dsh-go-replication-m04/plan.json) | 七个节点按契约推进；入口见 [M4 主题页](../../dsh-go-replication-m04/plans.md) |
+| M5 无密钥的完整 Agent 轮次 | [plan.json](../../dsh-go-replication-m05/plan.json) | 七个节点按契约推进；入口见 [M5 主题页](../../dsh-go-replication-m05/plans.md) |
+| M6 Session 持久化、恢复与格式边界 | [plan.json](../../dsh-go-replication-m06/plan.json) | 七个节点按契约推进；入口见 [M6 主题页](../../dsh-go-replication-m06/plans.md) |
+| M7 真实模型、本机执行策略与 CLI | [plan.json](../../dsh-go-replication-m07/plan.json) | 八个节点按契约推进；入口见 [M7 主题页](../../dsh-go-replication-m07/plans.md) |
+| M8 指令、技能、附件与上下文压缩 | [plan.json](../../dsh-go-replication-m08/plan.json) | 八个节点通过；入口见 [M8 主题页](../../dsh-go-replication-m08/plans.md) |
+| M9 子代理、目标与持久任务 | [plan.json](../../dsh-go-replication-m09/plan.json) | 八个节点通过；入口见 [M9 主题页](../../dsh-go-replication-m09/plans.md) |
+| M10 协议、SDK 与远程能力 | [plan.json](../../dsh-go-replication-m10/plan.json) | 九个节点通过；入口见 [M10 主题页](../../dsh-go-replication-m10/plans.md) |
+| M11 Web 客户端与 Desktop 载体 | [plan.json](../../dsh-go-replication-m11/plan.json) | 七个节点通过；入口见 [M11 主题页](../../dsh-go-replication-m11/plans.md) |
+| M12 全域覆盖与发行收口 | [plan.json](../../dsh-go-replication-m12/plan.json) | 五个节点通过；入口见 [M12 主题页](../../dsh-go-replication-m12/plans.md) |
 
-**下一步是 M3**：按 [M3 细化方案](m03-session.md)在本阶段展开前，先把切片关联到复刻与学习两个目标，建立独立 `plan.json`，并把预计目录展开为具体 inputs/outputs 与真实检查。
+**M4 已通过其执行契约**（`plan.json`），交付 `llm` 的流、assembler 与 Provider 契约、`tools` 的 schema 与执行管线、`systemprompt` 的片段装配，以及 `plugins/llmtrpc` 的唯一框架导入边界。**M5 已通过其执行契约**：交付 `agent` 的公共句柄与工厂契约、`agentloop` 的默认驱动（turn/step、inbox、取消与关闭），并在 `app` 上提供最小 Harness 装配，用 fake Provider 完成两次模型请求与一次工具调用。**M6 已通过其执行契约**：交付 `persistence` 的存储 seam、单写者规则、恢复状态与派生缓存，以及 `plugins/sessionjsonl` 的自有格式 JSON Lines 后端（帧、lease、flush 与损坏恢复）。**M7 已通过其执行契约**：交付 `capability` 的五个 seam（workspace/fs/subprocess/sandbox/approval）、`plugins/local` 的本机 Provider 与「先过策略再动手」的工具、`plugins/llmtrpc` 的凭据与端点接线，以及 `cmd/dsh-go` 的会话子命令。**下一步是 M8**：上下文、附件、token 预算与压缩。M7 交出的是受控的执行世界；M8 在其上管理「进入模型的内容」。
 
-M2 的未验项与 M12.2 归属记在 [M2 主题页的 G2 收口一节](../../dsh-go-replication-m02/plans.md#g2-收口的范围决定)：本阶段只交付 JSON 输入形式与显式编译期注册，不声称可读取原 DSH profile、加载 npm 插件或支持配置热重载。
+M3 的分阶段范围、实测差异与未验项记在 [M3 主题页](../../dsh-go-replication-m03/plans.md)。其中三条边界不得读成已完成：真实模型与流属 M4；磁盘持久化、单写者与格式互读属 M6，本阶段明确不声称能读取原 DSH 会话文件；图片附件与真实 offload 投影属 M8。
+
+M2 的未验项与 M12.2 归属仍以 [M2 主题页](../../dsh-go-replication-m02/plans.md) 为准。
 
 M1 通过不代表 M1 页列出的全部缺口都已关闭：M1 只实现了审计判定为下游阻塞且在 M1 范围内的部分。未关闭项（`internal/plugin`／`internal/config`／`internal/update` 事件、`Context.intercept` 分层配置、per-entry isolate、`Context.extend` 的 Go 等价物）在 [M2 主题页](../../dsh-go-replication-m02/plans.md#m1-遗留缺口的归属裁决)逐项给出归属裁决。
 

@@ -1,0 +1,7 @@
+fold=ok
+nodes=[0,1,2]
+replaceGeneration=0
+contentGeneration=0
+replacement=none
+messages=1
+message role:user text:"prompt" kinds:text

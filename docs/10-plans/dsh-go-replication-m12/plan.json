@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m12",
+  "title": "Go 复刻 DSH：M12 全域覆盖与发行收口",
+  "objectives": {
+    "replication": "逐切片（M12.1–M12.9）推进：可交付者真实交付（账本/遥测/基准/文档骨架/逐切片缺口记录），本环境无法完成的发行/签名/native/Python SDK 逐切片记为缺口",
+    "learning": "让读者从全域账本到各切片结论可导航；理解能力账本、兼容矩阵、基准方法与发行边界",
+    "evidence": "账本无未归属项由机器检查；每切片有独立节点与证据；缺口逐切片书面记录；make check 真实通过；不声称完整复刻"
+  },
+  "constraints": [
+    "只执行 M12；按阶段文档 9 切片逐一推进，不折叠",
+    "DSH 参考 checkout 只读；固定提交 00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "**9 切片各有独立节点**：M12.1–M12.9 逐一可追溯，可交付者真做，缺口者逐切片记录理由",
+    "**账本机器可查**：63 项每组必须有处置，未归属拒绝",
+    "**缺口如实记录**：本环境无法完成的项逐切片记未验证，不伪装通过",
+    "**不声称完整复刻**",
+    "新运行时包必须加入 coverageRequirement 与 fixture；不得降低 90% 阈值",
+    "节点 outputs 与真实交付物一致；主题页记录真实命令与退出码",
+    "遵循 AGENTS.md 文档与交付门禁",
+    "本契约只描述 M12"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+    "docs/10-plans/dsh-go-replication-m12/plans.md"
+  ],
+  "final": "g12-acceptance",
+  "nodes": [
+    {
+      "id": "m121-ledger",
+      "title": "M12.1 全域行为账本",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "internal/conformance/ledger.go",
+        "internal/conformance/ledger_test.go",
+        "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+        "docs/conformance/ledger.md"
+      ],
+      "writes": [
+        "internal/conformance/",
+        "docs/10-plans/dsh-go-replication-m12/dispositions.json",
+        "docs/conformance/ledger.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "ledger-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "ledger-complete",
+          "argv": [
+            "sh",
+            "-c",
+            "out=$(go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json) && echo \"$out\" && echo \"$out\" | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m122-config-compat",
+      "title": "M12.2 配置兼容与缺口",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/configuration/compat.md"
+      ],
+      "writes": [
+        "docs/configuration/compat.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "config-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/configuration/compat.md && grep -q 'YAML' docs/configuration/compat.md && grep -qi 'profile' docs/configuration/compat.md && grep -q '未实现' docs/configuration/compat.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m123-session-format",
+      "title": "M12.3 Session 格式兼容与缺口",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/session-format/compat.md"
+      ],
+      "writes": [
+        "docs/session-format/compat.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "format-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/session-format/compat.md && grep -qi 'Session' docs/session-format/compat.md && grep -qi 'migration\\|迁移' docs/session-format/compat.md && grep -q '未实现' docs/session-format/compat.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m124-ptc-workflow",
+      "title": "M12.4 PTC 与生产 workflow 缺口",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/ptc/gaps.md"
+      ],
+      "writes": [
+        "docs/ptc/gaps.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "ptc-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/ptc/gaps.md && grep -qi 'PTC' docs/ptc/gaps.md && grep -qi 'workflow' docs/ptc/gaps.md && grep -q '未实现\\|gap' docs/ptc/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m125-experimental",
+      "title": "M12.5 实验能力缺口",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/experimental/gaps.md"
+      ],
+      "writes": [
+        "docs/experimental/gaps.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "experimental-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/experimental/gaps.md && grep -qi 'browser-use' docs/experimental/gaps.md && grep -qi 'computer-use' docs/experimental/gaps.md && grep -qi 'Office\\|document' docs/experimental/gaps.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m126-credentials-telemetry",
+      "title": "M12.6 凭据/遥测/Provider seam",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/telemetry/doc.go",
+        "plugins/telemetry/telemetry.go",
+        "plugins/telemetry/telemetry_test.go",
+        "plugins/telemetry/README.md"
+      ],
+      "writes": [
+        "plugins/telemetry/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "telemetry-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/telemetry/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m127-native-bench",
+      "title": "M12.7 native 平台矩阵与性能基准",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "benchmarks/doc.go",
+        "benchmarks/bench_test.go",
+        "docs/release/platform.md"
+      ],
+      "writes": [
+        "benchmarks/",
+        "docs/release/platform.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "bench-run",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -run '^$' -bench . -benchmem ./benchmarks/... && test -f docs/release/platform.md && grep -qi '未验证' docs/release/platform.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m128-release",
+      "title": "M12.8 发行与分发缺口",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m121-ledger"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/release/distribution.md",
+        "docs/release/gaps.md",
+        "docs/release/version.md"
+      ],
+      "writes": [
+        "docs/release/distribution.md",
+        "docs/release/gaps.md",
+        "docs/release/version.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "release-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/release/distribution.md && grep -qi 'Python SDK' docs/release/distribution.md && grep -qi '签名' docs/release/distribution.md && test -f docs/release/version.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m129-docs-website",
+      "title": "M12.9 文档网站骨架与范围说明",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m122-config-compat",
+        "m123-session-format",
+        "m124-ptc-workflow",
+        "m125-experimental",
+        "m126-credentials-telemetry",
+        "m127-native-bench",
+        "m128-release"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/website/index.md",
+        "docs/conformance/scope.md"
+      ],
+      "writes": [
+        "docs/website/index.md",
+        "docs/conformance/scope.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "website-record",
+          "argv": [
+            "sh",
+            "-c",
+            "test -f docs/website/index.md && grep -qi '导航' docs/website/index.md && test -f docs/conformance/scope.md && grep -q '不声称完整复刻' docs/conformance/scope.md && grep -q 'verified=30 adapted=25 gap=8' docs/conformance/scope.md"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g12-acceptance",
+      "title": "G12 全域覆盖与发行收口验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m129-docs-website"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m12/plan.json",
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m12-conformance.md",
+        "docs/10-plans/dsh-go-replication/source-inventory.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m12/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "review": true,
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "ledger-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/conformance/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "telemetry-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/telemetry/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "ledger-complete2",
+          "argv": [
+            "sh",
+            "-c",
+            "go run ./cmd/conformance -inventory docs/10-plans/dsh-go-replication/source-inventory.json -dispositions docs/10-plans/dsh-go-replication-m12/dispositions.json | grep -q 'OK (63 groups, verified=30 adapted=25 gap=8)'"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "bench-run2",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -run '^$' -bench . -benchmem ./benchmarks/..."
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        }
+      ]
+    }
+  ]
+}

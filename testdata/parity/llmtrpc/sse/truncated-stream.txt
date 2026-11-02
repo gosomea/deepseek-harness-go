@@ -1,0 +1,2 @@
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","is_partial":true,"choices":[{"index":0,"delta":{"content":"partial"}}]}
+

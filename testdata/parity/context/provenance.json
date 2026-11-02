@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "kind": "context-scenarios",
+  "reference": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "paths": [
+      "packages/context",
+      "packages/spill",
+      "packages/compaction",
+      "docs/subsystems/compaction.zh.md"
+    ]
+  },
+  "fixtures": [
+    "scenarios/long-output-spill.json",
+    "scenarios/compaction-replay.json",
+    "scenarios/summary-failure.json",
+    "scenarios/route-switch.json"
+  ],
+  "comparison": "same-implementation determinism, not cross-implementation parity (see DIVERGENCES.md D1)",
+  "network": "none",
+  "credentials": "none",
+  "liveSmoke": "separate; a real summary route is skipped and recorded as unverified when no credential is configured"
+}

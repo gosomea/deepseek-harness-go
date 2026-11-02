@@ -1,0 +1,13 @@
+{
+  "id": "queued-input",
+  "title": "轮次开始前排队的输入由同一次 claim 取走，产生一次请求",
+  "inputs": ["first", "second"],
+  "scripts": [
+    [
+      { "type": "text-delta", "index": 0, "text": "one answer for both" },
+      { "type": "finish", "index": 0, "finish": "stop" }
+    ]
+  ],
+  "tools": [],
+  "actions": []
+}

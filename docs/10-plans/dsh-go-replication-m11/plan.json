@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m11",
+  "title": "Go 复刻 DSH：M11 Web 客户端与 Desktop 载体",
+  "objectives": {
+    "replication": "让多个客户端连接 Go Host，以权威 Session 和投影恢复界面，并将 Desktop 作为独立载体验证；Go Host 侧行为 keyless 验证，真实前端 UI/E2E/Desktop 打包作为明确缺口",
+    "learning": "让读者分清 Host 权威状态、客户端投影与实时 delta；理解快照/增量/断线恢复与慢消费者",
+    "evidence": "Go 侧行为有测试与显式差异；前端工具链可行性与缺口如实记录；make check 真实通过"
+  },
+  "constraints": [
+    "只执行 M11；M12 发行不进入本阶段",
+    "DSH 参考 checkout 只读；固定提交 00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "**UI 不生成第二份权威日志**：客户端只持有 host 投影",
+    "**快照+增量衔接无缺失/重复**：重连按 seq 续接",
+    "**慢消费者丢事件**：缓冲满丢弃而非阻塞 host",
+    "**审批回答归属正确**",
+    "新包必须加入 coverageRequirement 与 fixture 测试；不得降低 90% 阈值",
+    "节点 outputs 与真实交付物一致；主题页记录真实命令与退出码",
+    "遵循 AGENTS.md 文档与交付门禁",
+    "真实前端 UI(React)/浏览器 E2E/Desktop 打包在本环境无法交付时，如实记为缺口，不伪装通过，也不降低门禁",
+    "本契约只描述 M11"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m11/plans.md"
+  ],
+  "final": "g11-acceptance",
+  "nodes": [
+    {
+      "id": "m111-client-spike",
+      "title": "M11.1 客户端投影 seam 与可行性",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/clientview/doc.go",
+        "plugins/clientview/projection.go",
+        "plugins/clientview/projection_test.go",
+        "plugins/clientview/README.md",
+        "docs/client/overview.md"
+      ],
+      "writes": [
+        "plugins/clientview/",
+        "docs/client/overview.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "clientview-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/clientview/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m112-snapshot",
+      "title": "M11.2 快照与增量投影",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m111-client-spike"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/clientview/snapshot.go",
+        "plugins/clientview/snapshot_test.go"
+      ],
+      "writes": [
+        "plugins/clientview/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "snapshot-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/clientview/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m113-session-controller",
+      "title": "M11.3 会话/工作区控制器（Host 侧）",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m112-snapshot"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/hostapi/controller.go",
+        "plugins/hostapi/controller_test.go"
+      ],
+      "writes": [
+        "plugins/hostapi/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "controller-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m114-reconnect",
+      "title": "M11.4 断线恢复与慢消费者",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m113-session-controller"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/clientview/reconnect.go",
+        "plugins/clientview/reconnect_test.go"
+      ],
+      "writes": [
+        "plugins/clientview/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "reconnect-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/clientview/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m115-desktop-bridge",
+      "title": "M11.5 Desktop Host 启动桥（Go 侧）",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m114-reconnect"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/desktophost/doc.go",
+        "plugins/desktophost/bridge.go",
+        "plugins/desktophost/bridge_test.go",
+        "plugins/desktophost/README.md"
+      ],
+      "writes": [
+        "plugins/desktophost/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "desktophost-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/desktophost/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m116-spike-evidence",
+      "title": "M11.6 前端可行性证据与缺口记录",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m115-desktop-bridge"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/client/frontend-gap.md",
+        "examples/client/main.go",
+        "examples/client/main_test.go",
+        "examples/client/expected.txt",
+        "examples/client/README.md"
+      ],
+      "writes": [
+        "docs/client/frontend-gap.md",
+        "examples/client/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-client",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/client/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g11-acceptance",
+      "title": "G11 Web 与 Desktop 验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m116-spike-evidence"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m11/plan.json",
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m11-clients.md",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m11/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "review": true,
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "clientview-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/clientview/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "controller-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "desktophost-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/desktophost/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-client2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/client/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "profile=$(mktemp -t dsh-covgate.XXXXXX) && go test -count=1 -coverprofile=\"$profile\" ./... >/dev/null && go run ./scripts/doccheck -coverage \"$profile\""
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        }
+      ]
+    }
+  ]
+}

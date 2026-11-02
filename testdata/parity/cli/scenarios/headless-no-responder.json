@@ -1,0 +1,12 @@
+{
+  "id": "headless-no-responder",
+  "title": "无人应答时 ask-once 也不授权",
+  "steps": [
+    { "kind": "seed", "path": "notes.txt", "content": "original content" },
+    { "kind": "tool", "name": "edit_file", "callId": "call-1", "arguments": { "path": "notes.txt", "content": "no responder" }, "outcome": "unavailable" }
+  ],
+  "expect": {
+    "deniedWrites": 1,
+    "fileAfterDenial": "original content"
+  }
+}

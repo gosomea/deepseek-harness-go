@@ -1,0 +1,3 @@
+echo result: hi
+unknown method code: unsupported
+protocol version: 1

@@ -1,0 +1,11 @@
+{
+  "id": "long-output-spill",
+  "title": "超长工具输出被缩短但保留可定位原文的引用",
+  "kind": "spill",
+  "budget": 20,
+  "content": "the tool produced a very long output that cannot fit inside the small per-request budget and must be shortened with a pointer back to its original",
+  "expect": {
+    "shortened": true,
+    "hasReference": true
+  }
+}

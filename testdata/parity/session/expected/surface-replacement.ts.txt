@@ -1,0 +1,8 @@
+fold=ok
+nodes=[4,3]
+replaceGeneration=1
+contentGeneration=1
+replacement=seq:4 start:0 end:2 shadowed:[0,2]
+messages=2
+message role:user text:"summary" kinds:text
+message role:user text:"three" kinds:text

@@ -1,0 +1,22 @@
+--- attempt ---
+provider=fake model=fake-1
+--- stream chunks ---
+chunk=0 type=block-start index=0 text="" arguments=""
+chunk=1 type=tool-call-delta index=0 text="" arguments=""
+chunk=2 type=tool-call-delta index=0 text="" arguments="{\"pa"
+chunk=3 type=tool-call-delta index=0 text="" arguments="th\":\"a.txt\"}"
+chunk=4 type=block-end index=0 text="" arguments=""
+chunk=5 type=usage index=0 text="" arguments=""
+chunk=6 type=finish index=0 text="" arguments=""
+--- assembled blocks ---
+block=0 kind=tool-call id=call-1 name=read_file arguments="{\"path\":\"a.txt\"}"
+finish=tool-calls ok=true
+usage=input:5 output:4 reported=true
+message role=assistant provider=fake blocks=1
+--- tRPC translation (no network) ---
+wire messages=1 stream=true
+wire role=user content="read a.txt"
+wire json contains messages=true
+--- refusal ---
+unsupported=true
+names the block=true

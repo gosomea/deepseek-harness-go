@@ -1,0 +1,12 @@
+{
+  "id": "read-only-command",
+  "title": "只读策略拒绝命令而不是去掉限制",
+  "steps": [
+    { "kind": "tool", "name": "run_command", "callId": "call-1", "arguments": { "program": "/bin/echo", "arguments": ["hi"] }, "outcome": "allowed-once" }
+  ],
+  "policy": "read-only",
+  "expect": {
+    "commandDenied": 1,
+    "denialNamesRequiredMode": true
+  }
+}

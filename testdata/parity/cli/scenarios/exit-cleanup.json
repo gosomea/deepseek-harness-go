@@ -1,0 +1,11 @@
+{
+  "id": "exit-cleanup",
+  "title": "退出时释放写者声明，同一会话可再次打开",
+  "steps": [
+    { "kind": "seed", "path": "notes.txt", "content": "x" }
+  ],
+  "expect": {
+    "secondRunCanOpen": true,
+    "historyMessages": 0
+  }
+}

@@ -1,0 +1,14 @@
+flowchart TD
+  m111-client-spike{{"m111-client-spike: passed"}}
+  m112-snapshot{{"m112-snapshot: passed"}}
+  m111-client-spike --> m112-snapshot
+  m113-session-controller{{"m113-session-controller: passed"}}
+  m112-snapshot --> m113-session-controller
+  m114-reconnect{{"m114-reconnect: passed"}}
+  m113-session-controller --> m114-reconnect
+  m115-desktop-bridge{{"m115-desktop-bridge: passed"}}
+  m114-reconnect --> m115-desktop-bridge
+  m116-spike-evidence{{"m116-spike-evidence: passed"}}
+  m115-desktop-bridge --> m116-spike-evidence
+  g11-acceptance{{"g11-acceptance: passed"}}
+  m116-spike-evidence --> g11-acceptance

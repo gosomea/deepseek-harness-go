@@ -1,0 +1,21 @@
+flowchart TD
+  m101-protocol-dto{{"m101-protocol-dto: passed"}}
+  m102-hostapi-gateway{{"m102-hostapi-gateway: passed"}}
+  m101-protocol-dto --> m102-hostapi-gateway
+  m103-sdk-acp{{"m103-sdk-acp: passed"}}
+  m102-hostapi-gateway --> m103-sdk-acp
+  m104-mcp-lsp{{"m104-mcp-lsp: passed"}}
+  m101-protocol-dto --> m104-mcp-lsp
+  m105-ssh-remote{{"m105-ssh-remote: passed"}}
+  m104-mcp-lsp --> m105-ssh-remote
+  m106-wire-hook{{"m106-wire-hook: passed"}}
+  m102-hostapi-gateway --> m106-wire-hook
+  m107-web-hook{{"m107-web-hook: passed"}}
+  m101-protocol-dto --> m107-web-hook
+  m108-compat-matrix{{"m108-compat-matrix: passed"}}
+  m103-sdk-acp --> m108-compat-matrix
+  m105-ssh-remote --> m108-compat-matrix
+  m106-wire-hook --> m108-compat-matrix
+  m107-web-hook --> m108-compat-matrix
+  g10-acceptance{{"g10-acceptance: passed"}}
+  m108-compat-matrix --> g10-acceptance

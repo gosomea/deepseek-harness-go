@@ -1,0 +1,5 @@
+fired: 1
+settled status: settled
+duplicate fires: 0
+unknown not claimable: true
+unknown count: 1

@@ -1,0 +1,14 @@
+flowchart TD
+  m51-agent-contract{{"m51-agent-contract: passed"}}
+  m52-scoped-setup{{"m52-scoped-setup: passed"}}
+  m51-agent-contract --> m52-scoped-setup
+  m53-turn-step{{"m53-turn-step: passed"}}
+  m52-scoped-setup --> m53-turn-step
+  m54-inbox{{"m54-inbox: passed"}}
+  m53-turn-step --> m54-inbox
+  m55-cancel{{"m55-cancel: passed"}}
+  m54-inbox --> m55-cancel
+  m56-harness{{"m56-harness: passed"}}
+  m55-cancel --> m56-harness
+  g5-acceptance{{"g5-acceptance: passed"}}
+  m56-harness --> g5-acceptance

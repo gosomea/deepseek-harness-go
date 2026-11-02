@@ -1,0 +1,37 @@
+{
+  "source_repository": "https://github.com/deepseek-ai/deepseek-harness",
+  "source_commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+  "reference_package": "packages/core/session",
+  "reference_version": "0.1.7-alpha.2",
+  "reference_entry": "packages/core/session/lib/index.js",
+  "reference_entry_sha256": "718e8d51d731e6f61d3fe605c2a1d2fd71a566d2b96c84e0529b26feb2ac9200",
+  "reference_entry_bytes": 85049,
+  "reference_source_files": 9,
+  "reference_tree_clean": true,
+  "reference_tree_clean_meaning": "the reference `lib/` build consumed by the runner is a .gitignore'd build product; the fixed commit's packages/core/session/src was read with git show and was not modified. The local checkout's 70 unrelated modifications were not involved",
+  "recorded_on": "2026-10-06",
+  "recorded_with": {
+    "node": "v24.19.0",
+    "runner": "testdata/parity/session/runner-ts.mjs"
+  },
+  "record_command": "node testdata/parity/session/runner-ts.mjs <DSH>/packages testdata/parity/session/scenarios/<scenario>.json > testdata/parity/session/expected/<scenario>.ts.txt",
+  "determinism_check": "surface-replacement.json was recorded five times and produced identical bytes",
+  "live_verification": "TestLiveReferenceSessionSurfaceMatchesRecorded replays the recorded scenarios against the same build and compares them to these files; it is skipped when DSH_PACKAGES or Node is unavailable, and the skip is reported as unverified rather than as a pass",
+  "recorded_environment": {
+    "os": "darwin",
+    "note": "the reference `lib/` existed at the recorded commit and imports without a Cordis host for the surface functions this runner uses"
+  },
+  "excluded_from_trace": [
+    "message identifiers: the reference mints them and this project preserves whatever a payload carries, so comparing them would compare a generator rather than a behaviour",
+    "wall-clock time: only the recorded `time` field in the scenario is observable, never the current clock"
+  ],
+  "traces": {
+    "audit-events-do-not-enter-history.ts.txt": "d27d6148df3e2fe50678afc7e4cad56c403caa260fddde189466ab4ce61217e1",
+    "empty-message-placeholder.ts.txt": "be441cbb5ca5731fa2d91e663afbe2fa2856f9c8498c7fbedbe4e458712e57d3",
+    "message-projection.ts.txt": "0bc8ca0309ac4a384aa9343ae564929be689655acf624eabc4ad1efe04dbcddb",
+    "rejection-cases.ts.txt": "d36c9bdf6e87471a168224695fb24919d44f83035bf170b7cfcbfb9c87bdfd36",
+    "replay-consistency.ts.txt": "674ab118ef0b2b449a6932622574778c8534530cc9077e2134e1fe66b75ed361",
+    "surface-replacement.ts.txt": "2e11d411dc3cd30e9e5779ac0d4e7b6027b3c2d5698aa0e09a9366450e85789d"
+  },
+  "reuse": "these traces are the reference side of the session surface parity scenarios; regenerating them requires re-reviewing testdata/parity/session/DIVERGENCES.md"
+}

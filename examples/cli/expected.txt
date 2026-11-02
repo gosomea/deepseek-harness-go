@@ -1,0 +1,16 @@
+--- read ---
+read=notes.txt
+original content
+--- refused write ---
+denied=true
+file unchanged after refusal=true
+--- allowed write ---
+write=wrote 15 bytes to notes.txt
+file now="approved change"
+--- refused command under a read-only policy ---
+command denied=true
+--- reopen ---
+events=4 messages=2 openTurn=false unsettled=0
+history[0] role=user content="read notes.txt"
+history[1] role=assistant content="notes.txt says original content"
+needsAttention=false

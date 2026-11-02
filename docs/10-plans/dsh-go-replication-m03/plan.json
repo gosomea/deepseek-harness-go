@@ -1,0 +1,929 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m03",
+  "title": "Go 复刻 DSH：M3 对话词汇、Agent Scope 与内存 Session",
+  "objectives": {
+    "replication": "从一份权威事件日志重建出同一份模型历史；消息词汇、Agent 可见层、事件 envelope 与固定 DSH 参考行为对应，并有双实现差分证据",
+    "learning": "让 Go 读者从结构体、切片与接口出发，解释为什么 Session 不直接保存 messages 数组，区分权威日志与派生视图、审计事件与模型可见事件，并给出可运行的完整实验",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、行为测试与显式差异；差分检查在参考构建产物缺失时记为未验证；规划、缺环境与未验项不进入通过分子"
+  },
+  "constraints": [
+    "只执行 M3；真实模型、流与 assembler 属 M4，磁盘持久化与格式互读属 M6，客户端读模型属 M11",
+    "DSH 参考 checkout 只读；固定提交为 00102833dfaee1da9f48a3a8eae9d34005a75218，本地未提交改动不进入基线",
+    "参考 lib/ 是 .gitignore 的构建产物：差分检查在缺失时跳过并记为未验证，不记为通过，也不把缺环境当成功",
+    "所有权不变量：任何节点的 inputs 不得被链上更晚的节点写入；不使用目录级 writes；检查只断言本节点有权写入或由已通过前驱产出的文件",
+    "串行推进的理由：m32、m33 都要把新运行时包登记进共享覆盖率门禁（scripts/doccheck/main.go、docs/testing.md），登记必须发生在包已存在之后，否则门禁会因“没有覆盖数据”拒绝一个尚未创建的包。M3 细化方案把 M3.2／M3.3 写成并行分支，本契约改为串行并在此登记该决定",
+    "共享门禁文件 scripts/doccheck/main.go、scripts/doccheck/main_test.go、docs/testing.md 被 m31／m32／m33 先后修改，因此不出现在任何 inputs，也不作为非最终节点的 outputs；它们由 g3-acceptance 作为本轮最终状态冻结。后果：m31 与 m32 的对应写入不被记为产物，不会使前驱产物失效；这不是隐藏改动，每次写入都由该节点自己的 coverage-registration 检查断言",
+    "m34-projection 改写 m33 的产物 session/README.md（补上指向 docs/session/projection.md 的投影章节），因此 session/README.md 同时列入 m34 的 writes 与 g3 的 inputs：m33 的 receipt 在协议中转为 stale，须由评审在当前产物上重新验收，不得由下游自证前驱，也不得为保留旧结论而不补该章节",
+    "docs/README.md、docs/roadmap.md、docs/learning/index.md 只在 g3-acceptance 写一次：阶段中途把 M3 标成“当前可学／已通过”会与事实不符，且多次写入只会让已通过节点连续 stale",
+    "docs/10-plans/dsh-go-replication/stages/index.md 列在 M0 契约的 documents 中，其内容哈希参与 M0 revision 计算：g3 更新它会使 M0 三个节点变为 plan changed; revise required（M2 已使 M0 处于该状态）。这是按阶段交接要求执行 g3 的已知代价，如实记录",
+    "stages/m03-session.md、stages/m02-composition.md 与 cordis-audit.md 不改：前者是 M0 契约的 documents，后两者是已通过节点的 outputs。M3 的实际范围与实测差异记录在本阶段主题页",
+    "M3 细化方案把 session-projection 注册表与 session message projection 并列为“投影”，本契约裁决：只有 packages/core/session 的 surface fold 与 SessionMessageProjection 产生模型历史；session-projection 的客户端读模型属 M11。裁决写在主题页，不写入 M0/M1 已通过的文件",
+    "新运行时包在创建它的切片内即登记进 scripts/doccheck 的 coverageRequirement，并受不低于 90% 语句覆盖率门禁约束",
+    "不新增第三方 Go 运行时依赖；差分 fixture 只在有固定参考构建产物时作为必要检查的证据",
+    "每个节点需要语义评审；独立性如实记录（当前由作者完成评审，记为 independent: false）",
+    "保留工作区既有改动（cordis/、loader/、app/、cmd/、internal/、testdata/parity/cordis/ 等已交付物），不覆盖其他人的工作；m35 只在 internal/testkit/ 新增文件，不改 M1 已产出的 parity.go 与 compare.go",
+    "遵循项目 AGENTS.md 的代码、文档与交付门禁规则：分类 README、包注释、公开注释、Markdown 链接、完整程序与输出",
+    "只报告真实运行的命令、退出码与提交；本地通过不代表 CI 已通过",
+    "本契约在 m31-llm 首次 verify 时被拒：llm/coverage_test.go 未列入 writes，实测“changes outside declared writes”。该文件是 m31 的真实交付物（它覆盖 encodeUnknownBlock／spliceType／splitFields／derefBlock 与各 Validate 分支），已补入 m31 的 outputs 与 writes。这是契约遗漏，不是实现越界；按协议通过 revise 变更，未降低任何门禁",
+    "m32-scope 的契约同样漏登了 docs/scope/go-primer.md（scope 的概念笔记）；它已在 m32 的 outputs 与 writes 中补齐。与 m31 的 llm/coverage_test.go 属同一类契约遗漏，按协议通过 revise 变更，未降低门禁",
+    "m34-projection 必须扩展 m33 的产物：实时 surface 要与事件写入在同一个临界区里更新，而 Go 无法从另一个文件给结构体加字段，所以 session/log.go（surface 字段、Append 的规划-提交、generation 访问器）、session/types.go（SurfaceReplacement 报告类型的命名冲突）、session/codec.go 与 session/registry.go（image/offload 的登记）都在 m34 的 writes 中。后果：m33-session 的 receipt 因产物指纹变化而 stale，按协议需在当前集成产物上重新验收 m33，再由 m34 继续。这是真实耦合，不是范围漂移；由 g3-acceptance 在最终产物上再跑 make check",
+    "m35-example 的场景清单在撰写实现时扩展为六个：初稿的四个无法独立覆盖“空消息占位”与“消息投影改写”两条 M3 验收行为，因此增加了 empty-message-placeholder.json 与 message-projection.json 及其参考 trace。契约中的 outputs 已同步补齐",
+    "g3-acceptance 的 writes 不再声明 status.md 与 dag.mmd：plan.py 的产物校验要求每个声明的文件已存在，而它们只在 render 运行时生成，声明在前会让节点无法通过自身校验。它们的生成属于 render 步骤，不是本节点的验收产物；validation/ 仍作为目录级 write 保留，因为 export 每次写入新的 run 目录且不覆盖历史证据",
+    "g3-acceptance 的 learning-index 检查初稿断言了“## 当前可学的七个主题”这一固定标题，因此在把 scope 主题加入后失败。检查已改为断言**内容**（三个新主题的学习入口、C06/C07 出现在当前主题表、旧的“未来主题”行已删除），而不是钉住一个后续阶段每次都要改的计数。这次失败记录在案，说明“检查通过”不等于“内容正确”",
+    "g3-acceptance 拥有 docs/10-plans/dsh-go-replication-m03/plans.md（阶段结论章节）。它是本计划的 documents 条目，因此对它的写入会改变 revision 并使全部节点变为“plan changed; revise required”。处置：结论在 g3 之前写入，由 g3 作为最终产物冻结并验收，而不是在验收之后追加——后者会让已通过的证据立即失效。这与 M2 由收口节点冻结主题页的做法一致",
+    "主题页不链接任何具体的 validation/<run-id>：该目录由 export 生成，而主题页是其 inputs 的一部分，链接它会让主题页的每次改写立刻使刚导出的证据失效。查验证据时按 run-id 查看 validation/ 下的目录；这与 M2 由收口节点冻结主题页并只链接生成的 status.md 的做法一致"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m03/plans.md"
+  ],
+  "final": "g3-acceptance",
+  "nodes": [
+    {
+      "id": "m31-llm",
+      "title": "M3.1 冻结对话词汇与无损 JSON codec",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "llm/doc.go",
+        "llm/id.go",
+        "llm/content.go",
+        "llm/message.go",
+        "llm/codec.go",
+        "llm/content_test.go",
+        "llm/message_test.go",
+        "llm/codec_test.go",
+        "llm/coverage_test.go",
+        "llm/README.md",
+        "docs/llm/go-primer.md",
+        "docs/llm/content-blocks.md"
+      ],
+      "writes": [
+        "llm/doc.go",
+        "llm/id.go",
+        "llm/content.go",
+        "llm/message.go",
+        "llm/codec.go",
+        "llm/content_test.go",
+        "llm/message_test.go",
+        "llm/codec_test.go",
+        "llm/coverage_test.go",
+        "llm/README.md",
+        "docs/llm/go-primer.md",
+        "docs/llm/content-blocks.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "llm-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=90s",
+            "./llm/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 600,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('llm coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/llm/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']], ['docs/llm/content-blocks.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m32-scope",
+      "title": "M3.2 实现 Agent 可见层、条目表与 contribution 所有权",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m31-llm"
+      ],
+      "requires_gates": [
+        "m31-llm"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md",
+        "llm/doc.go",
+        "llm/message.go",
+        "llm/content.go",
+        "llm/README.md"
+      ],
+      "outputs": [
+        "scope/doc.go",
+        "scope/key.go",
+        "scope/carrier.go",
+        "scope/entries.go",
+        "scope/layers.go",
+        "scope/scope_test.go",
+        "scope/entries_test.go",
+        "scope/layers_test.go",
+        "scope/README.md",
+        "docs/scope/go-primer.md"
+      ],
+      "writes": [
+        "scope/doc.go",
+        "scope/key.go",
+        "scope/carrier.go",
+        "scope/entries.go",
+        "scope/layers.go",
+        "scope/scope_test.go",
+        "scope/entries_test.go",
+        "scope/layers_test.go",
+        "scope/README.md",
+        "docs/scope/go-primer.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "scope-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=90s",
+            "./scope/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 600,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'scope/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('scope coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/scope/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m33-session",
+      "title": "M3.3 实现事件 envelope、连续 seq 与 append-only 日志",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m32-scope"
+      ],
+      "requires_gates": [
+        "m32-scope"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md",
+        "llm/doc.go",
+        "llm/message.go",
+        "llm/README.md",
+        "scope/doc.go",
+        "scope/README.md"
+      ],
+      "outputs": [
+        "session/doc.go",
+        "session/types.go",
+        "session/event.go",
+        "session/log.go",
+        "session/codec.go",
+        "session/registry.go",
+        "session/event_test.go",
+        "session/log_test.go",
+        "session/codec_test.go",
+        "session/README.md",
+        "docs/session/go-primer.md",
+        "docs/session/event-log.md"
+      ],
+      "writes": [
+        "session/doc.go",
+        "session/types.go",
+        "session/event.go",
+        "session/log.go",
+        "session/codec.go",
+        "session/registry.go",
+        "session/event_test.go",
+        "session/log_test.go",
+        "session/codec_test.go",
+        "session/README.md",
+        "docs/session/go-primer.md",
+        "docs/session/event-log.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "session-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=90s",
+            "./session/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 600,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'scope/', 'session/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('session coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/session/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']], ['docs/session/event-log.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m34-projection",
+      "title": "M3.4 实现 surface fold、消息投影与审计事件分离",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m33-session"
+      ],
+      "requires_gates": [
+        "m33-session"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md",
+        "session/log.go",
+        "session/event.go",
+        "session/types.go",
+        "session/registry.go",
+        "session/README.md",
+        "docs/session/event-log.md",
+        "llm/message.go",
+        "llm/content.go"
+      ],
+      "outputs": [
+        "session/surface.go",
+        "session/surface_test.go",
+        "session/projection.go",
+        "session/projection_test.go",
+        "docs/session/projection.md"
+      ],
+      "writes": [
+        "session/surface.go",
+        "session/surface_test.go",
+        "session/projection.go",
+        "session/projection_test.go",
+        "docs/session/projection.md",
+        "session/log.go",
+        "session/types.go",
+        "session/codec.go",
+        "session/registry.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "session-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=90s",
+            "./session/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 600,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "surface-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=90s",
+            "-run",
+            "Surface|Projection|Derive",
+            "./session/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/session/projection.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m35-example",
+      "title": "M3.5 交付 Session replay 实验与双实现差分 fixture",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m34-projection"
+      ],
+      "requires_gates": [
+        "m34-projection"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md",
+        "session/log.go",
+        "session/surface.go",
+        "session/projection.go",
+        "session/README.md",
+        "docs/session/event-log.md",
+        "docs/session/projection.md",
+        "internal/testkit/parity.go",
+        "internal/testkit/compare.go",
+        "testdata/parity/cordis/README.md",
+        "testdata/parity/cordis/runner-ts.mjs"
+      ],
+      "outputs": [
+        "examples/session/main.go",
+        "examples/session/main_test.go",
+        "examples/session/expected.txt",
+        "examples/session/README.md",
+        "testdata/parity/session/README.md",
+        "testdata/parity/session/DIVERGENCES.md",
+        "testdata/parity/session/provenance.json",
+        "testdata/parity/session/runner-ts.mjs",
+        "testdata/parity/session/scenarios/replay-consistency.json",
+        "testdata/parity/session/scenarios/audit-events-do-not-enter-history.json",
+        "testdata/parity/session/scenarios/surface-replacement.json",
+        "testdata/parity/session/scenarios/rejection-cases.json",
+        "testdata/parity/session/expected/replay-consistency.ts.txt",
+        "testdata/parity/session/expected/audit-events-do-not-enter-history.ts.txt",
+        "testdata/parity/session/expected/surface-replacement.ts.txt",
+        "testdata/parity/session/expected/rejection-cases.ts.txt",
+        "internal/testkit/README.md",
+        "internal/testkit/session_scenario.go",
+        "internal/testkit/session_parity_test.go",
+        "testdata/parity/session/scenarios/empty-message-placeholder.json",
+        "testdata/parity/session/scenarios/message-projection.json",
+        "testdata/parity/session/expected/empty-message-placeholder.ts.txt",
+        "testdata/parity/session/expected/message-projection.ts.txt"
+      ],
+      "writes": [
+        "examples/session/main.go",
+        "examples/session/main_test.go",
+        "examples/session/expected.txt",
+        "examples/session/README.md",
+        "testdata/parity/session/README.md",
+        "testdata/parity/session/DIVERGENCES.md",
+        "testdata/parity/session/provenance.json",
+        "testdata/parity/session/runner-ts.mjs",
+        "testdata/parity/session/scenarios/replay-consistency.json",
+        "testdata/parity/session/scenarios/audit-events-do-not-enter-history.json",
+        "testdata/parity/session/scenarios/surface-replacement.json",
+        "testdata/parity/session/scenarios/rejection-cases.json",
+        "testdata/parity/session/expected/replay-consistency.ts.txt",
+        "testdata/parity/session/expected/audit-events-do-not-enter-history.ts.txt",
+        "testdata/parity/session/expected/surface-replacement.ts.txt",
+        "testdata/parity/session/expected/rejection-cases.ts.txt",
+        "internal/testkit/README.md",
+        "internal/testkit/session_scenario.go",
+        "internal/testkit/session_parity_test.go",
+        "testdata/parity/session/scenarios/empty-message-placeholder.json",
+        "testdata/parity/session/scenarios/message-projection.json",
+        "testdata/parity/session/expected/empty-message-placeholder.ts.txt",
+        "testdata/parity/session/expected/message-projection.ts.txt"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-run",
+          "argv": [
+            "go",
+            "run",
+            "./examples/session"
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "parity-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 600,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-coverage",
+            "coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g3-acceptance",
+      "title": "G3 收口：复刻、学习与证据同时验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m35-example"
+      ],
+      "requires_gates": [
+        "m35-example"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m03/plan.json",
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m03-session.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/learning/note-template.md",
+        "llm/README.md",
+        "scope/README.md",
+        "session/README.md",
+        "docs/llm/go-primer.md",
+        "docs/llm/content-blocks.md",
+        "docs/scope/go-primer.md",
+        "docs/session/go-primer.md",
+        "docs/session/event-log.md",
+        "docs/session/projection.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "examples/session/README.md",
+        "testdata/parity/session/README.md",
+        "testdata/parity/session/DIVERGENCES.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "Makefile",
+        ".github/workflows/check.yml",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m03/plans.md",
+        "Makefile",
+        ".github/workflows/check.yml",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/10-plans/dsh-go-replication-m03/validation/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 1200,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "parity-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=120s",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'scope/', 'session/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M3 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nreadme = pathlib.Path('docs/README.md').read_text(encoding='utf-8')\nroadmap = pathlib.Path('docs/roadmap.md').read_text(encoding='utf-8')\npkgs = ['llm/', 'scope/', 'session/']\nbad = [p for p in pkgs if ('../' + p + 'README.md') not in readme or ('../' + p + 'README.md') not in roadmap]\nprint('module index: OK' if not bad else 'not linked as ../<pkg>/README.md from docs/README.md and docs/roadmap.md: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "stage-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/10-plans/dsh-go-replication/stages/index.md').read_text(encoding='utf-8')\nproblems = []\nif 'dsh-go-replication-m03' not in text:\n    problems.append('stages/index.md does not point at the M3 contract')\nif '下一步是 M4' not in text:\n    problems.append('stages/index.md still does not hand over to M4')\nprint('stage index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "learning-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/learning/index.md').read_text(encoding='utf-8')\nproblems = []\n# Assert the three new topics are reachable and that C06/C07 left the\n# future-only table, rather than pinning a topic count that every later\n# stage would have to edit.\nfor link in ['../llm/go-primer.md', '../session/go-primer.md', '../scope/go-primer.md']:\n    if link not in text:\n        problems.append('missing link ' + link)\nif '## 当前可学的' not in text:\n    problems.append('no current-topics section')\nif '| C06 对话与流 |' not in text and 'C06 对话与流 |' not in text:\n    problems.append('C06 is not listed as a current topic')\n# The old future-only rows must be gone.\nfor stale in ['| C06 对话与流 | Go 数据类型与接口', '| C07 事件溯源 | C04、C06']:\n    if stale in text:\n        problems.append('stale future row ' + stale)\nprint('learning index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+flowchart TD
+  m81-contributions{{"m81-contributions: passed"}}
+  m82-settings-preset{{"m82-settings-preset: passed"}}
+  m81-contributions --> m82-settings-preset
+  m83-skills{{"m83-skills: passed"}}
+  m82-settings-preset --> m83-skills
+  m84-attachments{{"m84-attachments: passed"}}
+  m81-contributions --> m84-attachments
+  m85-token-spill{{"m85-token-spill: passed"}}
+  m83-skills --> m85-token-spill
+  m84-attachments --> m85-token-spill
+  m86-compaction{{"m86-compaction: passed"}}
+  m85-token-spill --> m86-compaction
+  m87-summary-route{{"m87-summary-route: passed"}}
+  m86-compaction --> m87-summary-route
+  g8-acceptance{{"g8-acceptance: passed"}}
+  m87-summary-route --> g8-acceptance

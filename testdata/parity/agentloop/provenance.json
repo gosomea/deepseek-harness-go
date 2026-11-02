@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "kind": "agentloop-turn-scenarios",
+  "reference": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "paths": [
+      "packages/core/agent/src/types.ts",
+      "packages/core/agent-loop/src/agent.ts",
+      "packages/core/agent-loop/src/inbox.ts",
+      "docs/agent-lifecycle.zh.md"
+    ]
+  },
+  "fixtures": [
+    "scenarios/full-turn.json",
+    "scenarios/queued-input.json",
+    "scenarios/cancel-mid-stream.json",
+    "scenarios/rejected-input.json"
+  ],
+  "comparison": "same-implementation determinism, not cross-implementation parity (see DIVERGENCES.md D1)",
+  "clock": "fixed at 1700000000000 ms",
+  "network": "none",
+  "credentials": "none"
+}

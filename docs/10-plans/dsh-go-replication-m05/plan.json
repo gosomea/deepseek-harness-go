@@ -1,0 +1,1099 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m05",
+  "title": "Go 复刻 DSH：M5 无密钥的完整 Agent 轮次",
+  "objectives": {
+    "replication": "由统一 app 装配启动一个 Agent，用 fake Provider 经两次模型请求与一次 fake 工具调用完成一次轮次，并证明每次模型可见输入都能从 session 日志重建；turn/step/attempt/call/result 的写入顺序与引用 DSH 参考一致",
+    "learning": "让 Go 读者区分句柄、实例与运行驱动；从一次轮次的两条时间线（权威日志与实时流）解释 turn/step/attempt/inbox；用排队输入与取消各自定位一个可预测的生效点",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、行为测试与显式差异；必要检查无密钥、无外网、使用可控时钟与 fake；参考产物缺失时差分记为未验证，不记为通过"
+  },
+  "constraints": [
+    "进入条件（前驱 gate）：本阶段要求 M2 的 G2 与 M4 的 G4 已通过。G2 提供显式插件树与最小 profile 的装配能力，M5.6 的 fake profile 建立在它之上；G4 提供 llm 的请求/流契约与 tools 的执行管线，M5.3 的 turn→step→请求→结算→工具批直接消费它们。两者都是 M5 开工的前置，不通过则本阶段不启动；M4 的 G4 已通过，证据见 docs/10-plans/dsh-go-replication-m04/plans.md 与其 validation/ 导出。前驱证据按提交与 run-id 固定，不随上游文档后续改动而自动生效。",
+    "只执行 M5；M6 的持久化与恢复、M7 的真实端点与本机工具、M8 的上下文预算都不进入本阶段。M5 只交付可离线运行的最小 Harness 主链",
+    "DSH 参考 checkout 只读；固定提交为 00102833dfaee1da9f48a3a8eae9d34005a75218，本地未提交改动不进入基线",
+    "fake-only 确定性：全部必要检查使用 fake Provider、fake 工具与可控时钟；不读真实时间、不发网络请求、不需要密钥。真实模型验证不是 G5 的必要条件",
+    "依赖边界：agent 是公共契约，不得 import agentloop；agentloop 是默认驱动，不得出现供应商、文件系统或网络专用分支。两条不变量分别由 agent-boundary 与 loop-purity 检查断言，不靠约定",
+    "轮次事件在 session 日志中的表示：turn/step/request/attempt 与 tool 事件都写入权威日志，且每条事件引用它所属的 turn 与 step；实时流只是投影，不构成持久事实",
+    "工具调用必须在执行前写入日志（先记录 call 再执行），已发生的结果按契约结算；被取消而从未派发的 tool-call 不得出现在日志里被当作已执行",
+    "参考构建产物缺失（DSH_PACKAGES 未指向固定参考 packages，或对应 lib/ 构建产物不存在）时差分检查跳过并记为未验证，不记为通过；已记录的参考 trace 仍参与比较",
+    "所有权不变量：任何节点的 inputs 不得被链上更晚的节点写入；不使用目录级 writes；检查只断言本节点有权写入、或由已通过前驱产出的文件",
+    "共享门禁文件 scripts/doccheck/main.go、scripts/doccheck/main_test.go、docs/testing.md 被 m51 与 m52 先后修改（每个新运行时包在同一片内登记进 coverageRequirement）。它们因此不出现在任何节点的 inputs，也不作为非最终节点的 outputs；最终状态由 g5-acceptance 冻结",
+    "docs/README.md、docs/roadmap.md、docs/learning/index.md 只在 g5-acceptance 写一次：阶段中途把 M5 标成「当前可学」会与事实不符，多次写入只会让已通过节点连续 stale",
+    "docs/10-plans/dsh-go-replication/stages/index.md 列在 M0 契约的 documents 中，其内容哈希参与 M0 revision 计算；g5 更新它会使 M0 三个节点变为 plan changed; revise required（M2–M4 已使 M0 处于该状态）。这是按阶段交接要求执行 g5 的已知代价，如实记录",
+    "主题页 plans.md 是本契约的 documents 之一：对它的写入会改变 revision 并使全部节点变为 plan changed; revise required。因此主题页内容（含实际运行过的命令、退出码与结果）必须在 g5 之前定稿，由 g5 冻结，export 之后不得再编辑；若确需再改，必须按协议对新 revision 重新验收所有受影响节点，不能让旧结论继续生效。这是 M4 阶段已实际发生三次的写序缺陷，本阶段用固定顺序避免",
+    "不得降低运行时包 90% 语句覆盖率阈值，也不得降低 Makefile 与 scripts/doccheck 定义的任何其他门禁来适配失败结果；失败一律修实现而非改门禁定义。确需改门禁定义时必须同时新增有效与无效样例、另立记录，并在 validation/<run-id> 留证；g5 的 gate-integrity 检查断言覆盖率比较式与 Makefile 子命令未被削弱",
+    "新运行时包 agent/ 与 agentloop/ 在创建它的同一切片内登记进 scripts/doccheck 的 coverageRequirement，并受不低于 90% 语句覆盖率门禁约束",
+    "agentloop 的活动串行：同一 Agent 同时只有一个活动 turn；多个 Agent 的作用域与取消相互独立，并发由 scope 与各自的 context 决定",
+    "每个节点需要语义评审；独立性如实记录（当前由作者完成评审，记为 independent: false）",
+    "保留工作区既有改动（cordis/、loader/、app/、llm/、scope/、session/、tools/、systemprompt/、plugins/、internal/、testdata/parity/ 等已交付物），不覆盖其他人的工作",
+    "遵循项目 AGENTS.md 的代码、文档与交付门禁规则：分类 README、包注释、公开注释、Markdown 链接、完整程序与输出。每个新包交付 README、行为参考与可运行实验",
+    "只报告真实运行的命令、退出码与提交；本地通过不代表 CI 已通过。阶段报告与主题页必须写出实际运行过的命令、退出码与结果",
+    "本契约只描述 M5 的切片与门禁；M6–M12 的范围仍由其细化页维护，不因本阶段通过而获得任何可用状态",
+    "fake-only 确定性要求：全部必要检查使用 fake Provider、fake 工具与可控时钟；不读真实时间、不发网络请求、不需要密钥。真实模型验证不是 G5 的必要条件，缺密钥不算通过。",
+    "requires_gates 的字段语义限制：该字段与 depends_on 一样只接受本计划内的节点 id（validate 会以 required gate is not an upstream gate 拒绝跨计划引用）。因此 G2/G4 这两个来自其他计划的前驱不能用字段登记，只能以本 constraints 的首条与本页「进入条件」章节显式声明，并附上上游计划的提交与 validation run 作为证据。这是真实的 CLI 约束，不是本阶段的取舍。"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m05/plans.md"
+  ],
+  "final": "g5-acceptance",
+  "nodes": [
+    {
+      "id": "m51-agent-contract",
+      "title": "M5.1 公开 Agent 句柄与工厂 seam",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "session/README.md",
+        "session/log.go",
+        "llm/README.md",
+        "scope/README.md",
+        "docs/session/go-primer.md",
+        "docs/10-plans/dsh-go-replication-m02/plans.md",
+        "docs/10-plans/dsh-go-replication-m04/status.md"
+      ],
+      "outputs": [
+        "agent/doc.go",
+        "agent/types.go",
+        "agent/handle.go",
+        "agent/factory.go",
+        "agent/handle_test.go",
+        "agent/factory_test.go",
+        "agent/README.md",
+        "docs/agent/go-primer.md"
+      ],
+      "writes": [
+        "agent/doc.go",
+        "agent/types.go",
+        "agent/handle.go",
+        "agent/factory.go",
+        "agent/handle_test.go",
+        "agent/factory_test.go",
+        "agent/README.md",
+        "docs/agent/go-primer.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "agent-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agent/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "agent-boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbad = []\nfor p in sorted(pathlib.Path('agent').rglob('*.go')):\n    text = p.read_text(encoding='utf-8')\n    if 'deepseek-harness-go/agentloop' in text:\n        bad.append(p.as_posix())\nprint('agent does not depend on agentloop: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M5.1 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/agent/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m52-scoped-setup",
+      "title": "M5.2 作用域内 setup 与失败回滚",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m51-agent-contract"
+      ],
+      "requires_gates": [
+        "m51-agent-contract"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agent/types.go",
+        "agent/handle.go",
+        "agent/factory.go",
+        "agent/README.md",
+        "session/log.go",
+        "scope/layers.go",
+        "internal/testkit/fakellm.go"
+      ],
+      "outputs": [
+        "agentloop/doc.go",
+        "agentloop/setup.go",
+        "agentloop/agent.go",
+        "agentloop/setup_test.go",
+        "agentloop/agent_test.go",
+        "agentloop/README.md",
+        "agentloop/source.go",
+        "agentloop/id.go",
+        "agentloop/control.go"
+      ],
+      "writes": [
+        "agentloop/doc.go",
+        "agentloop/setup.go",
+        "agentloop/agent.go",
+        "agentloop/setup_test.go",
+        "agentloop/agent_test.go",
+        "agentloop/README.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md",
+        "agentloop/source.go",
+        "agentloop/id.go",
+        "agentloop/control.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "agentloop-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "loop-purity",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbanned = ['trpc.group/trpc-go', 'os/exec', 'net/http', 'net/']\nbad = []\nfor p in sorted(pathlib.Path('agentloop').rglob('*.go')):\n    text = p.read_text(encoding='utf-8')\n    for needle in banned:\n        if needle in text:\n            bad.append(p.as_posix() + ' imports ' + needle)\nprint('agentloop stays provider-free: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/', 'agentloop/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M5.2 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m53-turn-step",
+      "title": "M5.3 turn→step→请求→结算→工具批",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m52-scoped-setup"
+      ],
+      "requires_gates": [
+        "m52-scoped-setup"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agentloop/agent.go",
+        "agentloop/setup.go",
+        "agent/README.md",
+        "llm/provider.go",
+        "llm/assembler.go",
+        "tools/pipeline.go",
+        "session/log.go",
+        "session/event.go",
+        "internal/testkit/fakellm.go"
+      ],
+      "outputs": [
+        "agentloop/loop.go",
+        "agentloop/turn.go",
+        "agentloop/events.go",
+        "agentloop/turn_test.go",
+        "agentloop/events_test.go",
+        "agentloop/loop_coverage_test.go",
+        "docs/agentloop/turns.md"
+      ],
+      "writes": [
+        "agentloop/loop.go",
+        "agentloop/turn.go",
+        "agentloop/events.go",
+        "agentloop/turn_test.go",
+        "agentloop/events_test.go",
+        "agentloop/loop_coverage_test.go",
+        "docs/agentloop/turns.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "agentloop-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "events-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Turn|Step|Request|Replay",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/agentloop/turns.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m54-inbox",
+      "title": "M5.4 inbox、追加输入与 idle 边界",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m53-turn-step"
+      ],
+      "requires_gates": [
+        "m53-turn-step"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agentloop/loop.go",
+        "agentloop/turn.go",
+        "agentloop/events.go",
+        "agentloop/README.md"
+      ],
+      "outputs": [
+        "agentloop/inbox.go",
+        "agentloop/inbox_test.go",
+        "docs/agentloop/inbox.md"
+      ],
+      "writes": [
+        "agentloop/inbox.go",
+        "agentloop/inbox_test.go",
+        "docs/agentloop/inbox.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "agentloop-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "inbox-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Inbox|Queue|Idle|Wakeup",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/agentloop/inbox.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m55-cancel",
+      "title": "M5.5 取消、流中断与关闭等待",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m54-inbox"
+      ],
+      "requires_gates": [
+        "m54-inbox"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agentloop/inbox.go",
+        "agentloop/turn.go",
+        "tools/pipeline.go",
+        "agent/README.md",
+        "docs/agentloop/inbox.md"
+      ],
+      "outputs": [
+        "agentloop/cancel.go",
+        "agentloop/cancel_test.go",
+        "docs/agentloop/cancellation.md"
+      ],
+      "writes": [
+        "agentloop/cancel.go",
+        "agentloop/cancel_test.go",
+        "docs/agentloop/cancellation.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "agentloop-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "cancel-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Cancel|Stop|Close|Abort",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/agentloop/cancellation.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m56-harness",
+      "title": "M5.6 fake profile、实验与轮次 fixture",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m55-cancel"
+      ],
+      "requires_gates": [
+        "m55-cancel"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agentloop/loop.go",
+        "agentloop/inbox.go",
+        "agentloop/cancel.go",
+        "agentloop/README.md",
+        "app/profile.go",
+        "app/bundle.go",
+        "app/README.md",
+        "session/surface.go",
+        "examples/model/main.go",
+        "internal/testkit/fakellm.go",
+        "docs/agentloop/turns.md"
+      ],
+      "outputs": [
+        "examples/harness/main.go",
+        "examples/harness/main_test.go",
+        "examples/harness/expected.txt",
+        "examples/harness/README.md",
+        "app/harness.go",
+        "app/harness_test.go",
+        "internal/testkit/harness_scenario.go",
+        "internal/testkit/harness_scenario_test.go",
+        "testdata/parity/agentloop/README.md",
+        "testdata/parity/agentloop/DIVERGENCES.md",
+        "testdata/parity/agentloop/provenance.json",
+        "testdata/parity/agentloop/scenarios/full-turn.json",
+        "testdata/parity/agentloop/scenarios/cancel-mid-stream.json",
+        "testdata/parity/agentloop/scenarios/queued-input.json",
+        "testdata/parity/agentloop/scenarios/rejected-input.json"
+      ],
+      "writes": [
+        "examples/harness/main.go",
+        "examples/harness/main_test.go",
+        "examples/harness/expected.txt",
+        "examples/harness/README.md",
+        "app/harness.go",
+        "app/harness_test.go",
+        "internal/testkit/harness_scenario.go",
+        "internal/testkit/harness_scenario_test.go",
+        "testdata/parity/agentloop/README.md",
+        "testdata/parity/agentloop/DIVERGENCES.md",
+        "testdata/parity/agentloop/provenance.json",
+        "testdata/parity/agentloop/scenarios/full-turn.json",
+        "testdata/parity/agentloop/scenarios/cancel-mid-stream.json",
+        "testdata/parity/agentloop/scenarios/queued-input.json",
+        "testdata/parity/agentloop/scenarios/rejected-input.json"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-harness",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/harness/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "app-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./app/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "scenario-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "HarnessScenario",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g5-acceptance",
+      "title": "G5 收口：复刻、学习与证据同时验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m56-harness"
+      ],
+      "requires_gates": [
+        "m56-harness"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m05/plan.json",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m05-agent-loop.md",
+        "docs/10-plans/dsh-go-replication-m04/plans.md",
+        "docs/learning/note-template.md",
+        "agent/README.md",
+        "agentloop/README.md",
+        "docs/agent/go-primer.md",
+        "docs/agentloop/turns.md",
+        "docs/agentloop/inbox.md",
+        "docs/agentloop/cancellation.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "examples/harness/README.md",
+        "testdata/parity/agentloop/README.md",
+        "testdata/parity/agentloop/DIVERGENCES.md",
+        "Makefile",
+        ".github/workflows/check.yml"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/10-plans/dsh-go-replication-m05/validation/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 1800,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "harness-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/harness/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "scenario-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "HarnessScenario",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "loop-purity",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbanned = ['trpc.group/trpc-go', 'os/exec', 'net/http', 'net/']\nbad = []\nfor p in sorted(pathlib.Path('agentloop').rglob('*.go')):\n    text = p.read_text(encoding='utf-8')\n    for needle in banned:\n        if needle in text:\n            bad.append(p.as_posix() + ' imports ' + needle)\nprint('agentloop stays provider-free: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "agent-boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbad = []\nfor p in sorted(pathlib.Path('agent').rglob('*.go')):\n    text = p.read_text(encoding='utf-8')\n    if 'deepseek-harness-go/agentloop' in text:\n        bad.append(p.as_posix())\nprint('agent does not depend on agentloop: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "gate-integrity",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmk = pathlib.Path('Makefile').read_text(encoding='utf-8')\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nproblems = []\nfor token in ['fmt-check', 'vet', 'test', 'coverage', 'docs', 'doc-examples', 'build']:\n    if token not in mk:\n        problems.append('Makefile lost gate ' + token)\nfor token in ['100 < current.total*90', 'has no coverage data']:\n    if token not in main:\n        problems.append('coverage gate weakened: ' + token)\nprint('gate integrity: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/', 'agentloop/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('G5 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nreadme = pathlib.Path('docs/README.md').read_text(encoding='utf-8')\nroadmap = pathlib.Path('docs/roadmap.md').read_text(encoding='utf-8')\npkgs = ['agent/', 'agentloop/']\nbad = [p for p in pkgs if ('../' + p + 'README.md') not in readme or ('../' + p + 'README.md') not in roadmap]\nprint('module index: OK' if not bad else 'not linked as ../<pkg>/README.md from docs/README.md and docs/roadmap.md: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "stage-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/10-plans/dsh-go-replication/stages/index.md').read_text(encoding='utf-8')\nproblems = []\nif 'dsh-go-replication-m05' not in text:\n    problems.append('stages/index.md does not point at the M5 contract')\nif 'M5' not in text:\n    problems.append('stages/index.md missing M5 handover')\nprint('stage index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "learning-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/learning/index.md').read_text(encoding='utf-8')\nproblems = []\nfor link in ['../agent/go-primer.md', '../agentloop/turns.md', '../agentloop/inbox.md',\n             '../agentloop/cancellation.md']:\n    if link not in text:\n        problems.append('missing link ' + link)\nif 'C09' not in text:\n    problems.append('C09 is not listed as a current topic')\nfor stale in ['| C09 Agent 轮次 | C05–C08', 'C09 起属后续阶段']:\n    if stale in text:\n        problems.append('stale future row ' + stale)\nprint('learning index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

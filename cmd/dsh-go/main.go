@@ -30,6 +30,10 @@ func main() {
 		if errors.As(err, &usage) {
 			os.Exit(exitUsage)
 		}
+		var coded interface{ ExitCode() int }
+		if errors.As(err, &coded) {
+			os.Exit(coded.ExitCode())
+		}
 		os.Exit(1)
 	}
 }
@@ -112,6 +116,15 @@ func pluginCatalog(names []string) (*loader.Catalog, error) {
 
 // run executes one command against the supplied streams.
 func run(args []string, stdout, stderr io.Writer) error {
+	// The session subcommand drives one model turn in a confined workspace. It is
+	// dispatched by name so the existing configuration behaviour is unchanged when
+	// the first argument is a flag, which is how every current invocation looks.
+	if len(args) > 0 && args[0] == "session" {
+		if _, err := runSessionCommand(args[1:], stdout, stderr); err != nil {
+			return err
+		}
+		return nil
+	}
 	opts, err := parse(args, stderr)
 	if err != nil {
 		return err
@@ -129,6 +142,35 @@ func run(args []string, stdout, stderr io.Writer) error {
 	}
 	return check(document, plugins, stdout)
 }
+
+// runSessionCommand runs one session invocation and reports its exit code.
+//
+// It returns a usageError for a rejected command line so the process exits with
+// the usage code, and an exitError carrying the session code otherwise.
+func runSessionCommand(args []string, stdout, stderr io.Writer) (int, error) {
+	options, err := parseSession(args, stderr)
+	if err != nil {
+		return exitUsageRun, err
+	}
+	deps := sessionDeps{stdout: stdout, stderr: stderr, provider: sessionProvider()}
+	code := runSession(context.Background(), options, deps)
+	if code == exitOK {
+		return exitOK, nil
+	}
+	return code, exitError{code: code}
+}
+
+// exitError carries the process exit code a session run decided.
+type exitError struct {
+	// code is the exit status the command must report.
+	code int
+}
+
+// Error reports the exit code as a message; the code itself is what matters.
+func (e exitError) Error() string { return fmt.Sprintf("exit status %d", e.code) }
+
+// ExitCode reports the process exit status for this error.
+func (e exitError) ExitCode() int { return e.code }
 
 // loadTree mounts a configuration document and returns the running tree. This is
 // the assembly path the CLI and examples share: parse first, mount second, and

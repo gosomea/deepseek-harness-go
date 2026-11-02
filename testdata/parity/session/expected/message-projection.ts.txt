@@ -1,0 +1,8 @@
+fold=ok
+nodes=[0,2]
+replaceGeneration=0
+contentGeneration=1
+replacement=none
+messages=2
+message role:user text:"[image omitted]" kinds:text
+message role:user text:"and this" kinds:text

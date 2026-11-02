@@ -1,0 +1,8 @@
+fold=ok
+nodes=[1,2]
+replaceGeneration=0
+contentGeneration=0
+replacement=none
+messages=2
+message role:user text:"first" kinds:text
+message role:assistant text:"reply" kinds:text

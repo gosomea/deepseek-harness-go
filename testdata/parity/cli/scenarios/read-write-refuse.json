@@ -1,0 +1,17 @@
+{
+  "id": "read-write-refuse",
+  "title": "拒绝审批时不写文件，允许一次后才写入",
+  "steps": [
+    { "kind": "seed", "path": "notes.txt", "content": "original content" },
+    { "kind": "tool", "name": "read_file", "callId": "call-1", "arguments": { "path": "notes.txt" }, "outcome": "rejected" },
+    { "kind": "tool", "name": "edit_file", "callId": "call-2", "arguments": { "path": "notes.txt", "content": "denied change" }, "outcome": "rejected" },
+    { "kind": "tool", "name": "edit_file", "callId": "call-3", "arguments": { "path": "notes.txt", "content": "approved change" }, "outcome": "allowed-once" }
+  ],
+  "expect": {
+    "readsSucceed": 1,
+    "deniedWrites": 1,
+    "allowedWrites": 1,
+    "fileAfterDenial": "original content",
+    "fileAfterAllowance": "approved change"
+  }
+}

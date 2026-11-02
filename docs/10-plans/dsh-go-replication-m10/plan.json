@@ -1,0 +1,784 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m10",
+  "title": "Go 复刻 DSH：M10 协议、SDK 与远程能力",
+  "objectives": {
+    "replication": "让 Go Host 通过明确版本的外部协议提供能力，并用远程 Provider 替换本地执行世界；基础协议 keyless、回环验证，真实外部服务 smoke 单列",
+    "learning": "让读者分清内部 Go 接口与稳定 wire DTO、请求关联、能力协商与版本",
+    "evidence": "每个切片有固定 TS 来源、Go 入口、测试与显式差异；无外部能力的项如实记为未验证缺口；make check 真实通过"
+  },
+  "constraints": [
+    "只执行 M10；M11 与 M12 不进入本阶段",
+    "DSH 参考 checkout 只读；固定提交 00102833dfaee1da9f48a3a8eae9d34005a75218",
+    "**wire DTO 不暴露内部类型**",
+    "**版本冻结**：版本不符分发前拒绝；未知方法返回明确 code；未知字段容忍",
+    "**请求 id 关联**：响应按 id 匹配",
+    "**认证只做一次**",
+    "**慢消费者丢事件**",
+    "**web 内容有界且不可信**",
+    "新包必须加入 coverageRequirement 与 fixture 测试；不得降低 90% 阈值",
+    "节点 outputs 与真实交付物一致；主题页记录真实命令与退出码",
+    "遵循 AGENTS.md 文档与交付门禁",
+    "外部能力不足如实记为未验证缺口",
+    "本契约只描述 M10"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m10/plans.md"
+  ],
+  "final": "g10-acceptance",
+  "nodes": [
+    {
+      "id": "m101-protocol-dto",
+      "title": "M10.1 协议 DTO、版本与错误",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "protocol/doc.go",
+        "protocol/protocol.go",
+        "protocol/protocol_test.go",
+        "protocol/README.md",
+        "docs/protocols/overview.md"
+      ],
+      "writes": [
+        "protocol/",
+        "docs/protocols/overview.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "protocol-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m102-hostapi-gateway",
+      "title": "M10.2 Host API 网关与认证",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m101-protocol-dto"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/hostapi/doc.go",
+        "plugins/hostapi/gateway.go",
+        "plugins/hostapi/gateway_test.go",
+        "plugins/hostapi/README.md"
+      ],
+      "writes": [
+        "plugins/hostapi/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "hostapi-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m103-sdk-acp",
+      "title": "M10.3 SDK 客户端与 ACP bridge",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m102-hostapi-gateway"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/sdk/doc.go",
+        "plugins/sdk/client.go",
+        "plugins/sdk/client_test.go",
+        "plugins/sdk/README.md",
+        "protocol/acp.go",
+        "protocol/acp_test.go"
+      ],
+      "writes": [
+        "plugins/sdk/",
+        "protocol/acp.go",
+        "protocol/acp_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "sdk-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "acp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m104-mcp-lsp",
+      "title": "M10.4 MCP 与 LSP stdio 生命周期",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m101-protocol-dto"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/mcp/doc.go",
+        "plugins/mcp/stdioclient.go",
+        "plugins/mcp/stdioclient_test.go",
+        "plugins/mcp/README.md",
+        "plugins/lsp/doc.go",
+        "plugins/lsp/stdioclient.go",
+        "plugins/lsp/stdioclient_test.go",
+        "plugins/lsp/README.md"
+      ],
+      "writes": [
+        "plugins/mcp/",
+        "plugins/lsp/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "mcp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "lsp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m105-ssh-remote",
+      "title": "M10.5 SSH 远程执行 Provider",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m104-mcp-lsp"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/ssh/doc.go",
+        "plugins/ssh/provider.go",
+        "plugins/ssh/provider_test.go",
+        "plugins/ssh/README.md"
+      ],
+      "writes": [
+        "plugins/ssh/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "ssh-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m106-wire-hook",
+      "title": "M10.6 压缩/子代理/任务 wire 面与 hook 桥",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m102-hostapi-gateway"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "protocol/wire.go",
+        "protocol/wire_test.go",
+        "plugins/hooks/doc.go",
+        "plugins/hooks/bridge.go",
+        "plugins/hooks/bridge_test.go",
+        "plugins/hooks/README.md"
+      ],
+      "writes": [
+        "protocol/wire.go",
+        "protocol/wire_test.go",
+        "plugins/hooks/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "wire-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "hooks-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m107-web-hook",
+      "title": "M10.7 web fetch/search 与 webhook 边界",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m101-protocol-dto"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "plugins/web/doc.go",
+        "plugins/web/fetch.go",
+        "plugins/web/fetch_test.go",
+        "plugins/web/README.md"
+      ],
+      "writes": [
+        "plugins/web/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "web-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m108-compat-matrix",
+      "title": "M10.8 兼容矩阵与 SDK 示例",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m103-sdk-acp",
+        "m105-ssh-remote",
+        "m106-wire-hook",
+        "m107-web-hook"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/protocols/compat-matrix.md",
+        "examples/sdk/main.go",
+        "examples/sdk/main_test.go",
+        "examples/sdk/expected.txt",
+        "examples/sdk/README.md"
+      ],
+      "writes": [
+        "docs/protocols/compat-matrix.md",
+        "examples/sdk/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-sdk",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g10-acceptance",
+      "title": "G10 协议与远程能力验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m108-compat-matrix"
+      ],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m10/plan.json",
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md",
+        "docs/10-plans/dsh-go-replication-m09/plans.md",
+        "docs/learning/note-template.md"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m10/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "review": true,
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "protocol-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "hostapi-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "sdk-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "mcp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "lsp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "ssh-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "hooks-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "web-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "example-sdk2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "profile=$(mktemp -t dsh-covgate.XXXXXX) && go test -count=1 -coverprofile=\"$profile\" ./... >/dev/null && go run ./scripts/doccheck -coverage \"$profile\""
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        }
+      ]
+    }
+  ]
+}

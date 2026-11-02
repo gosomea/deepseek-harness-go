@@ -32,7 +32,63 @@ go build ./...
 
 竞态检测需要 CGO 与 C 编译器。检查器的 Go 程序标记、输出和非空规则由[文档规范](documentation.md)维护；接口片段不会被当成独立程序运行。示例超时覆盖编译与执行，单个程序失败不会视为文档通过。
 
-90% 是本项目运行时包的语句覆盖率下限，不等同于 DSH 的每文件 100% 覆盖规则，也不证明全部行为正确。重点时序必须有独立行为测试。受门禁的包在 [门禁实现](../scripts/doccheck/main.go) 的 `coverageRequirement` 中逐个列出：新运行时包必须显式加入，清单之外或被遗漏的包会因“没有覆盖数据”而失败，不会因为未被选择而悄悄通过。当前受门禁的包是 `cordis`、`internal/testkit`、`loader` 与 `app`；每个包都在创建它的同一切片内登记，见 [M2 执行契约](10-plans/dsh-go-replication-m02/plans.md)。
+## 双实现差分
+
+Session surface 与 Cordis 运行时各自有一族共享场景，见 [Session 差分场景](../testdata/parity/session/README.md) 与 [Cordis 差分场景](../testdata/parity/cordis/README.md)。两族共用同一个比较器，因此差异规则只有一套。
+
+Session 的实时对照检查需要 `DSH_PACKAGES` 指向固定参考的 `packages` 目录：
+
+```sh
+DSH_PACKAGES=<DSH>/packages go test -count=1 -run TestLiveReferenceSessionSurfaceMatchesRecorded ./internal/testkit
+```
+
+缺少该变量、缺少 Node 或缺少固定构建产物时，检查**跳过**并把结果记为未验证，不记为通过；已记录的参考 trace 仍然参与比较。
+
+### 覆盖范围不对称
+
+Session 场景只对照 **surface 与派生历史**。envelope 的字段级拒绝（`ignorable` 的形状、未知 envelope 字段、必填字段）由 Go 单侧测试固定，因为固定参考的 `foldSurface` 不做 payload 校验——那些规则在它的**入日志边界**（`Session.append` 与 seed 采纳路径）上。这是已记录的差异，不是遗漏。
+
+90% 是本项目运行时包的语句覆盖率下限，不等同于 DSH 的每文件 100% 覆盖规则，也不证明全部行为正确。重点时序必须有独立行为测试。受门禁的包在 [门禁实现](../scripts/doccheck/main.go) 的 `coverageRequirement` 中逐个列出：新运行时包必须显式加入，清单之外或被遗漏的包会因“没有覆盖数据”而失败，不会因为未被选择而悄悄通过。当前受门禁的包是 `cordis`、`internal/testkit`、`loader`、`app`、`llm`、`scope`、`session`、`tools`、`systemprompt`、`plugins/llmtrpc`、`agent`、`agentloop`、`persistence`、`plugins/sessionjsonl`、`capability/workspace`、`capability/fs`、`capability/subprocess`、`capability/sandbox`、`capability/approval` 与 `plugins/local`；每个包都在创建它的同一切片内登记，见 [M2 执行契约](10-plans/dsh-go-replication-m02/plans.md)、[M3 执行契约](10-plans/dsh-go-replication-m03/plans.md)、[M4 执行契约](10-plans/dsh-go-replication-m04/plans.md)、[M5 执行契约](10-plans/dsh-go-replication-m05/plans.md)、[M6 执行契约](10-plans/dsh-go-replication-m06/plans.md)和 [M7 执行契约](10-plans/dsh-go-replication-m07/plans.md)。
+
+
+### 门禁变更记录：M4 登记三个新运行时包
+
+### 门禁变更记录：M5 登记 `agent` 与 `agentloop`
+
+### 门禁变更记录：M6 登记 `persistence` 与 `plugins/sessionjsonl`
+
+### 门禁变更记录：M7 登记五个 `capability/*` 包与 `plugins/local`
+
+M7 把六个新运行时包加入受门禁清单：`capability/workspace`、`capability/fs`、`capability/subprocess`、`capability/sandbox`、`capability/approval` 由 m71 登记（m71 创建它们），`plugins/local` 由创建它的 m73 登记。
+
+- **有效样例**：`all-gated-packages-pass` 包含这六个包的达标 profile。
+- **无效样例**：每个新包都有对应的 `<pkg>-below-threshold` 与 `<pkg>-missing` 用例。
+
+覆盖率阈值 90% 未改动。首次登记时 `plugins/local` 实测 83.2%，随后通过补真实行为测试（策略拒绝不写文件、只读策略拒绝 shell、进程树取消、输出限额、设备特殊文件与权限路径）达到 90.5%，**未调整阈值**。该变更由 [M7 执行契约](10-plans/dsh-go-replication-m07/plans.md) 的 `coverage-registration` 检查断言，并在 `validation/<run-id>` 中留证。
+
+
+M6 把 `persistence` 与 `plugins/sessionjsonl` 加入受门禁清单，并同样扩展了 `TestCoverageGateChecksEveryGatedPackage`：
+
+- **有效样例**：`all-gated-packages-pass` 现在包含两个新包的达标 profile。
+- **无效样例**：为每个新包增加 `<pkg>-below-threshold` 与 `<pkg>-missing` 两类用例。
+
+覆盖率阈值 90% 未改动，`Makefile` 的其他子命令未改动。首次登记时 `sessionjsonl` 实测 84.1%，随后通过补真实 I/O 故障路径测试（只读目录、描述符被关闭、路径被目录占用、未来版本、撕裂尾部）提升到 90.5%，未调整阈值。该变更由 [M6 执行契约](10-plans/dsh-go-replication-m06/plans.md) 的 `coverage-registration` 检查断言，并在 `validation/<run-id>` 中留证。
+
+
+M5 把 `agent` 与 `agentloop` 加入受门禁清单，并同样扩展了 `TestCoverageGateChecksEveryGatedPackage`：
+
+- **有效样例**：`all-gated-packages-pass` 现在包含两个新包的达标 profile。
+- **无效样例**：为每个新包增加 `<pkg>-below-threshold` 与 `<pkg>-missing` 两类用例。
+
+覆盖率阈值 90% 未改动，`Makefile` 的其他子命令未改动。该变更由 [M5 执行契约](10-plans/dsh-go-replication-m05/plans.md) 的 `coverage-registration` 检查断言，并在 `validation/<run-id>` 中留证。
+
+
+M4 把 `tools`、`systemprompt` 与 `plugins/llmtrpc` 加入受门禁清单（`scripts/doccheck/main.go` 的 `coverageRequirement`），因此同步扩展了它自己的测试 fixture `TestCoverageGateChecksEveryGatedPackage`，而不是让新包只被比较式覆盖：
+
+- **有效样例**：`all-gated-packages-pass` 现在同时包含三个新包的达标 profile，断言门禁接受全部受控包。
+- **无效样例**：为每个新包增加 `<pkg>-below-threshold`（覆盖率不足）与 `<pkg>-missing`（profile 里完全没有该包）两类用例，断言门禁分别拒绝。
+
+覆盖率阈值 90% 未改动，Makefile 的其他子命令未改动。这次变更由 [M4 执行契约](10-plans/dsh-go-replication-m04/plans.md) 的 `coverage-registration` 检查断言，并在 `validation/<run-id>` 中留证。
 
 ## 行为与证据
 
@@ -63,9 +119,22 @@ go build ./...
 | 录制 trace 与实时参考一致（需要固定构建产物，缺失时跳过） | `TestLiveReferenceTraceMatchesRecorded` |
 | 比较器拒绝未声明差异、未发生声明与无理由声明 | `TestCompareTracesRejectsUndeclaredDifferences`、`TestCompareTracesAppliesOnlyUsedDivergences` |
 | 参考 trace 的录制来源与哈希可核对 | `TestReferenceTracesMatchProvenance` |
+| Session surface 与固定参考逐行一致（六个共享场景） | `TestSessionParityMatchesRecordedReferenceTraces` |
+| 录制 trace 与实时参考一致（需要固定构建产物，缺失时跳过并记为未验证） | `TestLiveReferenceSessionSurfaceMatchesRecorded` |
+| Session 场景 fixture 格式正确、参考 trace 齐备 | `TestSessionScenariosAreWellFormed`、`TestSessionScenarioDecoderRejectsIncompleteFixtures` |
+| 追加提交后序号仍密集且唯一（并发写入与读取） | `TestConcurrentAppendsAndReads` |
+| 被拒绝的 append 不推进序号、不通知观察者 | `TestRejectedAppendLeavesTheLogUnchanged` |
+| 未知事件类型默认拒绝、标记 `ignorable` 后保留原文 | `TestUnknownEventPolicy` |
+| 审计事件让日志变长而模型历史不变 | `TestAuditEventsLengthenTheLogWithoutChangingHistory` |
+| 空内容消息占位但不产生模型消息 | `TestEmptyMessagesKeepTheirPlaceButDeriveToNothing` |
+| 离线 fold 与实时 surface 得到同一份结果 | `TestLiveLogComputesTheSameSurfaceAsAFold` |
+| 缺少必需消息投影即拒绝整份日志 | `TestRequiredProjectionIsRefusedWithoutAnInterpreter` |
+| 未知内容块原样保留、已知块逐字节往返 | `TestUnknownBlockSurvivesRoundTrip`、`TestContentRoundTripIsLossless` |
+| 兄弟作用域互不可见、事件只向上准入 | `TestSiblingScopesDoNotLeak`、`TestEventAdmissionFlowsUpTheChain` |
 | 覆盖率门禁对每个受门禁包分别拒绝缺失与低于阈值 | `TestCoverageGateChecksEveryGatedPackage` |
+| 覆盖率门禁的有效/无效样例覆盖每个受门禁包 | `TestCoverageGateChecksEveryGatedPackage` 的 `all-gated-packages-pass` 与各 `<pkg>-missing`／`<pkg>-below-threshold` 子用例 |
 
-测试源见 [生命周期测试](../cordis/lifecycle_test.go)、[运行时测试](../cordis/runtime_test.go)、[事件测试](../cordis/events_test.go) 和 [示例测试](../examples/cordis/main_test.go)。文档门禁拒绝样例见 [工具测试](../scripts/doccheck/main_test.go)。
+测试源见 [生命周期测试](../cordis/lifecycle_test.go)、[运行时测试](../cordis/runtime_test.go)、[事件测试](../cordis/events_test.go)、[Session 日志测试](../session/log_test.go)、[surface 测试](../session/surface_test.go)、[投影测试](../session/projection_test.go)、[消息测试](../llm/message_test.go)、[作用域测试](../scope/scope_test.go) 和 [示例测试](../examples/cordis/main_test.go)。文档门禁拒绝样例见 [工具测试](../scripts/doccheck/main_test.go)。
 
 ## 执行证据
 

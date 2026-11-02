@@ -1,0 +1,3727 @@
+{
+  "schema_version": 1,
+  "status": {
+    "plan": "dsh-go-replication-m10",
+    "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+    "nodes": {
+      "m101-protocol-dto": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "8741dd6cc58b4829a5b5ce12b39ef238",
+        "subject": "6308d40d0c8e4fae0d5675e5f0f538e5c2d0dd9fcd0a0221e4e6b782280c8d0c",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m102-hostapi-gateway": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "e7d775124dd1414eaf5304bc1b47e160",
+        "subject": "069e34da7c5cc543ec22303d3905f49e13e425feb86247e8a0ed909289070230",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m103-sdk-acp": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "1595e656dbe24f1fa8882c052c22e688",
+        "subject": "0bad3d6d004581490d5c77b956c76eb72fd39d9535d2dfa197095da72010559e",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m104-mcp-lsp": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "aba123a33ad743d0b51320a4c3d51520",
+        "subject": "528b940400f7ad4bacfc44ad5524f3dca4af161b533fde682fd6829ed7edfdc6",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m105-ssh-remote": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "c6e09d7ae20545b5b8a0cf1a91647dbb",
+        "subject": "167c454d621f6e5c434bf0db056496f64687be349fca98eb1dfa8c4f199821ca",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m106-wire-hook": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "b3da5cd7187f49288bc5839b284a4b08",
+        "subject": "7e388946e1bd0af3664ee88e0b122c61e53e35f8d772bf00a1eb1dac73aa146c",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m107-web-hook": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "b745b21b4c3748aba2e86e6017a2b5bf",
+        "subject": "6f05231077cd7f619ec43b54a7dfa6f75e26947f8efdec024ceba8e5c295a855",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "m108-compat-matrix": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "23ba069aa540482f9d90bc420282ca95",
+        "subject": "2ef93e629776916040fc7b4ae0e883951b44b19edbd922d897856693ff077b6a",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      },
+      "g10-acceptance": {
+        "status": "passed",
+        "reason": null,
+        "owner": "lead",
+        "attempt": "50a66004acfa43268e9d82700746aef9",
+        "subject": "a2ca9af3f07b9ce4aae9ea75724455a59e1000792bd58102afa41879de9a24e3",
+        "root": "/Users/yuqixian/forever-skills/projects/agent-research/deepseek-harness-go"
+      }
+    },
+    "complete": true
+  },
+  "events": [
+    {
+      "time": 1792487660.311657,
+      "action": "claim",
+      "node": "m101-protocol-dto",
+      "token": "8a7bcde394e4421b89e49cf80daf3ad1",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487660.573504,
+      "action": "start",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487660.6867871,
+      "action": "verify",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487663.07129,
+      "action": "awaiting-review",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487663.3963242,
+      "action": "passed",
+      "node": "m101-protocol-dto",
+      "receipt_hash": "8bbca5a087c7ad383d967fd7fa7e1c55baded1b3bf3c95a48877ad0a7ad2795e",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487663.6008189,
+      "action": "claim",
+      "node": "m102-hostapi-gateway",
+      "token": "8e0460ae6625466f9b9dc2a86aeaa169",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487663.840787,
+      "action": "start",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487663.976896,
+      "action": "verify",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487666.337549,
+      "action": "awaiting-review",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487666.746489,
+      "action": "passed",
+      "node": "m102-hostapi-gateway",
+      "receipt_hash": "ae331805f79550ea7667e40e3605c18c1abf284f731ddd89a5ca1d0762e7b088",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487666.979079,
+      "action": "claim",
+      "node": "m103-sdk-acp",
+      "token": "291a307d8eab4de6afc3748ac0f3aeee",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487667.238601,
+      "action": "start",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487667.3773172,
+      "action": "verify",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487671.414159,
+      "action": "awaiting-review",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487671.772696,
+      "action": "passed",
+      "node": "m103-sdk-acp",
+      "receipt_hash": "1d31ebcf9f4da96cc5d229fc887f08040c6b6baa6ec286db9c43a336dd0b72c3",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487671.976319,
+      "action": "claim",
+      "node": "m104-mcp-lsp",
+      "token": "e384fca6ba074b6da025fdd149924bbb",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487672.2157319,
+      "action": "start",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487672.347014,
+      "action": "verify",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487676.6764212,
+      "action": "awaiting-review",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487677.016456,
+      "action": "passed",
+      "node": "m104-mcp-lsp",
+      "receipt_hash": "19522d78ba985cea607902f505fc4b3fd267a84475205a3e32f105392e396f2f",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487683.180916,
+      "action": "claim",
+      "node": "m105-ssh-remote",
+      "token": "e2a476a7cb6a43f5bf729a38e09264eb",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487683.4362712,
+      "action": "start",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487683.572242,
+      "action": "verify",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487685.778535,
+      "action": "awaiting-review",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487686.139652,
+      "action": "passed",
+      "node": "m105-ssh-remote",
+      "receipt_hash": "6646ce02428bb5a234b5132d88528283f4d00917232cf6b7f88dae65b94ff89d",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487686.3576372,
+      "action": "claim",
+      "node": "m106-wire-hook",
+      "token": "5030313bae0d476cad6a0eac0dec08d4",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487686.60797,
+      "action": "start",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487686.745708,
+      "action": "verify",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487690.8113458,
+      "action": "awaiting-review",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487691.219696,
+      "action": "passed",
+      "node": "m106-wire-hook",
+      "receipt_hash": "2ddbd862cddaff052d5db58d4a92478c63b7b3d4c24659586c3a654f71ff30db",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487691.446838,
+      "action": "claim",
+      "node": "m107-web-hook",
+      "token": "55e5d51edbad48698daa88f6876db6b1",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487691.692582,
+      "action": "start",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487691.820956,
+      "action": "verify",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487694.06126,
+      "action": "awaiting-review",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487694.430424,
+      "action": "passed",
+      "node": "m107-web-hook",
+      "receipt_hash": "1decaaedea12f974efca86b814c65d6765ab0ae98969dc20bd1f6741f9817001",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487694.7475111,
+      "action": "claim",
+      "node": "m108-compat-matrix",
+      "token": "8e4fa0d573134905be1859dfd06be17a",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487695.098751,
+      "action": "start",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487695.329893,
+      "action": "verify",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487697.632684,
+      "action": "awaiting-review",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487698.175906,
+      "action": "passed",
+      "node": "m108-compat-matrix",
+      "receipt_hash": "8b6cfbc24fb336eaae1ca1aaa6167bf7ef57bdb053d80caaae85f39c4bebd8a0",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487704.626118,
+      "action": "claim",
+      "node": "g10-acceptance",
+      "token": "b4c50fb042b342b6a5576527b96c5806",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487704.941337,
+      "action": "start",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487705.1390631,
+      "action": "verify",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487830.994485,
+      "action": "awaiting-review",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487831.588893,
+      "action": "passed",
+      "node": "g10-acceptance",
+      "receipt_hash": "09095aa5fdb6c48187368ce251e7e45622321502a8e00a197b56ff3dc4451865",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487950.626047,
+      "action": "revise",
+      "node": null,
+      "previous_revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "previous_attempts": [
+        "8a7bcde394e4421b89e49cf80daf3ad1",
+        "8e0460ae6625466f9b9dc2a86aeaa169",
+        "291a307d8eab4de6afc3748ac0f3aeee",
+        "e384fca6ba074b6da025fdd149924bbb",
+        "e2a476a7cb6a43f5bf729a38e09264eb",
+        "5030313bae0d476cad6a0eac0dec08d4",
+        "55e5d51edbad48698daa88f6876db6b1",
+        "8e4fa0d573134905be1859dfd06be17a",
+        "b4c50fb042b342b6a5576527b96c5806"
+      ]
+    },
+    {
+      "time": 1792487950.8590841,
+      "action": "claim",
+      "node": "m101-protocol-dto",
+      "token": "8741dd6cc58b4829a5b5ce12b39ef238",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487951.2164621,
+      "action": "start",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487951.3620281,
+      "action": "verify",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487954.735342,
+      "action": "awaiting-review",
+      "node": "m101-protocol-dto",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487955.122559,
+      "action": "passed",
+      "node": "m101-protocol-dto",
+      "receipt_hash": "38c674b98291c9d8599507bfafe06ab6f81951ea190abc5683a93aba30d334f2",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487955.382004,
+      "action": "claim",
+      "node": "m102-hostapi-gateway",
+      "token": "e7d775124dd1414eaf5304bc1b47e160",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487955.671744,
+      "action": "start",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487955.828408,
+      "action": "verify",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487957.946204,
+      "action": "awaiting-review",
+      "node": "m102-hostapi-gateway",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487958.356072,
+      "action": "passed",
+      "node": "m102-hostapi-gateway",
+      "receipt_hash": "fc5d23351c1e3bf6e9fad823304c7c33b2b766f38c3ded32ff4461b4acfa248d",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487958.607341,
+      "action": "claim",
+      "node": "m103-sdk-acp",
+      "token": "1595e656dbe24f1fa8882c052c22e688",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487958.89363,
+      "action": "start",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487959.058054,
+      "action": "verify",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487963.05495,
+      "action": "awaiting-review",
+      "node": "m103-sdk-acp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487963.4652202,
+      "action": "passed",
+      "node": "m103-sdk-acp",
+      "receipt_hash": "18602a4aacadc8b0486c8fd6bd13be47a5b33c88881e8ef273a1d5b2b39f97da",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487963.7149189,
+      "action": "claim",
+      "node": "m104-mcp-lsp",
+      "token": "aba123a33ad743d0b51320a4c3d51520",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487964.002791,
+      "action": "start",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487964.150393,
+      "action": "verify",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487968.1550112,
+      "action": "awaiting-review",
+      "node": "m104-mcp-lsp",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487968.550981,
+      "action": "passed",
+      "node": "m104-mcp-lsp",
+      "receipt_hash": "57a99ea5438fde3c5c53f3a5d17b52841ea951a11c1d17a2bf484c21597f016d",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487968.8137522,
+      "action": "claim",
+      "node": "m105-ssh-remote",
+      "token": "c6e09d7ae20545b5b8a0cf1a91647dbb",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487969.108036,
+      "action": "start",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487969.267927,
+      "action": "verify",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487971.3947232,
+      "action": "awaiting-review",
+      "node": "m105-ssh-remote",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487971.833449,
+      "action": "passed",
+      "node": "m105-ssh-remote",
+      "receipt_hash": "4643c02f7af9115ab77767d7398ce8e95ca54ccb095c052b6be8359b2e4b02cf",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487972.092681,
+      "action": "claim",
+      "node": "m106-wire-hook",
+      "token": "b3da5cd7187f49288bc5839b284a4b08",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487972.377333,
+      "action": "start",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487972.539286,
+      "action": "verify",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487976.655485,
+      "action": "awaiting-review",
+      "node": "m106-wire-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487977.0915031,
+      "action": "passed",
+      "node": "m106-wire-hook",
+      "receipt_hash": "caa3ee9811f62cc061c8c856a1ff89811d47d904b96e100c5cad9daf340a1dec",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487977.347549,
+      "action": "claim",
+      "node": "m107-web-hook",
+      "token": "b745b21b4c3748aba2e86e6017a2b5bf",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487977.630924,
+      "action": "start",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487977.787812,
+      "action": "verify",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487979.874728,
+      "action": "awaiting-review",
+      "node": "m107-web-hook",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487980.283241,
+      "action": "passed",
+      "node": "m107-web-hook",
+      "receipt_hash": "65fe927d56f955ce4220d56daa01dcd814ebd5b5401afe530bc286e30115bcf1",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487980.637585,
+      "action": "claim",
+      "node": "m108-compat-matrix",
+      "token": "23ba069aa540482f9d90bc420282ca95",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487981.034703,
+      "action": "start",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487981.300428,
+      "action": "verify",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487983.469561,
+      "action": "awaiting-review",
+      "node": "m108-compat-matrix",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487984.091715,
+      "action": "passed",
+      "node": "m108-compat-matrix",
+      "receipt_hash": "7b09aa0bd7d75385669ce8c452f3a9bd3a14a7f35c40e20eb11f9624616f4791",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487994.0525482,
+      "action": "claim",
+      "node": "g10-acceptance",
+      "token": "50a66004acfa43268e9d82700746aef9",
+      "owner": "lead",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487994.45767,
+      "action": "start",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792487994.7161,
+      "action": "verify",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792488115.865153,
+      "action": "awaiting-review",
+      "node": "g10-acceptance",
+      "previous_attempts": []
+    },
+    {
+      "time": 1792488116.513885,
+      "action": "passed",
+      "node": "g10-acceptance",
+      "receipt_hash": "98bda990517671d18005d7b586c1f9f0b96c6d00b590119f23053049c2512305",
+      "previous_attempts": []
+    }
+  ],
+  "receipts": {
+    "m101-protocol-dto": {
+      "node": "m101-protocol-dto",
+      "attempt": "8741dd6cc58b4829a5b5ce12b39ef238",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "protocol-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487951.368833,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487954.500154,
+          "stdout_sha256": "fef774bfae461e15286d4c9e73b5bf0cb5112f209dd5f96c8e3392d0922dc26f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "protocol/doc.go": {
+          "sha256": "fd1b8e9f55cbef3f0d7130a2826054ec8cf651f3a0ba03ce0228ad6fdf2645bd",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/protocol.go": {
+          "sha256": "19f81f346523ac3d31d88ab66da10152d6898ae0d688313dd76c695b8c184c47",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/protocol_test.go": {
+          "sha256": "3931e6e9932d866a0b1e714ac4afc403e3a30f3c529eae1d339e666b5fcaf2c6",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/README.md": {
+          "sha256": "b8cdc252b85f30b204e5cb6b0216c2daa38452ff7424c1fbdcef877b674eb036",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/protocols/overview.md": {
+          "sha256": "741817a283993d2826d185e91bda56c4e752483092cefda54dd9e214af85b549",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "6308d40d0c8e4fae0d5675e5f0f538e5c2d0dd9fcd0a0221e4e6b782280c8d0c",
+      "review": {
+        "node": "m101-protocol-dto",
+        "attempt": "8741dd6cc58b4829a5b5ce12b39ef238",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "6308d40d0c8e4fae0d5675e5f0f538e5c2d0dd9fcd0a0221e4e6b782280c8d0c",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "protocol/doc.go",
+          "protocol/protocol.go",
+          "protocol/protocol_test.go",
+          "protocol/README.md",
+          "docs/protocols/overview.md"
+        ],
+        "findings": []
+      }
+    },
+    "m102-hostapi-gateway": {
+      "node": "m102-hostapi-gateway",
+      "attempt": "e7d775124dd1414eaf5304bc1b47e160",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "hostapi-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487955.8360162,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487957.6875079,
+          "stdout_sha256": "d8bd613f5afa3b0d0111578afbfb36ab56055a312a871c10099aa5b98f615617",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/hostapi/doc.go": {
+          "sha256": "4740c315e48221fdb36bb4ed434188c6510a08aee329a11836ff0284f7bc11a8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/gateway.go": {
+          "sha256": "c939ff2786a6a49bd48bbcfac46e70855541cabb790139fb1ebee9850399999e",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/gateway_test.go": {
+          "sha256": "0ceb704f69ae0987b826e371f924a5bcb10b93aca52748ef33e5bab6b04d16a8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/README.md": {
+          "sha256": "910a11f3f19669cf8e4cde1d3a148fdc3b01d147be7921b19a18aab8e13e002c",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "069e34da7c5cc543ec22303d3905f49e13e425feb86247e8a0ed909289070230",
+      "review": {
+        "node": "m102-hostapi-gateway",
+        "attempt": "e7d775124dd1414eaf5304bc1b47e160",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "069e34da7c5cc543ec22303d3905f49e13e425feb86247e8a0ed909289070230",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/hostapi/doc.go",
+          "plugins/hostapi/gateway.go",
+          "plugins/hostapi/gateway_test.go",
+          "plugins/hostapi/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m103-sdk-acp": {
+      "node": "m103-sdk-acp",
+      "attempt": "1595e656dbe24f1fa8882c052c22e688",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "sdk-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487959.066402,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487960.9142148,
+          "stdout_sha256": "d3bbce3615b4caf616c0906009cf8e9ce7c00ec2fbf8994c4d511f8e09fdb40c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "acp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487960.914804,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487962.807426,
+          "stdout_sha256": "7a39ac68d0978007b87961c70e7280bf7598d533958180fde8714c7feb15f894",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/sdk/doc.go": {
+          "sha256": "725b13feb57f2284383ebb502d36fbe5057c5c338bba5f96b0cd25b9706fb5f3",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/client.go": {
+          "sha256": "357cf8e838c867b41d9817649dc41e5702e43d1689f8012cd41da1edc5988f7b",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/client_test.go": {
+          "sha256": "6df70ae4800254b288d69e5898051c2650fd89d063cebe0140536fa17f1f9429",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/README.md": {
+          "sha256": "fbe0555b25a90acd1793636b89eb640d216b6d33cb26b58aa50cc0551a3d9e16",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/acp.go": {
+          "sha256": "7f13f824eeb0884f2b5497b0ccb7e460375c237a94e5495fcf49981be35ab813",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/acp_test.go": {
+          "sha256": "10b0a224217d3d26d59de64b9ee00701532ae5df48f59cce1b5a993df765db8f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "0bad3d6d004581490d5c77b956c76eb72fd39d9535d2dfa197095da72010559e",
+      "review": {
+        "node": "m103-sdk-acp",
+        "attempt": "1595e656dbe24f1fa8882c052c22e688",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "0bad3d6d004581490d5c77b956c76eb72fd39d9535d2dfa197095da72010559e",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/sdk/doc.go",
+          "plugins/sdk/client.go",
+          "plugins/sdk/client_test.go",
+          "plugins/sdk/README.md",
+          "protocol/acp.go",
+          "protocol/acp_test.go"
+        ],
+        "findings": []
+      }
+    },
+    "m104-mcp-lsp": {
+      "node": "m104-mcp-lsp",
+      "attempt": "aba123a33ad743d0b51320a4c3d51520",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "mcp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487964.1590002,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487965.9987042,
+          "stdout_sha256": "2b54a70cf2f67d382a2bdf05f1a805e48a4cc1e94cc2f571d0a6803087f675ab",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "lsp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487965.999833,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487967.898228,
+          "stdout_sha256": "09ab89b8b91f6104046bd7c04acb9fc44ffcb97e350347068efe534333df22a2",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/mcp/doc.go": {
+          "sha256": "3c32fe0a2b06f62adf6f36c136a8a22adf601441d847b87530466a1f73a7d332",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/stdioclient.go": {
+          "sha256": "b2ed980d4e9c1a9a3bbaf6922485e5fd870f7cb9e728612c513901082c5428e8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/stdioclient_test.go": {
+          "sha256": "317fcb87badaf885ca9f9bc93dbe454d0c4e59cd650c01a7ec6b7b11d5982b4f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/README.md": {
+          "sha256": "f8261ef93472fff7d8d25aae1969c3c1046d49cc490250a1bd757ceaee039e71",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/doc.go": {
+          "sha256": "b800c2376c3b346fe5d5191df464c9c3469925c58152e936fcfa2609759a7fea",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/stdioclient.go": {
+          "sha256": "6933fc0d052841b4cc23f7e731b40a51eeefc92b70b2ce0bd9b758fb55e3a079",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/stdioclient_test.go": {
+          "sha256": "856c16b426b4932ccf4dcd296d37d2c82f035e0f16a70dc31b69e2b5dee567ad",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/README.md": {
+          "sha256": "562970a8f439427d886f1231f34bd8435e249252c9c10ebf5c63451f8d563b30",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "528b940400f7ad4bacfc44ad5524f3dca4af161b533fde682fd6829ed7edfdc6",
+      "review": {
+        "node": "m104-mcp-lsp",
+        "attempt": "aba123a33ad743d0b51320a4c3d51520",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "528b940400f7ad4bacfc44ad5524f3dca4af161b533fde682fd6829ed7edfdc6",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/mcp/doc.go",
+          "plugins/mcp/stdioclient.go",
+          "plugins/mcp/stdioclient_test.go",
+          "plugins/mcp/README.md",
+          "plugins/lsp/doc.go",
+          "plugins/lsp/stdioclient.go",
+          "plugins/lsp/stdioclient_test.go",
+          "plugins/lsp/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m105-ssh-remote": {
+      "node": "m105-ssh-remote",
+      "attempt": "c6e09d7ae20545b5b8a0cf1a91647dbb",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "ssh-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487969.2775822,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487971.121869,
+          "stdout_sha256": "9037ac728e0f4825bd8b7afee9f634148a0b37522a105b9d78c7a050ac250513",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/ssh/doc.go": {
+          "sha256": "c83068bd2fe1d0b041e37b4963a2fa0be3d84ff57a47b50f389a9cd42ed82a0f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/provider.go": {
+          "sha256": "b16759ee599368d312ea58add456be78cb0b2afaf447d425fcc2be0c11cbd25f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/provider_test.go": {
+          "sha256": "a3f4dd3e8f8b2c9080ee81163e2e8fdfe655f0dcc3908fb84282e8d21deba0e6",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/README.md": {
+          "sha256": "56f00ebe88b99dc5a2c89a5d061eca8915beb7e05ff01db1eca60571e6fa0074",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "167c454d621f6e5c434bf0db056496f64687be349fca98eb1dfa8c4f199821ca",
+      "review": {
+        "node": "m105-ssh-remote",
+        "attempt": "c6e09d7ae20545b5b8a0cf1a91647dbb",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "167c454d621f6e5c434bf0db056496f64687be349fca98eb1dfa8c4f199821ca",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/ssh/doc.go",
+          "plugins/ssh/provider.go",
+          "plugins/ssh/provider_test.go",
+          "plugins/ssh/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m106-wire-hook": {
+      "node": "m106-wire-hook",
+      "attempt": "b3da5cd7187f49288bc5839b284a4b08",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "wire-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487972.548621,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487974.5488582,
+          "stdout_sha256": "3eed70bd55d00e6c2fe90968282ac10cb19f6cf07f0c80fb17d4de72295b307f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hooks-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487974.549713,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487976.407678,
+          "stdout_sha256": "304e5cb706cbd274dba8ff38e650017cf822be088d50ee6ac77af494a3483f49",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "protocol/wire.go": {
+          "sha256": "74e7f0c63aef8158c9491d24fbbc67839c860da3cee3824e8693f96b25adc73b",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/wire_test.go": {
+          "sha256": "f8fa54c1f43dac84dd0085781e33e8b9e322beb13567420b180478fc15b190ea",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/doc.go": {
+          "sha256": "2123164e4bee97f67e13c59347b1002c537255c80c765187a9a6509c26ccebb7",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/bridge.go": {
+          "sha256": "1b9b5374c51c6c0dcbff7b3382c284792a621748db200c3a5df4c35853155721",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/bridge_test.go": {
+          "sha256": "aff3c3f49245ff4d54771a89538c1771f11e75dc908c3c37e5305b8031bfb9b5",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/README.md": {
+          "sha256": "9cc17bd6080e82d105d3f4ada6fb62ff4e2b92064276cfdae9ebd2c8f171ac85",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "7e388946e1bd0af3664ee88e0b122c61e53e35f8d772bf00a1eb1dac73aa146c",
+      "review": {
+        "node": "m106-wire-hook",
+        "attempt": "b3da5cd7187f49288bc5839b284a4b08",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "7e388946e1bd0af3664ee88e0b122c61e53e35f8d772bf00a1eb1dac73aa146c",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "protocol/wire.go",
+          "protocol/wire_test.go",
+          "plugins/hooks/doc.go",
+          "plugins/hooks/bridge.go",
+          "plugins/hooks/bridge_test.go",
+          "plugins/hooks/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m107-web-hook": {
+      "node": "m107-web-hook",
+      "attempt": "b745b21b4c3748aba2e86e6017a2b5bf",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "web-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487977.797774,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487979.593322,
+          "stdout_sha256": "7b2e46077c9234a70c2e5c2da5bc28b2c357724744386ea8549cef660c7f973a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/web/doc.go": {
+          "sha256": "9bd2dcc299bd9d316142f8e4a5f736065d3ff800a74b53ea8c4ac1b172410da5",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/fetch.go": {
+          "sha256": "f0b2b1afe08da290630036a674ff760b21f4ee2a27163b30ba253144f0983677",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/fetch_test.go": {
+          "sha256": "952f714ec8e9b9fd72dedf23a827b1ac95f748e2e6e2e64e8566d779e19eae0f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/README.md": {
+          "sha256": "8d1b3885a309ca34a763118311bada4bba30165f83a5cbb314cff1e6ffdc9a75",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "6f05231077cd7f619ec43b54a7dfa6f75e26947f8efdec024ceba8e5c295a855",
+      "review": {
+        "node": "m107-web-hook",
+        "attempt": "b745b21b4c3748aba2e86e6017a2b5bf",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "6f05231077cd7f619ec43b54a7dfa6f75e26947f8efdec024ceba8e5c295a855",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/web/doc.go",
+          "plugins/web/fetch.go",
+          "plugins/web/fetch_test.go",
+          "plugins/web/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "m108-compat-matrix": {
+      "node": "m108-compat-matrix",
+      "attempt": "23ba069aa540482f9d90bc420282ca95",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "example-sdk",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487981.310726,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487983.1118941,
+          "stdout_sha256": "9ba1f389d29329fab7908d51db1c9abe6236777d9e59989c8813422ce8ca34ce",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/protocols/compat-matrix.md": {
+          "sha256": "7acb764e5c4513acdfdec3a5fc8603c234d75092d175fc5b0b0eb5a648b8c5eb",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/main.go": {
+          "sha256": "9eceb9d88500b6507d6f32c101b6790dddf7a451b85e7cee3f62afc5d559cf55",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/main_test.go": {
+          "sha256": "7d10ed4503017d10ca2bdcb092496507ece1592356aec70332060142407e5f30",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/expected.txt": {
+          "sha256": "ab1259675f7b42bf64060a3ff212777b67338ba8fdc89adcac4792863c024707",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/README.md": {
+          "sha256": "22f03dfe4a768b6fa273e8178c99740222ef82f34754d2a4ee7a6bf73d39c714",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "2ef93e629776916040fc7b4ae0e883951b44b19edbd922d897856693ff077b6a",
+      "review": {
+        "node": "m108-compat-matrix",
+        "attempt": "23ba069aa540482f9d90bc420282ca95",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "2ef93e629776916040fc7b4ae0e883951b44b19edbd922d897856693ff077b6a",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/protocols/compat-matrix.md",
+          "examples/sdk/main.go",
+          "examples/sdk/main_test.go",
+          "examples/sdk/expected.txt",
+          "examples/sdk/README.md"
+        ],
+        "findings": []
+      }
+    },
+    "g10-acceptance": {
+      "node": "g10-acceptance",
+      "attempt": "50a66004acfa43268e9d82700746aef9",
+      "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792487994.729177,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488045.962998,
+          "stdout_sha256": "ee5607621646dcb34cad26f574a30ad43b30d6fbc7524f0f7ef7a4377d52bd42",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792488045.96336,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488045.984183,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "protocol-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488045.984434,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488047.919308,
+          "stdout_sha256": "3f0a5e6d211b986baacb7ced4af68a0ca815de383a91c237c9e441e9cb95f1b8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hostapi-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488047.91989,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488049.886861,
+          "stdout_sha256": "5cc0e36a9b759e0c17adf7726f3428bd030ffa35ddb34e1768d3a92d9f012b87",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "sdk-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488049.88779,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488051.898419,
+          "stdout_sha256": "0fd0b7ed40e184b5ffdc0c51d36d4aedb5bfc9f1f39264554c1e6e4f46d879a5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "mcp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488051.899094,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488053.8698251,
+          "stdout_sha256": "e08d108cdf91eb2a5dc5604de81ae99fa6e6ac5892e5f3d3719049ddb3fb208c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "lsp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488053.871531,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488055.780977,
+          "stdout_sha256": "92b7b801b1c73e892194a1761ef376fe53f0e160ecf5d5847f3f9ebbe865dfe6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ssh-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488055.781773,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488057.698514,
+          "stdout_sha256": "bad08b9b187678645570422d4f382b307df242dda9c32fc76bee0d8b38af8843",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hooks-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488057.699151,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488059.6121888,
+          "stdout_sha256": "7d652aedc2c24dda2e51f39544c3f7ec10c891ee37d7b6b791c188cad838fe82",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "web-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488059.613962,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488061.589113,
+          "stdout_sha256": "e58b34972a8427b6e4d0bc663fad2b054243c991244e1e12f60be5f450cd6ea8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "example-sdk2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792488061.5903082,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488063.560564,
+          "stdout_sha256": "afd05d5acb27f5d549e018e456cb30ebe31fb2e5a90962ac8bf4ff58b970edd5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792488063.560977,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488064.3385699,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792488064.338809,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488089.058957,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792488089.0592508,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488103.980436,
+          "stdout_sha256": "3e7630710d8cf3d463a57fd3cd43403309fdd3537d9095b0f5d9c17804dc5b0c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "profile=$(mktemp -t dsh-covgate.XXXXXX) && go test -count=1 -coverprofile=\"$profile\" ./... >/dev/null && go run ./scripts/doccheck -coverage \"$profile\""
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792488103.9809222,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792488115.4789581,
+          "stdout_sha256": "b17c354413d30e201b45ae7a4c9036706dbb8b18fc417efc824890ff34c4458d",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "78c32b1d6776115e537d4c84f1d34de8588aaf36811ac44ab10e027d4be31e9f",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "5af100c4131824715b3b5557bacf814f3f82328667d189de5cccca5739a3bcc1",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "75152327b5cf5f52340316bdbe6e69332315b5fd4e3ab85c37b02cb73b3ee619",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "294a171bedd1da29d9b45e8f7a7b20176a7ea4f0a583a9dc5284316c5ebe4e2a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/index.md": {
+          "sha256": "be37883529b181467a8deaf7297a39901bc704d3b33804fa543d592ac7fb7623",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/index.md": {
+          "sha256": "e8734c656af926207240f7390cda94e65796c9890de0c0164743d8d3eeb9ce25",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "a2ca9af3f07b9ce4aae9ea75724455a59e1000792bd58102afa41879de9a24e3",
+      "review": {
+        "node": "g10-acceptance",
+        "attempt": "50a66004acfa43268e9d82700746aef9",
+        "revision": "78fab35ec01b8f8052b01829ecf5addebb28cbb007b2c4c9271f82d950fe81ee",
+        "subject": "a2ca9af3f07b9ce4aae9ea75724455a59e1000792bd58102afa41879de9a24e3",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/10-plans/dsh-go-replication-m10/plans.md",
+          "docs/testing.md",
+          "docs/README.md",
+          "docs/roadmap.md",
+          "docs/learning/index.md",
+          "docs/10-plans/dsh-go-replication/stages/index.md"
+        ],
+        "findings": []
+      }
+    }
+  },
+  "history": [
+    {
+      "node": "m101-protocol-dto",
+      "attempt": "8a7bcde394e4421b89e49cf80daf3ad1",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "protocol-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487660.68785,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487662.854646,
+          "stdout_sha256": "803838a27f197c76c46428a0b73baae5ac5fc25b34b1007bb758f4a9f682f779",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "protocol/doc.go": {
+          "sha256": "fd1b8e9f55cbef3f0d7130a2826054ec8cf651f3a0ba03ce0228ad6fdf2645bd",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/protocol.go": {
+          "sha256": "19f81f346523ac3d31d88ab66da10152d6898ae0d688313dd76c695b8c184c47",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/protocol_test.go": {
+          "sha256": "3931e6e9932d866a0b1e714ac4afc403e3a30f3c529eae1d339e666b5fcaf2c6",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/README.md": {
+          "sha256": "b8cdc252b85f30b204e5cb6b0216c2daa38452ff7424c1fbdcef877b674eb036",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/protocols/overview.md": {
+          "sha256": "741817a283993d2826d185e91bda56c4e752483092cefda54dd9e214af85b549",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "59855dab31e3a33ca47d102a7b1116e695516e4aca91d712043299a09b5fc6d3",
+      "review": {
+        "node": "m101-protocol-dto",
+        "attempt": "8a7bcde394e4421b89e49cf80daf3ad1",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "59855dab31e3a33ca47d102a7b1116e695516e4aca91d712043299a09b5fc6d3",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "protocol/doc.go",
+          "protocol/protocol.go",
+          "protocol/protocol_test.go",
+          "protocol/README.md",
+          "docs/protocols/overview.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m102-hostapi-gateway",
+      "attempt": "8e0460ae6625466f9b9dc2a86aeaa169",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "hostapi-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487663.9785511,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487666.011472,
+          "stdout_sha256": "31b64afa9a275f7d048c64fdc501ac234283a1a482450fcadddabd10271a4ddc",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/hostapi/doc.go": {
+          "sha256": "4740c315e48221fdb36bb4ed434188c6510a08aee329a11836ff0284f7bc11a8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/gateway.go": {
+          "sha256": "c939ff2786a6a49bd48bbcfac46e70855541cabb790139fb1ebee9850399999e",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/gateway_test.go": {
+          "sha256": "0ceb704f69ae0987b826e371f924a5bcb10b93aca52748ef33e5bab6b04d16a8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hostapi/README.md": {
+          "sha256": "910a11f3f19669cf8e4cde1d3a148fdc3b01d147be7921b19a18aab8e13e002c",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "b9bf07a54c571a98bed26626e2eb67acead8647d1473469da86fd0020b69f413",
+      "review": {
+        "node": "m102-hostapi-gateway",
+        "attempt": "8e0460ae6625466f9b9dc2a86aeaa169",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "b9bf07a54c571a98bed26626e2eb67acead8647d1473469da86fd0020b69f413",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/hostapi/doc.go",
+          "plugins/hostapi/gateway.go",
+          "plugins/hostapi/gateway_test.go",
+          "plugins/hostapi/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m103-sdk-acp",
+      "attempt": "291a307d8eab4de6afc3748ac0f3aeee",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "sdk-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487667.379787,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487669.377834,
+          "stdout_sha256": "fca1d63090288fe7da68c7801538adc0b713af3129ce75b4cce1f3b82cdc6aaf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "acp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487669.378444,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487671.1764219,
+          "stdout_sha256": "f1634b7b7f2059e3c1326b99152be8e417b53abdd7b6fc78a92a0fc0eb9dc840",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/sdk/doc.go": {
+          "sha256": "725b13feb57f2284383ebb502d36fbe5057c5c338bba5f96b0cd25b9706fb5f3",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/client.go": {
+          "sha256": "357cf8e838c867b41d9817649dc41e5702e43d1689f8012cd41da1edc5988f7b",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/client_test.go": {
+          "sha256": "6df70ae4800254b288d69e5898051c2650fd89d063cebe0140536fa17f1f9429",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/sdk/README.md": {
+          "sha256": "fbe0555b25a90acd1793636b89eb640d216b6d33cb26b58aa50cc0551a3d9e16",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/acp.go": {
+          "sha256": "7f13f824eeb0884f2b5497b0ccb7e460375c237a94e5495fcf49981be35ab813",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/acp_test.go": {
+          "sha256": "10b0a224217d3d26d59de64b9ee00701532ae5df48f59cce1b5a993df765db8f",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "1e9242e9aa92187e0bb0e8d7fbbadb37e63b060c1092b65de73185296d0ad73e",
+      "review": {
+        "node": "m103-sdk-acp",
+        "attempt": "291a307d8eab4de6afc3748ac0f3aeee",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "1e9242e9aa92187e0bb0e8d7fbbadb37e63b060c1092b65de73185296d0ad73e",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/sdk/doc.go",
+          "plugins/sdk/client.go",
+          "plugins/sdk/client_test.go",
+          "plugins/sdk/README.md",
+          "protocol/acp.go",
+          "protocol/acp_test.go"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m104-mcp-lsp",
+      "attempt": "e384fca6ba074b6da025fdd149924bbb",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "mcp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487672.3497238,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487674.3850272,
+          "stdout_sha256": "984e4128d80e55f3d001d684d4b9abeda9e057ec3ddda48751bb87bfd2384870",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "lsp-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487674.3916879,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487676.4494941,
+          "stdout_sha256": "5dfc1a517a171fc45192fc7980f49ba4abf76a17a8b6ed26fb8c49cb187e660c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/mcp/doc.go": {
+          "sha256": "3c32fe0a2b06f62adf6f36c136a8a22adf601441d847b87530466a1f73a7d332",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/stdioclient.go": {
+          "sha256": "b2ed980d4e9c1a9a3bbaf6922485e5fd870f7cb9e728612c513901082c5428e8",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/stdioclient_test.go": {
+          "sha256": "317fcb87badaf885ca9f9bc93dbe454d0c4e59cd650c01a7ec6b7b11d5982b4f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/mcp/README.md": {
+          "sha256": "f8261ef93472fff7d8d25aae1969c3c1046d49cc490250a1bd757ceaee039e71",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/doc.go": {
+          "sha256": "b800c2376c3b346fe5d5191df464c9c3469925c58152e936fcfa2609759a7fea",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/stdioclient.go": {
+          "sha256": "6933fc0d052841b4cc23f7e731b40a51eeefc92b70b2ce0bd9b758fb55e3a079",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/stdioclient_test.go": {
+          "sha256": "856c16b426b4932ccf4dcd296d37d2c82f035e0f16a70dc31b69e2b5dee567ad",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/lsp/README.md": {
+          "sha256": "562970a8f439427d886f1231f34bd8435e249252c9c10ebf5c63451f8d563b30",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "2f4d16de42109116105d42aedac3967f72c662fba17dadb93390fd87bea043a9",
+      "review": {
+        "node": "m104-mcp-lsp",
+        "attempt": "e384fca6ba074b6da025fdd149924bbb",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "2f4d16de42109116105d42aedac3967f72c662fba17dadb93390fd87bea043a9",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/mcp/doc.go",
+          "plugins/mcp/stdioclient.go",
+          "plugins/mcp/stdioclient_test.go",
+          "plugins/mcp/README.md",
+          "plugins/lsp/doc.go",
+          "plugins/lsp/stdioclient.go",
+          "plugins/lsp/stdioclient_test.go",
+          "plugins/lsp/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m105-ssh-remote",
+      "attempt": "e2a476a7cb6a43f5bf729a38e09264eb",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "ssh-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487683.57552,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487685.540053,
+          "stdout_sha256": "b1d773d86d9986aa1d500135c183949620abd7e8279c2d03e594b5a103d7a4f3",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/ssh/doc.go": {
+          "sha256": "c83068bd2fe1d0b041e37b4963a2fa0be3d84ff57a47b50f389a9cd42ed82a0f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/provider.go": {
+          "sha256": "b16759ee599368d312ea58add456be78cb0b2afaf447d425fcc2be0c11cbd25f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/provider_test.go": {
+          "sha256": "a3f4dd3e8f8b2c9080ee81163e2e8fdfe655f0dcc3908fb84282e8d21deba0e6",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/ssh/README.md": {
+          "sha256": "56f00ebe88b99dc5a2c89a5d061eca8915beb7e05ff01db1eca60571e6fa0074",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "6dee93e23660f95081a3a8cc872e542324a4057e729f547ed79d921d6f9271c4",
+      "review": {
+        "node": "m105-ssh-remote",
+        "attempt": "e2a476a7cb6a43f5bf729a38e09264eb",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "6dee93e23660f95081a3a8cc872e542324a4057e729f547ed79d921d6f9271c4",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/ssh/doc.go",
+          "plugins/ssh/provider.go",
+          "plugins/ssh/provider_test.go",
+          "plugins/ssh/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m106-wire-hook",
+      "attempt": "5030313bae0d476cad6a0eac0dec08d4",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "wire-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487686.750033,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487688.5416682,
+          "stdout_sha256": "94c38d6dd13f23bfb5b55ce7e1052c31be7ab7143e79f4a90d7b50820ef20ea6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hooks-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487688.542562,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487690.540647,
+          "stdout_sha256": "45f3f490258da39efe9793e7d6d351aa71b244788ea988e7b983e0ed707904e0",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "protocol/wire.go": {
+          "sha256": "74e7f0c63aef8158c9491d24fbbc67839c860da3cee3824e8693f96b25adc73b",
+          "executable": false,
+          "symlink": null
+        },
+        "protocol/wire_test.go": {
+          "sha256": "f8fa54c1f43dac84dd0085781e33e8b9e322beb13567420b180478fc15b190ea",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/doc.go": {
+          "sha256": "2123164e4bee97f67e13c59347b1002c537255c80c765187a9a6509c26ccebb7",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/bridge.go": {
+          "sha256": "1b9b5374c51c6c0dcbff7b3382c284792a621748db200c3a5df4c35853155721",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/bridge_test.go": {
+          "sha256": "aff3c3f49245ff4d54771a89538c1771f11e75dc908c3c37e5305b8031bfb9b5",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/hooks/README.md": {
+          "sha256": "9cc17bd6080e82d105d3f4ada6fb62ff4e2b92064276cfdae9ebd2c8f171ac85",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "830fd8154a258212433a0c6444af54f1eb8c8e84700b71d7e22c04b878a98565",
+      "review": {
+        "node": "m106-wire-hook",
+        "attempt": "5030313bae0d476cad6a0eac0dec08d4",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "830fd8154a258212433a0c6444af54f1eb8c8e84700b71d7e22c04b878a98565",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "protocol/wire.go",
+          "protocol/wire_test.go",
+          "plugins/hooks/doc.go",
+          "plugins/hooks/bridge.go",
+          "plugins/hooks/bridge_test.go",
+          "plugins/hooks/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m107-web-hook",
+      "attempt": "55e5d51edbad48698daa88f6876db6b1",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "web-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487691.8252401,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487693.815957,
+          "stdout_sha256": "b32aa2ff901d72aa03dab058d79666a2b4c6b6150559943fbae10d8f09393192",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "plugins/web/doc.go": {
+          "sha256": "9bd2dcc299bd9d316142f8e4a5f736065d3ff800a74b53ea8c4ac1b172410da5",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/fetch.go": {
+          "sha256": "f0b2b1afe08da290630036a674ff760b21f4ee2a27163b30ba253144f0983677",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/fetch_test.go": {
+          "sha256": "952f714ec8e9b9fd72dedf23a827b1ac95f748e2e6e2e64e8566d779e19eae0f",
+          "executable": false,
+          "symlink": null
+        },
+        "plugins/web/README.md": {
+          "sha256": "8d1b3885a309ca34a763118311bada4bba30165f83a5cbb314cff1e6ffdc9a75",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "4e91cab4f50f6bfc44a65f4f231ea571dc49916bb50be47830eb8b02ecfaad99",
+      "review": {
+        "node": "m107-web-hook",
+        "attempt": "55e5d51edbad48698daa88f6876db6b1",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "4e91cab4f50f6bfc44a65f4f231ea571dc49916bb50be47830eb8b02ecfaad99",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "plugins/web/doc.go",
+          "plugins/web/fetch.go",
+          "plugins/web/fetch_test.go",
+          "plugins/web/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "m108-compat-matrix",
+      "attempt": "8e4fa0d573134905be1859dfd06be17a",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "example-sdk",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487695.334898,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487697.296463,
+          "stdout_sha256": "1b9e700b89daaebf643054c310638f3d4e66cf892679afa8a14a2b956b72a6cf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/protocols/compat-matrix.md": {
+          "sha256": "7acb764e5c4513acdfdec3a5fc8603c234d75092d175fc5b0b0eb5a648b8c5eb",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/main.go": {
+          "sha256": "9eceb9d88500b6507d6f32c101b6790dddf7a451b85e7cee3f62afc5d559cf55",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/main_test.go": {
+          "sha256": "7d10ed4503017d10ca2bdcb092496507ece1592356aec70332060142407e5f30",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/expected.txt": {
+          "sha256": "ab1259675f7b42bf64060a3ff212777b67338ba8fdc89adcac4792863c024707",
+          "executable": false,
+          "symlink": null
+        },
+        "examples/sdk/README.md": {
+          "sha256": "22f03dfe4a768b6fa273e8178c99740222ef82f34754d2a4ee7a6bf73d39c714",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "a9b50a7a0b6d7477dd955c5e1d632265d67da4c0f156e30d08d5e7902c19da94",
+      "review": {
+        "node": "m108-compat-matrix",
+        "attempt": "8e4fa0d573134905be1859dfd06be17a",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "a9b50a7a0b6d7477dd955c5e1d632265d67da4c0f156e30d08d5e7902c19da94",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/protocols/compat-matrix.md",
+          "examples/sdk/main.go",
+          "examples/sdk/main_test.go",
+          "examples/sdk/expected.txt",
+          "examples/sdk/README.md"
+        ],
+        "findings": []
+      }
+    },
+    {
+      "node": "g10-acceptance",
+      "attempt": "b4c50fb042b342b6a5576527b96c5806",
+      "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792487705.1451159,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487753.276598,
+          "stdout_sha256": "b99c22ff27f8672782b2c114c8250492e417b3259c176bf937ea1175f68e3530",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "started": 1792487753.2770638,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487753.297868,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "protocol-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./protocol/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487753.298124,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487755.2463412,
+          "stdout_sha256": "c2fd6bbf6b683765306a41bb1cc92813b17189cde01cf421a19f53c2d80ba88f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hostapi-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hostapi/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487755.246908,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487757.130678,
+          "stdout_sha256": "7c707a9525ddd4e5f46c2d4157b4285be816c3eb35aa3b4965d3a072183625e1",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "sdk-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487757.131319,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487758.970259,
+          "stdout_sha256": "9f616c2deb4e87697c9fc23a9f1e7e420f9c8c857a5b54584855428537d6413e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "mcp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/mcp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487758.9706812,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487760.8144362,
+          "stdout_sha256": "e6e3d25f024431cbf10d01caf721f4e9e5cbfd6d12fe581d70470c0db24790c0",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "lsp-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/lsp/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487760.8149009,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487763.1312761,
+          "stdout_sha256": "c0b9fea230c0f6eb2ca312ef196b2829e1c5bee177b6cc42b29fdb9da46c64aa",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "ssh-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/ssh/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487763.13203,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487764.958569,
+          "stdout_sha256": "fff51e8831c16715059ac8862a902cc385072fe5c3a25a0a75bd9ec987b673cd",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "hooks-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/hooks/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487764.95907,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487766.792416,
+          "stdout_sha256": "30a2409c849c2cf26d23c1750e7d6aa4a782a011701c777116ccdc3899ea08f6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "web-behavior2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/web/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487766.793195,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487768.651799,
+          "stdout_sha256": "04cf69aa3b285e6a95c34bb88c37db399252e023961337efe68eeddec4fc3dad",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "example-sdk2",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/sdk/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "started": 1792487768.652552,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487770.526525,
+          "stdout_sha256": "40f65e106fb8bc48f0cbeefe5a81b6f882314ec3cf9338e3207f627ef9470adf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792487770.527016,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487771.451436,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "started": 1792487771.4516869,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487797.070194,
+          "stdout_sha256": "17088114fb4c0a2f84e9bf112d69185551020ec2b18ea854ee8c345fb6846eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792487797.070545,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487813.351626,
+          "stdout_sha256": "7e514040f602c2fb293f05e3c28bafd58052ee5e24ee644649dc9f472b0aadf5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "profile=$(mktemp -t dsh-covgate.XXXXXX) && go test -count=1 -coverprofile=\"$profile\" ./... >/dev/null && go run ./scripts/doccheck -coverage \"$profile\""
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "started": 1792487813.3521101,
+          "passed": true,
+          "expected_exit": 0,
+          "exit_code": 0,
+          "finished": 1792487830.627237,
+          "stdout_sha256": "b67e22ae8b5a21d022ff0cd1f39b09083dbb597ca9a5b18a3782da1a5f78bd29",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "inputs": {
+        "AGENTS.md": {
+          "sha256": "3a1b341df17ae823d0957c65ecaf3ac511873353a9a8678b08a64a694aeb960d",
+          "executable": false,
+          "symlink": null
+        },
+        "go.mod": {
+          "sha256": "db833c7c754a23aee1b6098251d2174fd77132492923eda808a3a501929c9806",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/documentation.md": {
+          "sha256": "328420b9bd1b15e65c2ba8a2bca1c78210aca70077dc98c75c86bd5445fd211a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plan.json": {
+          "sha256": "3d442bfb4c7a1563818faf1f1b9258541687f53d11a319f0fab8581b9f3ef3fb",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/acceptance.md": {
+          "sha256": "861d50652c260f42b8119b64370cfe7f5af75e71f8ace511aa8cba56676dd987",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/capabilities.md": {
+          "sha256": "de0d6695e76a3807c60881274507a6e2bafaee43a0d472183705370f19a6e223",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/m10-protocols.md": {
+          "sha256": "0fbeb323034008f8327a3e8d1dc7abf42cdfb46f676aadab27cbbb6d8f61ee95",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication-m09/plans.md": {
+          "sha256": "7c1fd70d951ce5f3b40aab5c0fbd1e81ac49f4b8331d1b881d488c02b4270824",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/note-template.md": {
+          "sha256": "ea22fb7c393c15a60f999788482a9b8a7bf54cd92c5dbb22a08faaad39f72c1e",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "outputs": {
+        "docs/10-plans/dsh-go-replication-m10/plans.md": {
+          "sha256": "ea14bcef62ea50bd4e35330c9700cfacf4a575bc5b1c1105928b4d045381440b",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/testing.md": {
+          "sha256": "5af100c4131824715b3b5557bacf814f3f82328667d189de5cccca5739a3bcc1",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/README.md": {
+          "sha256": "75152327b5cf5f52340316bdbe6e69332315b5fd4e3ab85c37b02cb73b3ee619",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/roadmap.md": {
+          "sha256": "294a171bedd1da29d9b45e8f7a7b20176a7ea4f0a583a9dc5284316c5ebe4e2a",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/learning/index.md": {
+          "sha256": "be37883529b181467a8deaf7297a39901bc704d3b33804fa543d592ac7fb7623",
+          "executable": false,
+          "symlink": null
+        },
+        "docs/10-plans/dsh-go-replication/stages/index.md": {
+          "sha256": "e8734c656af926207240f7390cda94e65796c9890de0c0164743d8d3eeb9ce25",
+          "executable": false,
+          "symlink": null
+        }
+      },
+      "error": null,
+      "subject": "587f453e1c1183ae530c9f0fd8622eb5d723e767104022bf9759e14d43833039",
+      "review": {
+        "node": "g10-acceptance",
+        "attempt": "b4c50fb042b342b6a5576527b96c5806",
+        "revision": "59fd9318cba6c1c6813b8b7fb5c02c8ad90235c1ba211ef553e8f2c4ee90b546",
+        "subject": "587f453e1c1183ae530c9f0fd8622eb5d723e767104022bf9759e14d43833039",
+        "reviewer": "lead",
+        "independent": false,
+        "verdict": "pass",
+        "objectives": [
+          "replication",
+          "learning",
+          "evidence"
+        ],
+        "evidence": [
+          "docs/10-plans/dsh-go-replication-m10/plans.md",
+          "docs/testing.md",
+          "docs/README.md",
+          "docs/roadmap.md",
+          "docs/learning/index.md",
+          "docs/10-plans/dsh-go-replication/stages/index.md"
+        ],
+        "findings": []
+      }
+    }
+  ]
+}

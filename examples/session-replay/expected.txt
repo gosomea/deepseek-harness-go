@@ -1,0 +1,11 @@
+data dir=sessions
+--- writer ---
+appended=4
+second writer refused=true
+--- reopened ---
+events=4 version=1 writerHeld=false
+openTurn=true unsettled=[call-1] needsAttention=true
+history[0] role=user content="read a.txt"
+--- damaged copies ---
+torn tail: complete=4 repairable=true reason=""
+middle damage: complete=1 repairable=false reason="corrupt record at offset 1: sessionjsonl: corrupt record: checksum mismatch at seq 1"

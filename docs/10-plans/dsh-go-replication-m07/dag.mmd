@@ -1,0 +1,17 @@
+flowchart TD
+  m71-capability-contract{{"m71-capability-contract: passed"}}
+  m72-approval-policy{{"m72-approval-policy: passed"}}
+  m71-capability-contract --> m72-approval-policy
+  m73-local-providers{{"m73-local-providers: passed"}}
+  m72-approval-policy --> m73-local-providers
+  m74-local-tools{{"m74-local-tools: passed"}}
+  m73-local-providers --> m74-local-tools
+  m75-real-endpoint{{"m75-real-endpoint: passed"}}
+  m71-capability-contract --> m75-real-endpoint
+  m76-cli{{"m76-cli: passed"}}
+  m74-local-tools --> m76-cli
+  m75-real-endpoint --> m76-cli
+  m77-cli-e2e{{"m77-cli-e2e: passed"}}
+  m76-cli --> m77-cli-e2e
+  g7-acceptance{{"g7-acceptance: passed"}}
+  m77-cli-e2e --> g7-acceptance

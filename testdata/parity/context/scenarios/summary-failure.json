@@ -1,0 +1,14 @@
+{
+  "id": "summary-failure",
+  "title": "摘要调用失败时不报告替换完成且原文不变",
+  "kind": "summary-failure",
+  "entries": [
+    { "id": "m1", "kind": "message", "text": "first" },
+    { "id": "m2", "kind": "message", "text": "second" }
+  ],
+  "region": [0, 1],
+  "failSummary": true,
+  "expect": {
+    "noEndPhase": true
+  }
+}

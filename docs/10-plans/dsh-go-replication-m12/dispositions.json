@@ -1,0 +1,319 @@
+{
+  "groups": {
+    "acp": {
+      "status": "adapted",
+      "note": "ACP 仅 protocol/acp.go DTO 映射；真实 ACP 客户端联调未验证",
+      "owner": "M10"
+    },
+    "api": {
+      "status": "adapted",
+      "note": "wire DTO 以 protocol 手写；API 控制器仅 keyless 网关，无真实 HTTP 服务",
+      "owner": "M10"
+    },
+    "attachment": {
+      "status": "verified",
+      "note": "附件身份与不可变存储",
+      "owner": "M8"
+    },
+    "boot": {
+      "status": "verified",
+      "note": "按 ID 更新与启停",
+      "owner": "M2"
+    },
+    "browser-use": {
+      "status": "gap",
+      "note": "浏览器自动化能力未实现",
+      "owner": "M12"
+    },
+    "bundle": {
+      "status": "verified",
+      "note": "bundle/profile 与 overlay",
+      "owner": "M2"
+    },
+    "client": {
+      "status": "adapted",
+      "note": "clientview 快照/增量/重连投影；真实 Web UI/E2E 未实现",
+      "owner": "M11"
+    },
+    "compaction": {
+      "status": "verified",
+      "note": "压缩三阶段与配对规则",
+      "owner": "M8"
+    },
+    "computer-use": {
+      "status": "gap",
+      "note": "计算机操作能力未实现",
+      "owner": "M12"
+    },
+    "context": {
+      "status": "verified",
+      "note": "上下文贡献与可渲染请求",
+      "owner": "M8"
+    },
+    "core": {
+      "status": "verified",
+      "note": "core 运行时、Agent 作用域、事件溯源",
+      "owner": "M1-M5"
+    },
+    "credentials": {
+      "status": "adapted",
+      "note": "本地凭据解析；账户平台/认证 Provider 未实现",
+      "owner": "M7"
+    },
+    "deliverables": {
+      "status": "adapted",
+      "note": "交付物展示 seam 未单独实现；仅概念归属",
+      "owner": "M11"
+    },
+    "document": {
+      "status": "gap",
+      "note": "Office 转换 Provider 未实现",
+      "owner": "M12"
+    },
+    "experimental": {
+      "status": "gap",
+      "note": "实验能力（语音/Agent Teams/WebWorker 等）未实现",
+      "owner": "M12"
+    },
+    "extensions": {
+      "status": "adapted",
+      "note": "显式 Go 注册替代动态扩展；进程隔离替代未实现",
+      "owner": "M2-M10"
+    },
+    "feedback": {
+      "status": "adapted",
+      "note": "反馈持久事实未单独实现；仅概念归属",
+      "owner": "M11"
+    },
+    "fs": {
+      "status": "verified",
+      "note": "文件系统 seam",
+      "owner": "M7"
+    },
+    "goal": {
+      "status": "verified",
+      "note": "goal 事件与投影",
+      "owner": "M9"
+    },
+    "guard": {
+      "status": "verified",
+      "note": "guard 语义由 sandbox 承载",
+      "owner": "M7"
+    },
+    "hooks": {
+      "status": "adapted",
+      "note": "hook 桥 keyless；外部插件通道未实现",
+      "owner": "M10"
+    },
+    "host": {
+      "status": "adapted",
+      "note": "Host API 网关 + 会话控制器；真实 webserver 打包未实现",
+      "owner": "M11"
+    },
+    "identity": {
+      "status": "adapted",
+      "note": "匿名标识；完整身份 Provider 未实现",
+      "owner": "M7"
+    },
+    "interaction": {
+      "status": "verified",
+      "note": "approval/questions/commands seam",
+      "owner": "M7"
+    },
+    "jobs": {
+      "status": "verified",
+      "note": "持久 job 状态机",
+      "owner": "M9"
+    },
+    "llm": {
+      "status": "verified",
+      "note": "消息/内容块/流/assembler/Provider 契约",
+      "owner": "M3-M4"
+    },
+    "lsp": {
+      "status": "adapted",
+      "note": "LSP stdio 客户端生命周期 keyless；真实语言服务器未验证",
+      "owner": "M10"
+    },
+    "mcp": {
+      "status": "adapted",
+      "note": "MCP stdio 客户端生命周期 keyless；真实 MCP server 未验证",
+      "owner": "M10"
+    },
+    "plan": {
+      "status": "verified",
+      "note": "plan 模式事件与投影",
+      "owner": "M9"
+    },
+    "preset": {
+      "status": "verified",
+      "note": "preset/persona",
+      "owner": "M8"
+    },
+    "ptc-runtime": {
+      "status": "gap",
+      "note": "PTC 执行 Provider 与生产 workflow 引擎未实现",
+      "owner": "M12"
+    },
+    "runtime-diagnostics": {
+      "status": "verified",
+      "note": "可观察错误与诊断",
+      "owner": "M5-M11"
+    },
+    "sandbox": {
+      "status": "verified",
+      "note": "单向升级阶梯",
+      "owner": "M7"
+    },
+    "schedule": {
+      "status": "verified",
+      "note": "可控时钟调度",
+      "owner": "M9"
+    },
+    "sdk": {
+      "status": "adapted",
+      "note": "Go SDK 客户端（SendFunc）；Python SDK 与网络传输未实现",
+      "owner": "M10"
+    },
+    "session": {
+      "status": "verified",
+      "note": "事件日志、surface 与投影",
+      "owner": "M3"
+    },
+    "session-query": {
+      "status": "gap",
+      "note": "session 查询 Provider 未实现",
+      "owner": "M12"
+    },
+    "settings": {
+      "status": "verified",
+      "note": "settings 与作用域覆盖",
+      "owner": "M8"
+    },
+    "shell": {
+      "status": "verified",
+      "note": "shell 经 subprocess 承载",
+      "owner": "M7"
+    },
+    "skill": {
+      "status": "verified",
+      "note": "技能发现与按需加载",
+      "owner": "M8"
+    },
+    "spill": {
+      "status": "verified",
+      "note": "token 预算与 spill",
+      "owner": "M8"
+    },
+    "ssh": {
+      "status": "adapted",
+      "note": "SSH 执行 seam 以内存模型验证；真实 SSH 主机未验证",
+      "owner": "M10"
+    },
+    "storage": {
+      "status": "verified",
+      "note": "persistence seam 与 JSONL 存储（自有格式）",
+      "owner": "M6"
+    },
+    "subagent": {
+      "status": "verified",
+      "note": "subagent seam 与进程内 Provider",
+      "owner": "M9"
+    },
+    "subprocess": {
+      "status": "verified",
+      "note": "子进程 seam",
+      "owner": "M7"
+    },
+    "terminal": {
+      "status": "adapted",
+      "note": "terminal 基础经 subprocess；PTY 与远程终端未实现",
+      "owner": "M7-M10"
+    },
+    "test-support": {
+      "status": "verified",
+      "note": "internal/testkit 确定性 fake",
+      "owner": "M0-M11"
+    },
+    "todo": {
+      "status": "verified",
+      "note": "todo 事件与投影",
+      "owner": "M9"
+    },
+    "typert": {
+      "status": "gap",
+      "note": "Typert 代码生成未复刻",
+      "owner": "M12"
+    },
+    "util": {
+      "status": "verified",
+      "note": "按消费者归属的辅助包",
+      "owner": "M0-M11"
+    },
+    "web": {
+      "status": "adapted",
+      "note": "有界 fetch seam 以函数 backend 验证；真实联网 smoke 未验证",
+      "owner": "M10"
+    },
+    "webhook": {
+      "status": "gap",
+      "note": "webhook 边界未实现",
+      "owner": "M12"
+    },
+    "workflow": {
+      "status": "verified",
+      "note": "workflow seam 与 fake 引擎",
+      "owner": "M9"
+    },
+    "workspace": {
+      "status": "verified",
+      "note": "执行世界与路径规则",
+      "owner": "M7"
+    },
+    "cordis": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "cosmokit": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "group": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "hmr": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "include": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "loader": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "logger-console": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "schemastery": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    },
+    "timer": {
+      "status": "adapted",
+      "note": "vendor 以显式 Go 注册/加载替代；动态 JS 语义差异已记录",
+      "owner": "M1/M2"
+    }
+  }
+}

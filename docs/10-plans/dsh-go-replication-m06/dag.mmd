@@ -1,0 +1,14 @@
+flowchart TD
+  m61-persistence-contract{{"m61-persistence-contract: passed"}}
+  m62-jsonl-store{{"m62-jsonl-store: passed"}}
+  m61-persistence-contract --> m62-jsonl-store
+  m63-format-recovery{{"m63-format-recovery: passed"}}
+  m62-jsonl-store --> m63-format-recovery
+  m64-resume{{"m64-resume: passed"}}
+  m63-format-recovery --> m64-resume
+  m65-projection-cache{{"m65-projection-cache: passed"}}
+  m64-resume --> m65-projection-cache
+  m66-session-replay{{"m66-session-replay: passed"}}
+  m65-projection-cache --> m66-session-replay
+  g6-acceptance{{"g6-acceptance: passed"}}
+  m66-session-replay --> g6-acceptance

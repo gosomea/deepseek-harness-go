@@ -1,0 +1,17 @@
+{
+  "id": "compaction-replay",
+  "title": "压缩替换一段消息历史且工具调用与结果配对不被拆坏",
+  "kind": "compaction",
+  "entries": [
+    { "id": "m1", "kind": "message", "text": "please read the file" },
+    { "id": "c1", "kind": "tool-call", "text": "read_file(notes.txt)", "callId": "call-1" },
+    { "id": "r1", "kind": "tool-result", "text": "hello", "callId": "call-1" },
+    { "id": "m2", "kind": "message", "text": "thanks" }
+  ],
+  "region": [0, 1],
+  "summary": "the user asked to read notes.txt",
+  "expect": {
+    "applied": true,
+    "pairingPreserved": true
+  }
+}

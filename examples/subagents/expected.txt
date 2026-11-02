@@ -1,0 +1,4 @@
+spawn lineage: mode=spawn inherit=0
+fork lineage: mode=fork inherit=7
+children: 2
+provider: in-process

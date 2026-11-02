@@ -1,0 +1,54 @@
+{
+  "id": "full-turn",
+  "title": "两次模型请求与一次工具调用组成一条完整轮次",
+  "inputs": [
+    "read a.txt"
+  ],
+  "scripts": [
+    [
+      {
+        "type": "tool-call-delta",
+        "index": 0,
+        "id": "call-1",
+        "name": "read_file",
+        "arguments": "{\"pa"
+      },
+      {
+        "type": "tool-call-delta",
+        "index": 0,
+        "arguments": "th\":\"a.txt\"}"
+      },
+      {
+        "type": "block-end",
+        "index": 0,
+        "id": "call-1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"a.txt\"}"
+      },
+      {
+        "type": "finish",
+        "index": 0,
+        "finish": "tool-calls"
+      }
+    ],
+    [
+      {
+        "type": "text-delta",
+        "index": 0,
+        "text": "a.txt says hello"
+      },
+      {
+        "type": "finish",
+        "index": 0,
+        "finish": "stop"
+      }
+    ]
+  ],
+  "tools": [
+    {
+      "name": "read_file",
+      "content": "contents of a.txt"
+    }
+  ],
+  "actions": []
+}

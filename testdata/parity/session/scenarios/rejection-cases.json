@@ -1,0 +1,13 @@
+{
+  "id": "rejection-cases",
+  "title": "A sequence gap is refused rather than repaired or renumbered.",
+  "expectFoldError": true,
+  "events": [
+    {"type": "user/message", "seq": 0, "time": 1700000000000,
+     "data": {"id": "u1", "role": "user", "content": [{"type": "text", "text": "one"}], "source": {"kind": "user"}},
+     "surfaceOp": "append"},
+    {"type": "user/message", "seq": 2, "time": 1700000000002,
+     "data": {"id": "u2", "role": "user", "content": [{"type": "text", "text": "two"}], "source": {"kind": "user"}},
+     "surfaceOp": "append"}
+  ]
+}

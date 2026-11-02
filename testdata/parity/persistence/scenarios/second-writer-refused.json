@@ -1,0 +1,10 @@
+{
+  "id": "second-writer-refused",
+  "title": "第二个写者被明确拒绝，只读句柄不受影响",
+  "events": [{ "type": "turn/start", "data": { "turn": 0, "input": "x" } }],
+  "expect": {
+    "secondWriterRefused": true,
+    "readAllowedWhileWriting": true,
+    "releasedAfterClose": true
+  }
+}

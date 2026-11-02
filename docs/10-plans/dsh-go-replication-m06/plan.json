@@ -1,0 +1,1102 @@
+{
+  "schema_version": 1,
+  "id": "dsh-go-replication-m06",
+  "title": "Go 复刻 DSH：M6 Session 持久化、恢复与格式边界",
+  "objectives": {
+    "replication": "关闭并重新打开一个会话后重建相同历史与待处理状态；单写者、flush 承诺、自有格式版本与损坏恢复都有行为测试，且不读写用户原有 DSH home",
+    "learning": "让 Go 读者区分 append 可见、flush 持久与 idle 活动结束；用损坏副本解释可修复尾部与中间损坏的差别；说明派生缓存与权威日志的边界",
+    "evidence": "每条行为有固定 TS 来源、Go 入口、行为测试与显式差异；必要检查使用临时目录与屏障而非 sleep；参考构建产物缺失时差分记为未验证，不记为通过"
+  },
+  "constraints": [
+    "只执行 M6；M7 的真实端点与本机工具、M8 的压缩、M9 的持久任务都不进入本阶段。M6 只交付磁盘格式、句柄、恢复语义与缓存重建边界",
+    "DSH 参考 checkout 只读；固定提交为 00102833dfaee1da9f48a3a8eae9d34005a75218，本地未提交改动不进入基线",
+    "**不冒用 DSH 的格式身份**：Go 自有日志使用独立格式标识与独立数据目录，不写入用户原有 DSH home，也不读取或改写其文件。原始 DSH 日志互读与 generation 迁移属 M12，以固定 golden fixture 与跨实现测试单独验收；本阶段不声称能处理 DSH Session 文件",
+    "自有一致性规则：一个会话同时只有一个 `write` 句柄，第二写者被明确拒绝（用屏障同步的并发测试证明，不用 sleep 猜测）；`read` 句柄不取得所有权，可在他人持有 `write` 时工作",
+    "flush 语义必须可观察：`append` 返回只保证已进入缓冲并可见于同一句柄的后续读取；`flush` 返回才承诺到达磁盘。测试必须能区分两者，失败时不得报告已持久",
+    "恢复规则分层：**未知未来版本拒绝**打开；**中间损坏**（非尾部）视为不可恢复并拒绝；**尾部损坏**可修复到最后一个完整记录，且修复本身不改变已提交前缀",
+    "恢复不盲目重放副作用：崩溃前已发生但未结算的工具调用在恢复后保持可观察（记录为未结算），不自动重新执行；不确定状态的策略必须显式写出",
+    "派生缓存不是权威：删除缓存后从日志重建必须得到一致结果；缺少必需投影时明确失败，而不是返回一份看起来正常的历史",
+    "参考构建产物缺失（DSH_PACKAGES 未指向固定参考 packages，或对应 lib/ 构建产物不存在）时差分检查跳过并记为未验证，不记为通过",
+    "所有权不变量：任何节点的 inputs 不得被链上更晚的节点写入；不使用目录级 writes；检查只断言本节点有权写入、或由已通过前驱产出的文件",
+    "共享门禁文件 scripts/doccheck/main.go、scripts/doccheck/main_test.go、docs/testing.md 被 m61 与 m62 先后修改（每个新运行时包在同一片内登记进 coverageRequirement）。它们因此不出现在任何节点的 inputs，也不作为非最终节点的 outputs；最终状态由 g6-acceptance 冻结",
+    "docs/README.md、docs/roadmap.md、docs/learning/index.md 只在 g6-acceptance 写一次：阶段中途把 M6 标成「当前可学」会与事实不符，多次写入只会让已通过节点连续 stale",
+    "docs/10-plans/dsh-go-replication/stages/index.md 列在 M0 契约的 documents 中，其内容哈希参与 M0 revision 计算；g6 更新它会使 M0 三个节点变为 plan changed; revise required（M2–M5 已使 M0 处于该状态）。这是按阶段交接要求执行 g6 的已知代价，如实记录",
+    "主题页 plans.md 是本契约的 documents 之一：对它的写入会改变 revision 并使全部节点变为 plan changed; revise required。因此主题页内容（含实际运行过的命令、退出码与结果）必须在 g6 之前定稿，由 g6 冻结，export 之后不得再编辑；若确需再改，必须按协议对新 revision 重新验收所有受影响节点。这是 M4 与 M5 两阶段已实际发生的写序问题，本阶段沿用固定顺序避免",
+    "不得降低运行时包 90% 语句覆盖率阈值，也不得降低 Makefile 与 scripts/doccheck 定义的任何其他门禁来适配失败结果；失败一律修实现而非改门禁定义。确需改门禁定义时必须同时新增有效与无效样例、另立记录，并在 validation/<run-id> 留证；g6 的 gate-integrity 检查断言覆盖率比较式与 Makefile 子命令未被削弱",
+    "新运行时包 persistence/ 与 plugins/sessionjsonl/ 在创建它的同一切片内登记进 scripts/doccheck 的 coverageRequirement，并受不低于 90% 语句覆盖率门禁约束",
+    "跨平台文件锁行为与 fsync 承诺在本阶段冻结：无法提供等价隔离的平台必须显式拒绝不受支持的运行配置，而不是静默降级",
+    "所有检查使用临时目录与仓库内 fixture；测试不得写入用户 home、不得依赖网络；并发测试使用屏障（channel 或 sync.WaitGroup）而不是 sleep",
+    "每个节点需要语义评审；独立性如实记录（当前由作者完成评审，记为 independent: false）",
+    "保留工作区既有改动（cordis/、loader/、app/、llm/、scope/、session/、tools/、systemprompt/、agent/、agentloop/、plugins/、internal/、testdata/parity/ 等已交付物），不覆盖其他人的工作",
+    "遵循项目 AGENTS.md 的代码、文档与交付门禁规则：分类 README、包注释、公开注释、Markdown 链接、完整程序与输出。每个新包交付 README、行为参考与可运行实验",
+    "只报告真实运行的命令、退出码与提交；本地通过不代表 CI 已通过。阶段报告与主题页必须写出实际运行过的命令、退出码与结果",
+    "本契约只描述 M6 的切片与门禁；M7–M12 的范围仍由其细化页维护，不因本阶段通过而获得任何可用状态"
+  ],
+  "documents": [
+    "docs/10-plans/dsh-go-replication/acceptance.md",
+    "docs/10-plans/dsh-go-replication/capabilities.md",
+    "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+    "docs/10-plans/dsh-go-replication/source-inventory.json",
+    "docs/10-plans/dsh-go-replication-m06/plans.md"
+  ],
+  "final": "g6-acceptance",
+  "nodes": [
+    {
+      "id": "m61-persistence-contract",
+      "title": "M6.1 持久化契约与单写者句柄",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [],
+      "requires_gates": [],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "session/README.md",
+        "session/log.go",
+        "session/types.go",
+        "docs/session/event-log.md"
+      ],
+      "outputs": [
+        "persistence/doc.go",
+        "persistence/handle.go",
+        "persistence/service.go",
+        "persistence/errors.go",
+        "persistence/handle_test.go",
+        "persistence/README.md",
+        "docs/persistence/go-primer.md"
+      ],
+      "writes": [
+        "persistence/doc.go",
+        "persistence/handle.go",
+        "persistence/service.go",
+        "persistence/errors.go",
+        "persistence/handle_test.go",
+        "persistence/README.md",
+        "docs/persistence/go-primer.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "persistence-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./persistence/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "format-boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbanned = ['session.v4', '.jsonl.zstd', 'dsh-session-format']\nbad = []\nfor p in sorted(pathlib.Path('.').rglob('*.go')):\n    if '.git' in p.parts:\n        continue\n    text = p.read_text(encoding='utf-8')\n    for needle in banned:\n        if needle in text:\n            bad.append(p.as_posix() + ' mentions ' + needle)\nprint('Go format keeps its own identity: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/', 'agentloop/', 'persistence/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M6.1 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/persistence/go-primer.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m62-jsonl-store",
+      "title": "M6.2 JSONL 存储、framing 与 flush",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m61-persistence-contract"
+      ],
+      "requires_gates": [
+        "m61-persistence-contract"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "persistence/handle.go",
+        "persistence/service.go",
+        "persistence/errors.go",
+        "persistence/README.md",
+        "session/log.go"
+      ],
+      "outputs": [
+        "plugins/sessionjsonl/doc.go",
+        "plugins/sessionjsonl/format.go",
+        "plugins/sessionjsonl/storage.go",
+        "plugins/sessionjsonl/lease.go",
+        "plugins/sessionjsonl/format_test.go",
+        "plugins/sessionjsonl/storage_test.go",
+        "plugins/sessionjsonl/README.md",
+        "plugins/sessionjsonl/storage_coverage_test.go",
+        "plugins/sessionjsonl/edge_paths_test.go",
+        "plugins/sessionjsonl/io_failure_test.go",
+        "plugins/sessionjsonl/fault_reach_test.go",
+        "plugins/sessionjsonl/store_faults_test.go"
+      ],
+      "writes": [
+        "plugins/sessionjsonl/doc.go",
+        "plugins/sessionjsonl/format.go",
+        "plugins/sessionjsonl/storage.go",
+        "plugins/sessionjsonl/lease.go",
+        "plugins/sessionjsonl/format_test.go",
+        "plugins/sessionjsonl/storage_test.go",
+        "plugins/sessionjsonl/README.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/testing.md",
+        "plugins/sessionjsonl/storage_coverage_test.go",
+        "plugins/sessionjsonl/edge_paths_test.go",
+        "plugins/sessionjsonl/io_failure_test.go",
+        "plugins/sessionjsonl/fault_reach_test.go",
+        "plugins/sessionjsonl/store_faults_test.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "sessionjsonl-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sessionjsonl/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "format-boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbanned = ['session.v4', '.jsonl.zstd', 'dsh-session-format']\nbad = []\nfor p in sorted(pathlib.Path('.').rglob('*.go')):\n    if '.git' in p.parts:\n        continue\n    text = p.read_text(encoding='utf-8')\n    for needle in banned:\n        if needle in text:\n            bad.append(p.as_posix() + ' mentions ' + needle)\nprint('Go format keeps its own identity: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/', 'agentloop/', 'persistence/', 'plugins/sessionjsonl/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('M6.2 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m63-format-recovery",
+      "title": "M6.3 自有格式版本与损坏恢复",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m62-jsonl-store"
+      ],
+      "requires_gates": [
+        "m62-jsonl-store"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "plugins/sessionjsonl/format.go",
+        "plugins/sessionjsonl/storage.go",
+        "plugins/sessionjsonl/README.md"
+      ],
+      "outputs": [
+        "plugins/sessionjsonl/recover.go",
+        "plugins/sessionjsonl/recover_test.go",
+        "docs/persistence/format.md"
+      ],
+      "writes": [
+        "plugins/sessionjsonl/recover.go",
+        "plugins/sessionjsonl/recover_test.go",
+        "docs/persistence/format.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "sessionjsonl-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./plugins/sessionjsonl/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "recovery-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Recover|Version|Seq",
+            "./plugins/sessionjsonl/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/persistence/format.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m64-resume",
+      "title": "M6.4 恢复、待处理状态与 checkpoint",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m63-format-recovery"
+      ],
+      "requires_gates": [
+        "m63-format-recovery"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "persistence/handle.go",
+        "persistence/service.go",
+        "agentloop/agent.go",
+        "agentloop/turn.go",
+        "agentloop/inbox.go",
+        "session/log.go",
+        "docs/agentloop/cancellation.md"
+      ],
+      "outputs": [
+        "persistence/resume.go",
+        "persistence/resume_test.go",
+        "agentloop/resume.go",
+        "agentloop/resume_test.go",
+        "docs/persistence/recovery.md"
+      ],
+      "writes": [
+        "persistence/resume.go",
+        "persistence/resume_test.go",
+        "agentloop/resume.go",
+        "agentloop/resume_test.go",
+        "docs/persistence/recovery.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "persistence-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./persistence/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "agentloop-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "resume-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Resume|Checkpoint|Pending",
+            "./persistence/...",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/persistence/recovery.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m65-projection-cache",
+      "title": "M6.5 投影缓存重建与存储 fake",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m64-resume"
+      ],
+      "requires_gates": [
+        "m64-resume"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "persistence/resume.go",
+        "persistence/handle.go",
+        "session/surface.go",
+        "session/projection.go",
+        "session/registry.go",
+        "internal/testkit/README.md"
+      ],
+      "outputs": [
+        "persistence/cache.go",
+        "persistence/cache_test.go",
+        "persistence/store.go",
+        "persistence/store_test.go",
+        "internal/testkit/fakestore.go",
+        "internal/testkit/fakestore_test.go",
+        "docs/persistence/cache.md"
+      ],
+      "writes": [
+        "persistence/cache.go",
+        "persistence/cache_test.go",
+        "persistence/store.go",
+        "persistence/store_test.go",
+        "internal/testkit/fakestore.go",
+        "internal/testkit/fakestore_test.go",
+        "docs/persistence/cache.md"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "persistence-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Cache|Store|Projection",
+            "./persistence/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "testkit-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-structure",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nspec = [['docs/persistence/cache.md', ['## 读完要解决的问题', '## 从熟悉的 Go 写法出发', '## 最小实验', '## 先预测，再观察', '## 两种实现怎样对应', '## 失败与定位', '## 回到源码与下一步']]]\nproblems = []\nfor path, headings in spec:\n    p = pathlib.Path(path)\n    if not p.is_file():\n        problems.append(path + ': missing file')\n        continue\n    text = p.read_text(encoding='utf-8')\n    for h in headings:\n        if h not in text:\n            problems.append(path + ': missing heading ' + h)\nprint('doc structure: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "m66-session-replay",
+      "title": "M6.6 跨进程实验与恢复 fixture",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m65-projection-cache"
+      ],
+      "requires_gates": [
+        "m65-projection-cache"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "persistence/cache.go",
+        "persistence/store.go",
+        "plugins/sessionjsonl/storage.go",
+        "plugins/sessionjsonl/recover.go",
+        "examples/harness/README.md",
+        "internal/testkit/harness_scenario.go"
+      ],
+      "outputs": [
+        "examples/session-replay/main.go",
+        "examples/session-replay/main_test.go",
+        "examples/session-replay/expected.txt",
+        "examples/session-replay/README.md",
+        "internal/testkit/persistence_scenario.go",
+        "internal/testkit/persistence_scenario_test.go",
+        "testdata/parity/persistence/README.md",
+        "testdata/parity/persistence/DIVERGENCES.md",
+        "testdata/parity/persistence/provenance.json",
+        "testdata/parity/persistence/scenarios/reopen-consistency.json",
+        "testdata/parity/persistence/scenarios/second-writer-refused.json",
+        "testdata/parity/persistence/scenarios/truncated-tail.json",
+        "testdata/parity/persistence/scenarios/future-version.json",
+        "testdata/parity/persistence/scenarios/middle-corruption.json",
+        "examples/session-replay/format.go"
+      ],
+      "writes": [
+        "examples/session-replay/main.go",
+        "examples/session-replay/main_test.go",
+        "examples/session-replay/expected.txt",
+        "examples/session-replay/README.md",
+        "internal/testkit/persistence_scenario.go",
+        "internal/testkit/persistence_scenario_test.go",
+        "testdata/parity/persistence/README.md",
+        "testdata/parity/persistence/DIVERGENCES.md",
+        "testdata/parity/persistence/provenance.json",
+        "testdata/parity/persistence/scenarios/reopen-consistency.json",
+        "testdata/parity/persistence/scenarios/second-writer-refused.json",
+        "testdata/parity/persistence/scenarios/truncated-tail.json",
+        "testdata/parity/persistence/scenarios/future-version.json",
+        "testdata/parity/persistence/scenarios/middle-corruption.json",
+        "examples/session-replay/format.go"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "example-replay",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/session-replay/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "persistence-scenario",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "PersistenceScenario",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "doc-examples",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck",
+            "-examples"
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "full-race-coverage",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-coverprofile=coverage.out",
+            "./..."
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-gate",
+          "argv": [
+            "sh",
+            "-c",
+            "go test -count=1 -coverprofile=coverage.out ./... >/dev/null && go run ./scripts/doccheck -coverage coverage.out"
+          ],
+          "cwd": ".",
+          "timeout": 900,
+          "expected_exit": 0
+        },
+        {
+          "id": "docs",
+          "argv": [
+            "go",
+            "run",
+            "./scripts/doccheck"
+          ],
+          "cwd": ".",
+          "timeout": 180,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    },
+    {
+      "id": "g6-acceptance",
+      "title": "G6 收口：复刻、学习与证据同时验收",
+      "kind": "gate",
+      "objectives": [
+        "replication",
+        "learning",
+        "evidence"
+      ],
+      "depends_on": [
+        "m66-session-replay"
+      ],
+      "requires_gates": [
+        "m66-session-replay"
+      ],
+      "inputs": [
+        "AGENTS.md",
+        "go.mod",
+        "docs/documentation.md",
+        "docs/10-plans/dsh-go-replication-m06/plan.json",
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/10-plans/dsh-go-replication/acceptance.md",
+        "docs/10-plans/dsh-go-replication/capabilities.md",
+        "docs/10-plans/dsh-go-replication/stages/m06-persistence.md",
+        "docs/10-plans/dsh-go-replication-m05/plans.md",
+        "docs/learning/note-template.md",
+        "persistence/README.md",
+        "plugins/sessionjsonl/README.md",
+        "docs/persistence/go-primer.md",
+        "docs/persistence/format.md",
+        "docs/persistence/recovery.md",
+        "docs/persistence/cache.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "examples/session-replay/README.md",
+        "testdata/parity/persistence/README.md",
+        "testdata/parity/persistence/DIVERGENCES.md",
+        "Makefile",
+        ".github/workflows/check.yml"
+      ],
+      "outputs": [
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md"
+      ],
+      "writes": [
+        "docs/10-plans/dsh-go-replication-m06/plans.md",
+        "docs/testing.md",
+        "docs/README.md",
+        "docs/roadmap.md",
+        "docs/learning/index.md",
+        "docs/10-plans/dsh-go-replication/stages/index.md",
+        "scripts/doccheck/main.go",
+        "scripts/doccheck/main_test.go",
+        "docs/10-plans/dsh-go-replication-m06/validation/"
+      ],
+      "resources": [
+        "deepseek-harness-go-local"
+      ],
+      "checks": [
+        {
+          "id": "make-check",
+          "argv": [
+            "make",
+            "check"
+          ],
+          "cwd": ".",
+          "timeout": 1800,
+          "expected_exit": 0
+        },
+        {
+          "id": "diff",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "replay-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "./examples/session-replay/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "persistence-scenario",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "PersistenceScenario",
+            "./internal/testkit/..."
+          ],
+          "cwd": ".",
+          "timeout": 420,
+          "expected_exit": 0
+        },
+        {
+          "id": "resume-behavior",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "-count=1",
+            "-timeout=240s",
+            "-run",
+            "Resume|Checkpoint",
+            "./persistence/...",
+            "./agentloop/..."
+          ],
+          "cwd": ".",
+          "timeout": 300,
+          "expected_exit": 0
+        },
+        {
+          "id": "format-boundary",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nbanned = ['session.v4', '.jsonl.zstd', 'dsh-session-format']\nbad = []\nfor p in sorted(pathlib.Path('.').rglob('*.go')):\n    if '.git' in p.parts:\n        continue\n    text = p.read_text(encoding='utf-8')\n    for needle in banned:\n        if needle in text:\n            bad.append(p.as_posix() + ' mentions ' + needle)\nprint('Go format keeps its own identity: OK' if not bad else repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "gate-integrity",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmk = pathlib.Path('Makefile').read_text(encoding='utf-8')\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nproblems = []\nfor token in ['fmt-check', 'vet', 'test', 'coverage', 'docs', 'doc-examples', 'build']:\n    if token not in mk:\n        problems.append('Makefile lost gate ' + token)\nfor token in ['100 < current.total*90', 'has no coverage data']:\n    if token not in main:\n        problems.append('coverage gate weakened: ' + token)\nprint('gate integrity: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "coverage-registration",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nmod = 'github.com/gosomea/deepseek-harness-go/'\nmain = pathlib.Path('scripts/doccheck/main.go').read_text(encoding='utf-8')\nmissing = [p for p in ['llm/', 'agent/', 'agentloop/', 'persistence/', 'plugins/sessionjsonl/'] if (mod + p) not in main]\ntest = pathlib.Path('scripts/doccheck/main_test.go').read_text(encoding='utf-8')\nif 'TestCoverageGateChecksEveryGatedPackage' not in test:\n    missing.append('main_test.go: coverage gate fixture test missing')\nprint('G6 coverage registration: OK' if not missing else 'missing: ' + repr(missing))\nsys.exit(1 if missing else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "module-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\nreadme = pathlib.Path('docs/README.md').read_text(encoding='utf-8')\nroadmap = pathlib.Path('docs/roadmap.md').read_text(encoding='utf-8')\npkgs = ['persistence/', 'plugins/sessionjsonl/']\nbad = [p for p in pkgs if ('../' + p + 'README.md') not in readme or ('../' + p + 'README.md') not in roadmap]\nprint('module index: OK' if not bad else 'not linked as ../<pkg>/README.md from docs/README.md and docs/roadmap.md: ' + repr(bad))\nsys.exit(1 if bad else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "stage-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/10-plans/dsh-go-replication/stages/index.md').read_text(encoding='utf-8')\nproblems = []\nif 'dsh-go-replication-m06' not in text:\n    problems.append('stages/index.md does not point at the M6 contract')\nif 'M6' not in text:\n    problems.append('stages/index.md missing M6 handover')\nprint('stage index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        },
+        {
+          "id": "learning-index",
+          "argv": [
+            "{python}",
+            "-c",
+            "import pathlib, sys\ntext = pathlib.Path('docs/learning/index.md').read_text(encoding='utf-8')\nproblems = []\nfor link in ['../persistence/go-primer.md', '../persistence/format.md',\n             '../persistence/recovery.md', '../persistence/cache.md']:\n    if link not in text:\n        problems.append('missing link ' + link)\nif 'C10' not in text:\n    problems.append('C10 is not listed as a current topic')\nfor stale in ['| C10 持久化与恢复 | C07、C09', 'C10 起属后续阶段']:\n    if stale in text:\n        problems.append('stale future row ' + stale)\nprint('learning index: OK' if not problems else 'problems: ' + repr(problems))\nsys.exit(1 if problems else 0)"
+          ],
+          "cwd": ".",
+          "timeout": 120,
+          "expected_exit": 0
+        }
+      ],
+      "review": true
+    }
+  ]
+}

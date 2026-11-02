@@ -1,0 +1,4 @@
+data: {"id":"1","object":"error","created":1,"model":"fixture","choices":[],"error":{"message":"rate limited","type":"rate_limit_error"}}
+
+data: [DONE]
+

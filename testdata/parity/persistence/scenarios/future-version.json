@@ -1,0 +1,11 @@
+{
+  "id": "future-version",
+  "title": "未知未来版本被拒绝，而不是按当前版本尽力解析",
+  "events": [{ "type": "turn/start", "data": { "turn": 0, "input": "x" } }],
+  "damage": { "kind": "version", "version": 99 },
+  "expect": {
+    "openRefused": true,
+    "errorKind": "unsupported-version",
+    "fileUnchanged": true
+  }
+}

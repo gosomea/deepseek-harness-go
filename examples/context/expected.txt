@@ -1,0 +1,16 @@
+recorded: [base spec clock]
+cited: [base clock spec]
+two renders agree: true
+text:
+You are a harness.
+
+now: fixed for this experiment
+
+reference: docs/context/contributions.md
+refused append error: true
+set after refusal is nil: true
+log recorded before refusal: [kept]
+compaction applied: true
+compaction phases: [start summary end]
+summary failure reported: true
+failed compaction phases: [start summary]

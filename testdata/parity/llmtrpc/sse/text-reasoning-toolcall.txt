@@ -1,0 +1,18 @@
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"reasoning_content":"think "}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"reasoning_content":"hard"}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"content":"Hel"}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"content":"lo"}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"read_file"}}]}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"pa"}}]}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"th\":\"a.txt\"}"}}]}}]}
+
+data: {"id":"1","object":"chat.completion.chunk","created":1,"model":"fixture","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":11,"completion_tokens":5,"total_tokens":16,"prompt_tokens_details":{"cached_tokens":3},"completion_tokens_details":{"reasoning_tokens":4}}}
+
+data: [DONE]
+
